@@ -1,0 +1,13 @@
+import type { Metadata } from "next";
+import HomePage from "@/components/site/HomePage";
+
+export const metadata: Metadata = {
+  title: "মায়া — জীবন্ত মুখের এক ছোট্ট ডেস্ক রোবট",
+  description:
+    "মায়া একটা নরম ডেস্ক রোবট: গোল জীবন্ত মুখ, আটটা মুড, এগারোটা স্ক্রিন, সাতটা গেম আর বাংলা চিরকুট। সাতটা এডিশন, প্লাগ-ইন অ্যাক্সেসরি আর প্রতিটা বাক্সে একটা মিনি কি-চেইন।",
+  alternates: { languages: { en: "/", bn: "/bn" } },
+};
+
+export default function HomeBn() {
+  return <HomePage lang="bn" />;
+}
