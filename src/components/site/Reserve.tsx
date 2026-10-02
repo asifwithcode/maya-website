@@ -2,7 +2,8 @@
 
 import { useEffect, useState, type FormEvent } from "react";
 import MayaFace from "./MayaFace";
-import { COMBO, EDITIONS, PRICING } from "./data";
+import { COMBO } from "./data";
+import { useContent } from "./content";
 import { revealChildren, revealLines, useGsap } from "./motion";
 import { takaFor, useT } from "./i18n";
 
@@ -10,9 +11,10 @@ export default function Reserve() {
   const { lang, t } = useT();
   const r = t.reserve;
   const taka = (n: number) => takaFor(lang, n);
+  const { pricing: PRICING, editions } = useContent();
   // values must stay in the API's VALID_VARIANTS list; only the labels are translated
   const VARIANTS: [string, string][] = [
-    ...EDITIONS.map((e): [string, string] => [e.variant, `${t.editions.items[e.look][0]} · ${taka(PRICING.maya)}`]),
+    ...editions.map((e): [string, string] => [e.variant, `${e.name[lang]} · ${taka(e.price ?? PRICING.maya)}`]),
     [COMBO.variant, `${t.editions.combo.name} · ${taka(PRICING.collector)}`],
     ["Classic", `${r.classic} · ${taka(PRICING.maya)}`],
     ["Surprise me", `${r.surprise} · ${taka(PRICING.maya)}`],
@@ -42,7 +44,7 @@ export default function Reserve() {
       const res = await fetch("/api/preorder", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(Object.fromEntries(f)),
+        body: JSON.stringify({ ...Object.fromEntries(f), lang }),
       });
       const body = await res.json();
       if (!res.ok) throw new Error(lang === "en" && body.error ? body.error : r.error);
@@ -91,7 +93,7 @@ export default function Reserve() {
               <div className="grid grid-cols-[1fr_5rem] gap-4">
                 <label className="block">
                   <span className="text-xs text-white/45">{r.edition}</span>
-                  <select name="variant" defaultValue="Bunny" className="field-input">
+                  <select name="variant" defaultValue={VARIANTS[0][0]} className="field-input">
                     {VARIANTS.map(([v, label]) => (
                       <option key={v} value={v}>
                         {label}

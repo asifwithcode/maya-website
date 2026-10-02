@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import HomePage from "@/components/site/HomePage";
 
+// content comes from the CMS; the admin revalidates on save, this is a safety net
+export const revalidate = 3600;
+
 export const metadata: Metadata = {
   title: "Maya — a tiny desk robot with a living face",
   description:

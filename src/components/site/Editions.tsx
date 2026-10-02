@@ -1,7 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { COMBO, EDITIONS, PRICING, SEPARATELY } from "./data";
+import { COMBO } from "./data";
+import { separately, useContent } from "./content";
 import { revealChildren, revealLines, useGsap } from "./motion";
 import { scrollToId } from "./SmoothScroll";
 import { takaFor, useT } from "./i18n";
@@ -21,6 +22,8 @@ export default function Editions() {
   const { lang, t } = useT();
   const taka = (n: number) => takaFor(lang, n);
   const e9 = t.editions;
+  const { pricing: PRICING, editions } = useContent();
+  const SEPARATELY = separately(PRICING, editions.length);
   const ref = useGsap<HTMLElement>((root, reduce) => {
     revealLines(root.querySelector("h2")!, reduce);
     revealChildren(root, reduce);
@@ -40,14 +43,16 @@ export default function Editions() {
         </div>
 
         <ul data-reveal-group className="mt-16 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {EDITIONS.map((e) => {
-            const [name, accessory, eyes] = e9.items[e.look];
+          {editions.map((e) => {
+            const name = e.name[lang];
+            const accessory = e.accessory[lang];
+            const eyes = e.eyes[lang];
             return (
-              <li key={e.look} data-reveal>
+              <li key={e.slug} data-reveal>
                 <article className="group flex h-full flex-col overflow-hidden rounded-[1.75rem] bg-card ring-1 ring-ink/[0.06]">
                   <div className="relative aspect-[5/4] overflow-hidden" style={{ background: e.tint }}>
                     <Image
-                      src={`/showcase/art/maya-${e.look}.svg`}
+                      src={`/showcase/art/maya-${e.slug}.svg`}
                       alt={`Maya, ${name}`}
                       fill
                       unoptimized
@@ -61,7 +66,7 @@ export default function Editions() {
                       {accessory} · {eyes} · {e9.mini}
                     </p>
                     <div className="mt-auto flex items-center justify-between gap-4 pt-6">
-                      <span className="text-2xl font-semibold tracking-tight">{taka(PRICING.maya)}</span>
+                      <span className="text-2xl font-semibold tracking-tight">{taka(e.price ?? PRICING.maya)}</span>
                       <button
                         type="button"
                         onClick={() => reserve(e.variant)}

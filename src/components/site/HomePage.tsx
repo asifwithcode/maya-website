@@ -11,11 +11,15 @@ import Footer from "./Footer";
 import SmoothScroll from "./SmoothScroll";
 import { LangProvider, type Lang } from "./i18n";
 import HtmlLang from "./HtmlLang";
+import { ContentProvider } from "./content";
+import { getSiteContent } from "@/db/content";
 
 /** The landing page, rendered at / (English) and /bn (Bangla). */
-export default function HomePage({ lang }: { lang: Lang }) {
+export default async function HomePage({ lang }: { lang: Lang }) {
+  const content = await getSiteContent();
   return (
     <LangProvider lang={lang}>
+      <ContentProvider content={content}>
       <HtmlLang lang={lang} />
       <div lang={lang}>
         <SmoothScroll />
@@ -32,6 +36,7 @@ export default function HomePage({ lang }: { lang: Lang }) {
         </main>
         <Footer />
       </div>
+      </ContentProvider>
     </LangProvider>
   );
 }
