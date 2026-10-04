@@ -116,7 +116,7 @@ export const GAMES = [
 export const SPECS: [string, string][] = [
   ["Brain", "ESP32-C3, 160 MHz RISC-V, 400 KB SRAM, 4 MB flash"],
   ["Display", '1.28" round IPS, 240 × 240, 40 MHz SPI'],
-  ["Touch", "Two capacitive pads: tap on the head, menu on the side"],
+  ["Touch", "Two capacitive pads, one in each foot"],
   ["Wireless", "2.4 GHz Wi-Fi and Bluetooth LE setup"],
   ["Cloud", "Encrypted MQTT over TLS"],
   ["Interface", "LVGL 8.4, 11 screens, 3D carousel menu"],

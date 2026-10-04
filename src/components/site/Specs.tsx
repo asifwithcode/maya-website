@@ -58,7 +58,7 @@ export default function Specs() {
             <h2 className="mt-3 text-5xl font-semibold leading-[0.98] tracking-[-0.04em] sm:text-7xl">{s.startTitle}</h2>
             <p className="mt-5 max-w-sm text-ink-soft">
               {s.guideBefore}{" "}
-              <Link href="/docs" className="text-ink underline decoration-eye underline-offset-4">
+              <Link href={lang === "bn" ? "/bn/docs" : "/docs"} className="text-ink underline decoration-eye underline-offset-4">
                 {s.guideLink}
               </Link>
               {lang === "bn" ? "।" : "."}

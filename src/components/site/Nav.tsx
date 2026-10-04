@@ -45,6 +45,7 @@ export default function Nav({ home = true, path = "" }: { home?: boolean; path?:
   const base = lang === "bn" ? "/bn" : "/";
   const otherHref = lang === "bn" ? path || "/" : `/bn${path}`;
   const appHref = lang === "bn" ? "/bn/app" : "/app";
+  const guideHref = lang === "bn" ? "/bn/docs" : "/docs";
 
   useEffect(() => {
     const onScroll = () => {
@@ -93,7 +94,7 @@ export default function Nav({ home = true, path = "" }: { home?: boolean; path?:
             </Link>
           </li>
           <li>
-            <Link href="/docs" className="transition-colors hover:text-ink">
+            <Link href={guideHref} className="transition-colors hover:text-ink">
               {t.nav.guide}
             </Link>
           </li>
@@ -148,7 +149,7 @@ export default function Nav({ home = true, path = "" }: { home?: boolean; path?:
             </Link>
           </li>
           <li>
-            <Link href="/docs" className="block py-3 text-2xl font-medium tracking-tight">
+            <Link href={guideHref} className="block py-3 text-2xl font-medium tracking-tight">
               {t.nav.guide}
             </Link>
           </li>

@@ -105,7 +105,7 @@ export default function AppDownload({ apkUrl, version }: { apkUrl: string | null
           </div>
           <div className="rounded-[1.5rem] bg-paper p-6">
             <p className="text-sm leading-relaxed text-ink-soft">{a.iphone}</p>
-            <Link href="/docs#pairing" className="mt-4 inline-block text-sm text-ink underline decoration-eye underline-offset-4">
+            <Link href={lang === "bn" ? "/bn/docs#pairing" : "/docs#pairing"} className="mt-4 inline-block text-sm text-ink underline decoration-eye underline-offset-4">
               {a.guide}
             </Link>
           </div>

@@ -17,7 +17,7 @@ export default function Footer() {
             <Link href={lang === "bn" ? "/bn/app" : "/app"} className="hover:text-white">
               {t.footer.app}
             </Link>
-            <Link href="/docs" className="hover:text-white">
+            <Link href={lang === "bn" ? "/bn/docs" : "/docs"} className="hover:text-white">
               {t.footer.guide}
             </Link>
             <a href="mailto:contact@xentoryx.com" className="hover:text-white">
