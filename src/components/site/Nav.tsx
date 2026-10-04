@@ -35,14 +35,16 @@ function ThemeToggle() {
   );
 }
 
-export default function Nav({ home = true }: { home?: boolean }) {
+/** `path` is the page under the language prefix ("/app"), so the language switch stays on it. */
+export default function Nav({ home = true, path = "" }: { home?: boolean; path?: string }) {
   const { lang, t } = useT();
   const [solid, setSolid] = useState(false);
   const [hidden, setHidden] = useState(false);
   const [open, setOpen] = useState(false);
   const last = useRef(0);
   const base = lang === "bn" ? "/bn" : "/";
-  const otherHref = lang === "bn" ? "/" : "/bn";
+  const otherHref = lang === "bn" ? path || "/" : `/bn${path}`;
+  const appHref = lang === "bn" ? "/bn/app" : "/app";
 
   useEffect(() => {
     const onScroll = () => {
@@ -85,6 +87,11 @@ export default function Nav({ home = true }: { home?: boolean }) {
               </a>
             </li>
           ))}
+          <li>
+            <Link href={appHref} className="transition-colors hover:text-ink">
+              {t.nav.app}
+            </Link>
+          </li>
           <li>
             <Link href="/docs" className="transition-colors hover:text-ink">
               {t.nav.guide}
@@ -135,6 +142,11 @@ export default function Nav({ home = true }: { home?: boolean }) {
               </a>
             </li>
           ))}
+          <li>
+            <Link href={appHref} className="block py-3 text-2xl font-medium tracking-tight">
+              {t.nav.app}
+            </Link>
+          </li>
           <li>
             <Link href="/docs" className="block py-3 text-2xl font-medium tracking-tight">
               {t.nav.guide}

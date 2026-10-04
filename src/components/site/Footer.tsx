@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useT } from "./i18n";
 
 export default function Footer() {
-  const { t } = useT();
+  const { lang, t } = useT();
   return (
     <footer className="overflow-hidden bg-night px-5 pb-10 pt-6 text-white/45 sm:px-8 print:hidden">
       <div className="mx-auto max-w-7xl">
@@ -14,6 +14,9 @@ export default function Footer() {
         <div className="mt-6 flex flex-col gap-4 border-t border-white/10 pt-6 text-sm sm:flex-row sm:items-center sm:justify-between">
           <span>© 2026 {t.footer.rights}</span>
           <nav className="flex gap-6">
+            <Link href={lang === "bn" ? "/bn/app" : "/app"} className="hover:text-white">
+              {t.footer.app}
+            </Link>
             <Link href="/docs" className="hover:text-white">
               {t.footer.guide}
             </Link>

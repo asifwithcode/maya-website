@@ -168,6 +168,13 @@ export default function DocsPage() {
               ))}
             </ol>
             <p className={P}>
+              Get the app for Android at{" "}
+              <Link href="/app" className="text-ink underline decoration-eye underline-offset-4">
+                maya.xentoryxlabs.site/app
+              </Link>
+              , or scan the QR code on your quick start card.
+            </p>
+            <p className={P}>
               Maya works without Wi-Fi too: her face, moods, clock, timers and games all run on the device. Wi-Fi adds
               weather, notifications and time sync.
             </p>
@@ -265,7 +272,7 @@ export default function DocsPage() {
             <H2 id="pairing" n={6}>Pairing and Wi-Fi</H2>
             <p className={P}>
               A new Maya opens the setup screen with a QR code. In the app, tap <b className="text-ink">Pair New Maya</b>, scan
-              the code, and choose your Wi-Fi. The app talks to her over Bluetooth, and the connection is encrypted end
+              the code, and choose your Wi-Fi. Don&rsquo;t have the app yet? <Link href="/app" className="text-ink underline decoration-eye underline-offset-4">Get it here</Link>. The app talks to her over Bluetooth, and the connection is encrypted end
               to end. Once paired, Maya belongs to your account, and nobody else can claim her.
             </p>
             <ul className="mt-5 max-w-2xl list-disc space-y-2 pl-5 text-ink-soft">

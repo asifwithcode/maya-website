@@ -63,6 +63,12 @@ export default function Specs() {
               </Link>
               {lang === "bn" ? "।" : "."}
             </p>
+            <Link
+              href={lang === "bn" ? "/bn/app" : "/app"}
+              className="mt-7 inline-flex rounded-full bg-ink px-5 py-2.5 text-sm font-semibold text-paper transition hover:bg-eye-deep hover:text-white"
+            >
+              {s.getApp}
+            </Link>
           </div>
           <ol data-reveal-group className="grid gap-4 sm:grid-cols-3">
             {s.steps.map(([title, d], i) => (

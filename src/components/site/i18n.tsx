@@ -6,7 +6,7 @@ export type Lang = "en" | "bn";
 
 const en = {
   nav: {
-    moods: "Moods", features: "Features", screens: "Screens", editions: "Editions", specs: "Specs", guide: "Guide",
+    moods: "Moods", features: "Features", screens: "Screens", editions: "Editions", specs: "Specs", guide: "Guide", app: "App",
     reserve: "Reserve", open: "Open menu", close: "Close menu", other: "বাংলা", otherLabel: "বাংলায় দেখুন",
     toDark: "Switch to dark mode", toLight: "Switch to light mode",
   },
@@ -72,6 +72,7 @@ const en = {
   specs: {
     kicker: "Tech specs", title: "The details.", inBox: "In the box",
     startKicker: "Getting started", startTitle: "Three steps.", guideBefore: "Everything else is in the", guideLink: "user guide",
+    getApp: "Get the Maya app",
     steps: [
       ["Plug in", "USB-C into any 5 V charger. Maya wakes up and says hi."],
       ["Pair", "The Maya app finds her over Bluetooth and sends your Wi-Fi securely."],
@@ -89,14 +90,36 @@ const en = {
     submit: "Reserve, pay later", loading: "Reserving…", error: "Something went wrong.",
     classic: "Classic, no accessory", surprise: "Surprise me",
   },
-  footer: { rights: "Xentoryx Labs. Designed and printed in Bangladesh.", guide: "User guide" },
+  footer: { rights: "Xentoryx Labs. Designed and printed in Bangladesh.", guide: "User guide", app: "Maya app" },
+  app: {
+    kicker: "Maya app · Android",
+    title: "Get the Maya app.",
+    text: "The app pairs your Maya over Bluetooth, gives her your Wi-Fi, and sends her the weather, the time and your phone's notifications.",
+    download: "Download for Android",
+    version: (v: string) => `Version ${v} · Android 7 or newer`,
+    requires: "Android 7 or newer",
+    soonTitle: "The app is almost ready.",
+    soonText: "We're putting the finishing touches on it. Maya already works without it: her face, moods, clock, timers and games all run on the device.",
+    soonMail: "Email me when it's out",
+    stepsTitle: "Installing it",
+    steps: [
+      ["Download", "Tap the button above on your Android phone. The file is called maya.apk."],
+      ["Allow the install", "Open the file. If Android asks, allow installs from your browser for this one app."],
+      ["Pair your Maya", "Open the app, tap Pair New Maya and scan the QR code on her screen."],
+    ] as [string, string][],
+    note: "We publish the app ourselves, outside Google Play, so Android shows a warning the first time. That's expected. Only download it from this page.",
+    scanTitle: "On a computer?",
+    scanText: "Scan this with your phone's camera to open this page there.",
+    iphone: "iPhone? The app is Android-only for now. You can still give Maya your Wi-Fi without it: open Wi-Fi setup on her and she makes her own hotspot. The guide shows how.",
+    guide: "Read the user guide",
+  },
 };
 
 type Dict = typeof en;
 
 const bn: Dict = {
   nav: {
-    moods: "মুড", features: "ফিচার", screens: "স্ক্রিন", editions: "এডিশন", specs: "স্পেক", guide: "গাইড",
+    moods: "মুড", features: "ফিচার", screens: "স্ক্রিন", editions: "এডিশন", specs: "স্পেক", guide: "গাইড", app: "অ্যাপ",
     reserve: "রিজার্ভ", open: "মেনু খুলুন", close: "মেনু বন্ধ করুন", other: "English", otherLabel: "View in English",
     toDark: "ডার্ক মোডে যান", toLight: "লাইট মোডে যান",
   },
@@ -181,6 +204,7 @@ const bn: Dict = {
   specs: {
     kicker: "টেক স্পেক", title: "খুঁটিনাটি।", inBox: "বাক্সে যা আছে",
     startKicker: "শুরু করা", startTitle: "তিনটা ধাপ।", guideBefore: "বাকি সব আছে", guideLink: "ইউজার গাইডে",
+    getApp: "Maya অ্যাপ নামান",
     steps: [
       ["প্লাগ লাগান", "যেকোনো ৫V চার্জারে USB-C লাগান। মায়া জেগে উঠে হাই বলবে।"],
       ["পেয়ার করুন", "Maya অ্যাপ ব্লুটুথে ওকে খুঁজে নিরাপদে আপনার Wi-Fi পাঠিয়ে দেয়।"],
@@ -209,7 +233,29 @@ const bn: Dict = {
     submit: "রিজার্ভ করুন, পরে টাকা দিন", loading: "রিজার্ভ হচ্ছে…", error: "কিছু একটা ভুল হয়েছে।",
     classic: "ক্লাসিক, অ্যাক্সেসরি ছাড়া", surprise: "চমকে দিন",
   },
-  footer: { rights: "Xentoryx Labs। বাংলাদেশে ডিজাইন ও প্রিন্ট করা।", guide: "ইউজার গাইড" },
+  footer: { rights: "Xentoryx Labs। বাংলাদেশে ডিজাইন ও প্রিন্ট করা।", guide: "ইউজার গাইড", app: "Maya অ্যাপ" },
+  app: {
+    kicker: "Maya অ্যাপ · অ্যান্ড্রয়েড",
+    title: "Maya অ্যাপ নামিয়ে নিন।",
+    text: "অ্যাপটা ব্লুটুথে আপনার মায়ার সাথে জুড়ে যায়, ওকে আপনার Wi-Fi দেয়, আর পাঠায় আবহাওয়া, সময় আর ফোনের নোটিফিকেশন।",
+    download: "অ্যান্ড্রয়েডের জন্য ডাউনলোড",
+    version: (v: string) => `ভার্সন ${bnDigits(v)} · অ্যান্ড্রয়েড ৭ বা নতুন`,
+    requires: "অ্যান্ড্রয়েড ৭ বা নতুন",
+    soonTitle: "অ্যাপটা প্রায় তৈরি।",
+    soonText: "শেষ ঘষামাজা চলছে। অ্যাপ ছাড়াও মায়া চলে: মুখ, মুড, ঘড়ি, টাইমার আর গেম সব ওর ভেতরেই।",
+    soonMail: "বের হলে আমাকে ইমেইল করুন",
+    stepsTitle: "যেভাবে ইনস্টল করবেন",
+    steps: [
+      ["ডাউনলোড", "অ্যান্ড্রয়েড ফোনে ওপরের বোতামে চাপুন। ফাইলের নাম maya.apk।"],
+      ["ইনস্টলের অনুমতি", "ফাইলটা খুলুন। অ্যান্ড্রয়েড জিজ্ঞেস করলে এই একটা অ্যাপের জন্য ব্রাউজার থেকে ইনস্টলের অনুমতি দিন।"],
+      ["মায়াকে পেয়ার করুন", "অ্যাপ খুলে Pair New Maya চাপুন, তারপর মায়ার স্ক্রিনের QR কোড স্ক্যান করুন।"],
+    ],
+    note: "অ্যাপটা আমরা নিজেরাই দিই, Google Play-র বাইরে, তাই প্রথমবার অ্যান্ড্রয়েড একটা সতর্কবার্তা দেখায়। এটা স্বাভাবিক। শুধু এই পেজ থেকেই ডাউনলোড করুন।",
+    scanTitle: "কম্পিউটারে আছেন?",
+    scanText: "ফোনের ক্যামেরা দিয়ে এটা স্ক্যান করুন, পেজটা ফোনে খুলে যাবে।",
+    iphone: "আইফোন? আপাতত অ্যাপটা শুধু অ্যান্ড্রয়েডে। অ্যাপ ছাড়াও মায়াকে Wi-Fi দেওয়া যায়: ওর Wi-Fi setup খুললে সে নিজের হটস্পট বানায়। কীভাবে, তা গাইডে আছে।",
+    guide: "ইউজার গাইড পড়ুন",
+  },
 };
 
 const DICTS: Record<Lang, Dict> = { en, bn };
