@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import MayaFace from "./MayaFace";
 import { bnDigits, useT } from "./i18n";
 
 /**
@@ -49,14 +48,9 @@ export default function AppDownload({ apkUrl, version }: { apkUrl: string | null
             )}
           </div>
 
-          {/* phone art is decoration; on a phone the install steps matter more */}
+          {/* real app screens; on a phone the install steps come first and the screens follow below */}
           <div className="hidden justify-center md:flex">
-            <div className="relative grid aspect-[9/17] w-56 place-items-center rounded-[2.5rem] border-[10px] border-night bg-night shadow-2xl sm:w-64">
-              <div className="grid h-36 w-36 place-items-center rounded-full bg-screen sm:h-40 sm:w-40">
-                <MayaFace mood="happy" className="h-28 w-28 sm:h-32 sm:w-32" />
-              </div>
-              <span className="absolute bottom-8 font-script text-2xl text-white/80">maya</span>
-            </div>
+            <Phone src="/screens/app-home.webp" alt={a.shotHome} className="w-64" />
           </div>
         </div>
       </section>
@@ -78,6 +72,23 @@ export default function AppDownload({ apkUrl, version }: { apkUrl: string | null
           </div>
         </section>
       )}
+
+      <section className="px-5 pb-20 sm:px-8 md:pb-28">
+        <div className="mx-auto max-w-6xl">
+          <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">{a.shotsTitle}</h2>
+          <p className="mt-3 max-w-xl text-ink-soft">{a.shotsText}</p>
+          <div className="mt-10 grid grid-cols-2 gap-4 sm:gap-8 md:max-w-2xl">
+            <figure>
+              <Phone src="/screens/app-home.webp" alt={a.shotHome} />
+              <figcaption className="mt-3 text-center text-sm text-ink-soft">{a.shotHomeCaption}</figcaption>
+            </figure>
+            <figure>
+              <Phone src="/screens/app-stats.webp" alt={a.shotStats} />
+              <figcaption className="mt-3 text-center text-sm text-ink-soft">{a.shotStatsCaption}</figcaption>
+            </figure>
+          </div>
+        </div>
+      </section>
 
       <section className="px-5 pb-24 sm:px-8 md:pb-32">
         <div className="mx-auto grid max-w-6xl gap-4 md:grid-cols-2">
@@ -101,5 +112,15 @@ export default function AppDownload({ apkUrl, version }: { apkUrl: string | null
         </div>
       </section>
     </main>
+  );
+}
+
+/** A screenshot from the app in a plain phone frame. */
+function Phone({ src, alt, className = "" }: { src: string; alt: string; className?: string }) {
+  return (
+    <div className={`overflow-hidden rounded-[2rem] border-[7px] border-night bg-night shadow-2xl ${className}`}>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={src} alt={alt} width={540} height={1129} loading="lazy" className="block h-auto w-full" />
+    </div>
   );
 }

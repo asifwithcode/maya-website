@@ -112,6 +112,12 @@ const en = {
     scanText: "Scan this with your phone's camera to open this page there.",
     iphone: "iPhone? The app is Android-only for now. You can still give Maya your Wi-Fi without it: open Wi-Fi setup on her and she makes her own hotspot. The guide shows how.",
     guide: "Read the user guide",
+    shotsTitle: "Inside the app",
+    shotsText: "Real screens, from a real Maya on our desk.",
+    shotHome: "Maya app home screen: Maya online, her mood and quick actions",
+    shotStats: "Maya app stats screen: focus streak, today's focus and sessions",
+    shotHomeCaption: "Her mood, at a glance",
+    shotStatsCaption: "Your focus, tracked",
   },
 };
 
@@ -255,6 +261,12 @@ const bn: Dict = {
     scanText: "ফোনের ক্যামেরা দিয়ে এটা স্ক্যান করুন, পেজটা ফোনে খুলে যাবে।",
     iphone: "আইফোন? আপাতত অ্যাপটা শুধু অ্যান্ড্রয়েডে। অ্যাপ ছাড়াও মায়াকে Wi-Fi দেওয়া যায়: ওর Wi-Fi setup খুললে সে নিজের হটস্পট বানায়। কীভাবে, তা গাইডে আছে।",
     guide: "ইউজার গাইড পড়ুন",
+    shotsTitle: "অ্যাপের ভেতরে",
+    shotsText: "সত্যিকারের স্ক্রিন, আমাদের টেবিলের সত্যিকারের মায়া থেকে।",
+    shotHome: "Maya অ্যাপের হোম স্ক্রিন: মায়া অনলাইন, ওর মুড আর কুইক অ্যাকশন",
+    shotStats: "Maya অ্যাপের স্ট্যাটস স্ক্রিন: ফোকাস স্ট্রিক, আজকের ফোকাস আর সেশন",
+    shotHomeCaption: "এক নজরে ওর মুড",
+    shotStatsCaption: "আপনার ফোকাসের হিসাব",
   },
 };
 
