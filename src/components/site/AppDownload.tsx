@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useT } from "./i18n";
 import { pathFor } from "./paths";
+import { APP_RELEASE } from "@/lib/app-release";
 
 export default function AppDownload() {
   const { lang } = useT();
@@ -41,14 +42,16 @@ export default function AppDownload() {
               : "Pair in seconds over Bluetooth, hand over your Wi‑Fi, and relay your phone’s notifications to Maya."}
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-            <a href="/app" download className="btn-primary">
+            <a href={APP_RELEASE.file} download className="btn-primary">
               {isBn ? "অ্যান্ড্রয়েডের জন্য ডাউনলোড" : "Download for Android"}
             </a>
             <Link href={pathFor(isBn ? "bn" : "en", "docs")} className="link-more">
               {isBn ? "ইউজার গাইড পড়ুন" : "Read the user guide"} <span aria-hidden>›</span>
             </Link>
           </div>
-          <p className="mt-4 text-[12px] text-[#86868b]">v1.5.2 · Android 8.0+ · 33.5 MB</p>
+          <p className="mt-4 text-[12px] text-[#86868b]">
+            v{APP_RELEASE.version} · Android {APP_RELEASE.minAndroid}+ · {APP_RELEASE.sizeMb} MB
+          </p>
         </div>
 
         <div id="guide" className="mt-5 grid scroll-mt-24 grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">

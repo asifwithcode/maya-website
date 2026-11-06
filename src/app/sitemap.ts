@@ -8,6 +8,7 @@ const PAGES: { bn: string; en: string; priority: number }[] = [
   { bn: "/docs", en: "/en/docs", priority: 0.8 },
   { bn: "/privacy", en: "/en/privacy", priority: 0.3 },
   { bn: "/terms", en: "/en/terms", priority: 0.3 },
+  { bn: "/app", en: "/en/app", priority: 0.6 },
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {

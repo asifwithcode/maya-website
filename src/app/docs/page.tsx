@@ -7,6 +7,7 @@ import MayaFace from "@/components/site/MayaFace";
 import PrintButton from "@/components/site/PrintButton";
 import { GAMES, MOODS, SPECS } from "@/components/site/data";
 import { LangProvider } from "@/components/site/i18n";
+import { APP_RELEASE } from "@/lib/app-release";
 
 export const metadata: Metadata = {
   title: "মায়া ইউজার গাইড, সফটওয়্যার ও পূর্ণাঙ্গ সমস্যা সমাধান | Xentoryx",
@@ -214,7 +215,7 @@ const TROUBLESHOOTING_BN = [
       },
       {
         q: "ডিসপ্লেতে সাদা আলো জ্বলছে কিন্তু চোখ বা গ্রাফিক্স আসছে না",
-        a: "স্ক্রিন পাওয়ার পেলেও SPI ডেটা লাইন ঠিকমতো সিঙ্ক না হলে এমন হতে পারে। কেবলটি খুলে ৫ সেকেন্ড অপেক্ষা করে আবার শক্ত করে লাগান। যদি সমাধান না হয়, পিসির MAYA Studio-তে কানেক্ট করে ফার্মওয়্যার রি-ফ্ল্যাশ করুন।",
+        a: "স্ক্রিন পাওয়ার পেলেও SPI ডেটা লাইন ঠিকমতো সিঙ্ক না হলে এমন হতে পারে। কেবলটি খুলে ৫ সেকেন্ড অপেক্ষা করে আবার শক্ত করে লাগান। তাতেও ঠিক না হলে WhatsApp (+880 1892-126867) বা xentoryxlabs@gmail.com-এ আমাদের জানান।",
       },
       {
         q: "মায়া হঠাৎ ফ্রিজ হয়ে গেছে বা কোনো টাচ নিচ্ছে না",
@@ -307,20 +308,16 @@ const TROUBLESHOOTING_BN = [
     ],
   },
   {
-    category: "ফার্মওয়্যার ও পিসি সফটওয়্যার সমস্যা",
-    badge: "পিসি ও ফ্ল্যাশিং",
+    category: "ফার্মওয়্যার আপডেট",
+    badge: "সাপোর্ট",
     items: [
       {
-        q: "MAYA Studio for Windows ওপেন করলে COM পোর্ট খুঁজে পায় না",
-        a: "১) নিশ্চিত করুন যে USB-C কেবলটিতে ৪টি তার রয়েছে অর্থাৎ এটি ডেটা ক্যাবল। ২) উইন্ডোজ ডিভাইস ম্যানেজারে 'Ports (COM & LPT)'-এর নিচে হলুদ চিহ্ন থাকলে ESP32-C3 USB JTAG/CDC বা CH340 ড্রাইভার ইন্সটল করুন। ৩) পিসির অন্য ইউএসবি পোর্টে লাগিয়ে দেখুন।",
+        q: "মায়ার ফার্মওয়্যার কীভাবে আপডেট করব?",
+        a: "আপনাকে কিছু করতে হবে না। ফার্মওয়্যার আপডেট Xentoryx Labs নিজে USB দিয়ে করে। কোনো আপডেট দরকার হলে বা মায়া ঠিকমতো না চললে WhatsApp (+880 1892-126867) বা xentoryxlabs@gmail.com-এ জানান, আমরা আপডেট করে দেব।",
       },
       {
-        q: "ফার্মওয়্যার ফ্ল্যাশ করার সময় মাঝপথে আটকে যায় বা এরর দেয়",
-        a: "হার্ডওয়্যার রম বুটলোডার মোড সক্রিয় করুন: ইউএসবি ক্যাবল খুলে ফেলুন, মায়ার পেছনের ছোট BOOT বাটনটি চেপে ধরে রেখে ইউএসবি লাগান, ২ সেকেন্ড পর বাটন ছেড়ে দিন। এবার MAYA Studio থেকে COM পোর্ট সিলেক্ট করে Flash Firmware চাপুন।",
-      },
-      {
-        q: "ফার্মওয়্যার আপডেট করলে কি সেভ করা হাই স্কোর বা ওয়াই-ফাই মুছে যাবে?",
-        a: "না! সাধারণ ফার্মওয়্যার আপডেটে শুধু অ্যাপ্লিকেশন পার্টেশন আপডেট হয়। আপনার ওয়াই-ফাই পাসওয়ার্ড, গেমের হাই স্কোর ও ডিভাইসের নাম সম্পূর্ণ অক্ষত থাকে।",
+        q: "আপডেট করলে কি Wi-Fi বা হাই স্কোর মুছে যাবে?",
+        a: "না। সাধারণ আপডেটে আপনার Wi-Fi, গেমের হাই স্কোর, মায়ার নাম আর অ্যাপের সাথে পেয়ারিং ঠিক থাকে।",
       },
     ],
   },
@@ -428,17 +425,17 @@ export default function DocsPageBn() {
                     </h2>
                   </div>
                   <span className="self-start rounded-full bg-[#1d1d1f] px-3 py-1 font-mono text-[11px] font-bold text-white">
-                    v1.5.2 LATEST SUITE
+                    v1.6.0
                   </span>
                 </div>
 
-                <div className="grid gap-6 md:grid-cols-2">
+                <div className="grid max-w-xl gap-6">
                   {/* Android Companion */}
                   <div className="flex flex-col justify-between rounded-2xl border border-black/10 bg-[#ffffff] p-6">
                     <div>
                       <div className="flex items-center gap-2 mb-2">
                         <span className="font-mono text-[10px] font-bold text-black/50">মোবাইল কম্প্যানিয়ন</span>
-                        <span className="font-mono text-[10px] font-bold text-[#0071e3]">Android 8.0+</span>
+                        <span className="font-mono text-[10px] font-bold text-[#0071e3]">Android 7.0+</span>
                       </div>
                       <h3 className="font-bold text-xl text-[#1d1d1f]">MAYA Companion for Android</h3>
                       <p className="font-mono text-xs text-black/70 mt-2 leading-relaxed">
@@ -447,34 +444,12 @@ export default function DocsPageBn() {
                     </div>
                     <div className="mt-6">
                       <a
-                        href="/app"
+                        href={APP_RELEASE.file}
                         download
                         className="flex items-center justify-center gap-2 rounded-full bg-[#1d1d1f] px-6 py-3 font-mono text-xs font-bold text-white shadow-sm transition hover:bg-[#0071e3] hover:text-black"
                       >
                         <span>↓ ডাউনলোড APK প্যাকেজ</span>
-                        <span className="text-[10px] opacity-70">33.5 MB</span>
-                      </a>
-                    </div>
-                  </div>
-
-                  {/* Desktop Studio */}
-                  <div className="flex flex-col justify-between rounded-2xl border border-black/10 bg-[#ffffff] p-6">
-                    <div>
-                      <div className="flex items-center gap-2 mb-2">
-                        <span className="font-mono text-[10px] font-bold text-black/50">ডেস্কটপ ফ্ল্যাশার ও টুল</span>
-                        <span className="font-mono text-[10px] font-bold text-[#0071e3]">Windows 10 / 11</span>
-                      </div>
-                      <h3 className="font-bold text-xl text-[#1d1d1f]">MAYA Studio for Windows</h3>
-                      <p className="font-mono text-xs text-black/70 mt-2 leading-relaxed">
-                        হাই-স্পিড USB ফার্মওয়্যার আপডেট (৯২১,৬০০ বডরেট), ডায়াগনস্টিক সিরিয়াল কনসোল মনিটর, মেমোরি ইন্সপেক্টর এবং কাস্টম চোখ টেস্টিং টুল।
-                      </p>
-                    </div>
-                    <div className="mt-6">
-                      <a
-                        href="#firmware"
-                        className="flex items-center justify-center gap-2 rounded-full border border-black/20 bg-white px-6 py-3 font-mono text-xs font-bold text-[#1d1d1f] shadow-sm transition hover:bg-[#e8e8ed]"
-                      >
-                        <span>ফার্মওয়্যার আপডেট গাইড দেখুন →</span>
+                        <span className="text-[10px] opacity-70">28 MB</span>
                       </a>
                     </div>
                   </div>
@@ -730,15 +705,16 @@ export default function DocsPageBn() {
           <Section>
             <H2 id="firmware" n={8}>ফার্মওয়্যার আপডেট</H2>
             <p className={P}>
-              উইন্ডোজ পিসির MAYA Studio সফটওয়্যার বা ওয়েব ফ্ল্যাশারের মাধ্যমে সহজেই নতুন ফার্মওয়্যার ইন্সটল করা যায়:
+              কম্পিউটারে কিছু ইন্সটল করতে হবে না। মায়ার ফার্মওয়্যার আপডেট Xentoryx Labs নিজে USB দিয়ে করে।
+              নতুন আপডেট এলে বা মায়া ঠিকমতো না চললে আমাদের জানান:
             </p>
-            <ol className="mt-5 max-w-2xl list-decimal space-y-2 pl-5 font-mono text-xs text-black/70">
-              <li>৪-তারের ইউএসবি ডেটা কেবল দিয়ে মায়াকে পিসিতে লাগান।</li>
-              <li><b>MAYA Studio for Windows</b> সফটওয়্যারটি চালু করুন।</li>
-              <li>ডিভাইসের COM পোর্ট সিলেক্ট করুন (USB-JTAG/CDC বা CH340)।</li>
-              <li><b>Flash Firmware</b> বাটনে ক্লিক করুন। নতুন ফার্মওয়্যার ৯২১,৬০০ বডরেটে ফ্ল্যাশ হয়ে যাবে।</li>
-              <li>ফ্ল্যাশিং চলাকালীন কেবল খুলবেন না। কাজ শেষ হলে মায়া নিজে থেকেই রিস্টার্ট নেবে।</li>
-            </ol>
+            <ul className="mt-5 max-w-2xl list-disc space-y-2 pl-5 font-mono text-xs text-black/70">
+              <li>WhatsApp: <b>+880 1892-126867</b></li>
+              <li>ইমেইল: <b>xentoryxlabs@gmail.com</b></li>
+            </ul>
+            <p className="mt-3 font-mono text-xs text-black/60">
+              সাধারণ আপডেটে আপনার Wi-Fi, হাই স্কোর আর মায়ার নাম মুছে যায় না।
+            </p>
           </Section>
 
           {/* Section: Reset */}

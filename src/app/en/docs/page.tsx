@@ -7,6 +7,7 @@ import MayaFace from "@/components/site/MayaFace";
 import PrintButton from "@/components/site/PrintButton";
 import { GAMES, MOODS, SPECS } from "@/components/site/data";
 import { LangProvider } from "@/components/site/i18n";
+import { APP_RELEASE } from "@/lib/app-release";
 
 export const metadata: Metadata = {
   title: "Maya User Guide, Software & Comprehensive Troubleshooting | Xentoryx",
@@ -214,7 +215,7 @@ const TROUBLESHOOTING_CATEGORIES = [
       },
       {
         q: "The display backlight lights up white/grey, but no face or graphics appear",
-        a: "A blank illuminated screen indicates the display has power but SPI communication did not initialize cleanly. Unplug the USB-C cable, wait 5 seconds, and firmly reconnect it. If the issue persists, connect Maya to a PC and inspect the device in MAYA Studio to verify firmware integrity.",
+        a: "A blank illuminated screen indicates the display has power but SPI communication did not initialize cleanly. Unplug the USB-C cable, wait 5 seconds, and firmly reconnect it. If it still shows nothing, contact us on WhatsApp (+880 1892-126867) or at xentoryxlabs@gmail.com.",
       },
       {
         q: "Maya froze or is completely unresponsive to touch",
@@ -307,20 +308,16 @@ const TROUBLESHOOTING_CATEGORIES = [
     ],
   },
   {
-    category: "Firmware Flashing & MAYA Studio",
-    badge: "PC Software",
+    category: "Firmware Updates",
+    badge: "Support",
     items: [
       {
-        q: "MAYA Studio for Windows does not detect Maya's COM port",
-        a: "1) Ensure you are using a 4-wire USB-C data cable (some cables only contain power wires for charging phones). 2) In Windows Device Manager, look under 'Ports (COM & LPT)'. If you see a yellow exclamation mark, install the ESP32-C3 USB JTAG/CDC or CH340 driver. 3) Try a different USB port on your PC.",
+        q: "How do I update Maya's firmware?",
+        a: "You don't need to. Firmware updates are done by Xentoryx Labs over USB. If an update is released that you need, or Maya is not working right, contact us on WhatsApp (+880 1892-126867) or at xentoryxlabs@gmail.com and we will update her for you.",
       },
       {
-        q: "Firmware flashing fails halfway through or shows a write error",
-        a: "Force ROM bootloader mode: Unplug USB-C, press and hold the physical BOOT button on the rear of Maya, plug the USB-C cable back in, and release the BOOT button after 2 seconds. Now select the COM port in MAYA Studio and click Flash Firmware.",
-      },
-      {
-        q: "Will updating firmware erase my Wi-Fi credentials or high scores?",
-        a: "Standard firmware updates flash only the application code partition (0x10000) and preserve the non-volatile storage (NVS) partition where Wi-Fi passwords, high scores, and pairing tokens are stored.",
+        q: "Will an update erase my Wi-Fi or high scores?",
+        a: "No. A normal update keeps your Wi-Fi, game high scores, Maya's name and her pairing with your app.",
       },
     ],
   },
@@ -440,17 +437,17 @@ export default function DocsPage() {
                     </h2>
                   </div>
                   <span className="self-start rounded-full bg-[#1d1d1f] px-3 py-1 font-mono text-[11px] font-bold text-white">
-                    v1.5.2 Latest Suite
+                    v1.6.0
                   </span>
                 </div>
 
-                <div className="grid gap-6 md:grid-cols-2">
+                <div className="grid max-w-xl gap-6">
                   {/* Android Companion */}
                   <div className="flex flex-col justify-between rounded-2xl border border-black/10 bg-[#ffffff] p-6">
                     <div>
                       <div className="flex items-center gap-2 mb-2">
                         <span className="font-mono text-[10px] font-bold text-black/50">Mobile Companion</span>
-                        <span className="font-mono text-[10px] font-bold text-[#0071e3]">Android 8.0+</span>
+                        <span className="font-mono text-[10px] font-bold text-[#0071e3]">Android 7.0+</span>
                       </div>
                       <h3 className="font-bold text-xl text-[#1d1d1f]">MAYA Companion for Android</h3>
                       <p className="font-mono text-xs text-black/70 mt-2 leading-relaxed">
@@ -459,34 +456,12 @@ export default function DocsPage() {
                     </div>
                     <div className="mt-6">
                       <a
-                        href="/app"
+                        href={APP_RELEASE.file}
                         download
                         className="flex items-center justify-center gap-2 rounded-full bg-[#1d1d1f] px-6 py-3 font-mono text-xs font-bold text-white shadow-sm transition hover:bg-[#0071e3] hover:text-black"
                       >
                         <span>↓ Download APK Package</span>
-                        <span className="text-[10px] opacity-70">33.5 MB</span>
-                      </a>
-                    </div>
-                  </div>
-
-                  {/* Desktop Studio */}
-                  <div className="flex flex-col justify-between rounded-2xl border border-black/10 bg-[#ffffff] p-6">
-                    <div>
-                      <div className="flex items-center gap-2 mb-2">
-                        <span className="font-mono text-[10px] font-bold text-black/50">Desktop Diagnostic Suite</span>
-                        <span className="font-mono text-[10px] font-bold text-[#0071e3]">Windows 10 / 11</span>
-                      </div>
-                      <h3 className="font-bold text-xl text-[#1d1d1f]">MAYA Studio for Windows</h3>
-                      <p className="font-mono text-xs text-black/70 mt-2 leading-relaxed">
-                        High-speed USB flashing utility (921,600 baud), serial console diagnostic monitor, NVS configuration inspector, and custom eye expression testing.
-                      </p>
-                    </div>
-                    <div className="mt-6">
-                      <a
-                        href="#firmware"
-                        className="flex items-center justify-center gap-2 rounded-full border border-black/20 bg-white px-6 py-3 font-mono text-xs font-bold text-[#1d1d1f] shadow-sm transition hover:bg-[#e8e8ed]"
-                      >
-                        <span>USB Web / Desktop Flasher →</span>
+                        <span className="text-[10px] opacity-70">28 MB</span>
                       </a>
                     </div>
                   </div>
@@ -738,15 +713,16 @@ export default function DocsPage() {
           <Section>
             <H2 id="firmware" n={8}>Firmware Updates</H2>
             <p className={P}>
-              Maya can be flashed and upgraded using our desktop software or USB web updater:
+              You never have to install anything on a computer. Maya&rsquo;s firmware is updated by Xentoryx Labs over USB.
+              If a new update is out or Maya is not behaving as she should, get in touch:
             </p>
-            <ol className="mt-5 max-w-2xl list-decimal space-y-2 pl-5 font-mono text-xs text-black/70">
-              <li>Connect Maya to your computer using a verified 4-wire USB-C data cable.</li>
-              <li>Launch <b>MAYA Studio for Windows</b>.</li>
-              <li>Select your device&rsquo;s serial COM port (detected as USB-JTAG/CDC or CH340).</li>
-              <li>Click <b>Flash Firmware</b>. The tool uploads the latest binary at 921,600 baud.</li>
-              <li>Do not disconnect Maya while the flashing progress bar is running. Once complete, Maya reboots automatically.</li>
-            </ol>
+            <ul className="mt-5 max-w-2xl list-disc space-y-2 pl-5 font-mono text-xs text-black/70">
+              <li>WhatsApp: <b>+880 1892-126867</b></li>
+              <li>Email: <b>xentoryxlabs@gmail.com</b></li>
+            </ul>
+            <p className="mt-3 font-mono text-xs text-black/60">
+              A normal update keeps your Wi-Fi, high scores and Maya&rsquo;s name.
+            </p>
           </Section>
 
           {/* Section: Reset */}

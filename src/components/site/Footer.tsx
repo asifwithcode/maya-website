@@ -36,7 +36,7 @@ export default function Footer() {
         [isBn ? "ইউজার গাইড" : "User guide", docs],
         [isBn ? "Bluetooth ও Wi‑Fi সেটআপ" : "Bluetooth & Wi‑Fi setup", `${docs}#pairing`],
         [isBn ? "সমস্যা সমাধান" : "Troubleshooting", `${docs}#help`],
-        [isBn ? "অ্যান্ড্রয়েড অ্যাপ" : "Android app", "/app", true],
+        [isBn ? "অ্যান্ড্রয়েড অ্যাপ" : "Android app", pathFor(lang, "app")],
         [isBn ? "প্রাইভেসি পলিসি" : "Privacy policy", pathFor(lang, "privacy")],
         [isBn ? "ব্যবহারের শর্তাবলি" : "Terms of use", pathFor(lang, "terms")],
       ],

@@ -212,7 +212,7 @@ export const TERMS: Record<"en" | "bn", LegalDoc> = {
       {
         heading: "Firmware updates",
         body: [
-          "Maya's firmware may be updated to fix problems or add features. Updates are installed over USB with MAYA Studio and may change how Maya works. Keep Maya connected until an update you started has finished.",
+          "Maya's firmware may be updated to fix problems or add features. Updates are installed over USB by Xentoryx Labs and may change how Maya works.",
         ],
       },
       {
@@ -276,7 +276,7 @@ export const TERMS: Record<"en" | "bn", LegalDoc> = {
       {
         heading: "Firmware আপডেট",
         body: [
-          "সমস্যা ঠিক করতে বা ফিচার যোগ করতে মায়ার firmware আপডেট হতে পারে। আপডেট দেওয়া হয় USB দিয়ে MAYA Studio থেকে, আর এতে মায়ার কাজের ধরন বদলাতে পারে। আপনি আপডেট শুরু করলে শেষ না হওয়া পর্যন্ত মায়াকে সংযুক্ত রাখুন।",
+          "সমস্যা ঠিক করতে বা ফিচার যোগ করতে মায়ার firmware আপডেট হতে পারে। আপডেট Xentoryx Labs USB দিয়ে করে, আর এতে মায়ার কাজের ধরন বদলাতে পারে।",
         ],
       },
       {
