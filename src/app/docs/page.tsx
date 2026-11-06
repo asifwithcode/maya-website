@@ -82,12 +82,6 @@ const CONTROLS_BN: { action: string; face: string; screens: string; tag: string 
     tag: "ডুয়াল টাচ",
   },
   {
-    action: "T2 ২.৫ সেকেন্ড চেপে ধরা",
-    face: "যেকোনো অবস্থা থেকে সরাসরি পেয়ারিং মোড ও কিউআর কোড চালু।",
-    screens: "যেকোনো অবস্থা থেকে সরাসরি পেয়ারিং মোড ও কিউআর কোড চালু।",
-    tag: "শর্টকাট",
-  },
-  {
     action: "ESP32 BOOT বাটন (পেছনে)",
     face: "হার্ডওয়্যার সিস্টেম রিস্টার্ট / সফট রিবুট।",
     screens: "হার্ডওয়্যার সিস্টেম রিস্টার্ট / সফট রিবুট।",
@@ -258,8 +252,8 @@ const TROUBLESHOOTING_BN = [
         a: "ওয়াই-ফাই পাসওয়ার্ডে জটিল ইউনিকোড ক্যারেক্টার এড়িয়ে চলুন। মায়া সাধারণ বাসাবাড়ির WPA/WPA2-Personal নেটওয়ার্কে কাজ করে। বিশ্ববিদ্যালয় বা অফিসের যেসব ওয়াই-ফাইতে লগইন পেইজ বা ইউজারনেম দিতে হয় (Enterprise / Captive Portal) সেগুলো মায়ায় সরাসরি কাজ করবে না।",
       },
       {
-        q: "কাছে অ্যান্ড্রয়েড ফোন না থাকলে ওয়াই-ফাই সেটআপ করার উপায় কী?",
-        a: "মায়ার নিজস্ব হটস্পট মোড রয়েছে! ডান পা (T2) ২.৫ সেকেন্ড চেপে ধরলে স্ক্রিনে QR ও সেটআপ মোড আসবে। মায়া তখন 'MAYA-SETUP' নামের নিজস্ব ওয়াই-ফাই ছড়াবে। ল্যাপটপ বা আইফোন দিয়ে সেই ওয়াই-ফাইতে যুক্ত হয়ে ব্রাউজারে 192.168.4.1 লিখে এন্টার দিলেই ওয়াই-ফাই দেওয়ার ওয়েব পেজ পাওয়া যাবে।",
+        q: "অ্যাপ ছাড়া কি ওয়াই-ফাই সেট করা যায়?",
+        a: "না। মায়া ওয়াই-ফাই পায় শুধু MAYA Companion অ্যান্ড্রয়েড অ্যাপ থেকে, ব্লুটুথ দিয়ে। আপনার অ্যান্ড্রয়েড ফোন না থাকলে সেটআপের জন্য কারো ফোন ধার নিন: মায়া একবার অনলাইন হলে আর ফোন লাগে না।",
       },
       {
         q: "ওয়াই-ফাই ছাড়াও কি মায়াকে সম্পূর্ণ ব্যবহার করা সম্ভব?",
@@ -273,11 +267,11 @@ const TROUBLESHOOTING_BN = [
     items: [
       {
         q: "MAYA Companion অ্যাপে স্ক্যান করলে মায়াকে খুঁজে পাচ্ছে না",
-        a: "১) ফোনের ব্লুটুথ এবং লোকেশন (অ্যান্ড্রয়েড ১২+ এর ক্ষেত্রে Nearby Devices পারমিশন) চালু আছে কিনা দেখে নিন। ২) মায়াকে সেটআপ স্ক্রিনে রাখুন (T2 ২.৫ সেকেন্ড চেপে ধরুন)। ৩) স্ক্যানের সময় ফোনটিকে মায়ার ১ মিটারের মধ্যে রাখুন।",
+        a: "১) ফোনের ব্লুটুথ এবং লোকেশন (অ্যান্ড্রয়েড ১২+ এর ক্ষেত্রে Nearby Devices পারমিশন) চালু আছে কিনা দেখে নিন। ২) মায়ার পেয়ারিং স্ক্রিন খুলুন: T2 চেপে মেনু খুলুন, T2 চাপতে চাপতে Setup-এ যান, তারপর T1 চাপুন (ব্লুটুথ ও ওয়াই-ফাই সেটআপ অংশ দেখুন)। ৩) স্ক্যানের সময় ফোনটিকে মায়ার ১ মিটারের মধ্যে রাখুন।",
       },
       {
         q: "পেয়ারিং ফেইল বা 'Connecting' অবস্থায় আটকে যাচ্ছে",
-        a: "ফোনের সিস্টেম ব্লুটুথ সেটিংসে গিয়ে পূর্বে সেভ থাকা 'MAYA' বা 'ESP32' ডিভাইসটি 'Forget / Unpair' করে দিন। তারপর মায়ার T2 ২.৫ সেকেন্ড চেপে কিউআর স্ক্রিন রিফ্রেশ করুন এবং অ্যাপ থেকে পুনরায় পেয়ার করুন।",
+        a: "ফোনের সিস্টেম ব্লুটুথ সেটিংসে গিয়ে পূর্বে সেভ থাকা 'MAYA' বা 'ESP32' ডিভাইসটি 'Forget / Unpair' করে দিন। তারপর মেনু থেকে মায়ার Setup আবার খুলুন এবং অ্যাপ থেকে পুনরায় পেয়ার করুন।",
       },
       {
         q: "ব্লুটুথ দিয়ে মায়াকে ওয়াই-ফাই পাঠানো যাচ্ছে না",
@@ -480,7 +474,7 @@ export default function DocsPageBn() {
                 ],
                 [
                   "৪. ব্লুটুথ ও ওয়াই-ফাই পেয়ার",
-                  "MAYA Companion অ্যাপ অন করে 'Pair New Maya' চাপুন। ব্লুটুথে মায়াকে সিলেক্ট করে আপনার বাসার ২.৪ GHz ওয়াই-ফাই দিয়ে দিন।",
+                  "MAYA Companion অ্যাপ খুলে 'Pair a Maya' চাপুন। তালিকা থেকে মায়াকে বাছুন (বা তার Setup স্ক্রিনের QR স্ক্যান করুন), তারপর বাসার ২.৪ GHz ওয়াই-ফাই পাঠিয়ে দিন।",
                 ],
               ].map(([t, d], i) => (
                 <li key={t} className="rounded-2xl border border-black/10 bg-[#f5f5f7] p-5 flex flex-col justify-between">
@@ -539,9 +533,9 @@ export default function DocsPageBn() {
                 </p>
               </div>
               <div className="rounded-xl border border-black/10 bg-[#f5f5f7] p-4">
-                <span className="font-bold text-[#1d1d1f]">ইনস্ট্যান্ট পেয়ারিং শর্টকাট (T2 চেপে ধরা):</span>
+                <span className="font-bold text-[#1d1d1f]">পেয়ারিং স্ক্রিন (Setup):</span>
                 <p className="mt-1 text-black/70 leading-relaxed">
-                  যেকোনো অবস্থা থেকে ডান পা (T2) ২.৫ সেকেন্ড চেপে ধরলেই সাথে সাথে ব্লুটুথ ক্লেম ও Wi-Fi QR কোড স্ক্রিন খুলে যাবে।
+                  T2 চেপে মেনু খুলুন, T2 চাপতে চাপতে শেষ আইটেম <b>Setup</b>-এ যান, তারপর T1 চাপুন। মায়া সেটআপ হওয়ার আগ পর্যন্ত মেনুতে Setup থাকে; তারপর ওই জায়গায় Reset Device দেখায়।
                 </p>
               </div>
             </div>
@@ -635,33 +629,39 @@ export default function DocsPageBn() {
 
           {/* Section: Pairing & Wi-Fi */}
           <Section>
-            <H2 id="pairing" n={6}>ব্লুটুথ ও ওয়াই-ফাই সেটআপ</H2>
+            <H2 id="pairing" n={6}>ব্লুটুথ ও ওয়াই-ফাই সেটআপ</H2>
             <p className={P}>
-              মায়াকে ইন্টারনেটে যুক্ত করতে নিচের যেকোনো একটি সহজ পদ্ধতি ব্যবহার করুন:
+              মায়া আপনার ওয়াই-ফাই পায় MAYA Companion অ্যান্ড্রয়েড অ্যাপ থেকে, ব্লুটুথ দিয়ে। সেটআপের এটাই একমাত্র উপায়, লাগে প্রায় এক মিনিট।
             </p>
 
             <div className="mt-6 grid gap-6 md:grid-cols-2 font-mono text-xs">
               <div className="rounded-2xl border border-black/10 bg-[#f5f5f7] p-6">
-                <span className="font-bold text-xs text-[#0071e3]">পদ্ধতি ১ (সুপারিশকৃত)</span>
-                <h3 className="font-bold text-base text-[#1d1d1f] mt-1">অ্যান্ড্রয়েড অ্যাপ দিয়ে অটো পেয়ারিং</h3>
+                <span className="font-bold text-xs text-[#0071e3]">মায়ার মধ্যে</span>
+                <h3 className="font-bold text-base text-[#1d1d1f] mt-1">পেয়ারিং স্ক্রিন খুলুন</h3>
                 <ol className="mt-3 list-decimal space-y-2 pl-4 text-black/75 leading-relaxed">
-                  <li>মায়াকে অন করে MAYA Companion অ্যাপটি চালু করুন।</li>
-                  <li><b>Pair New Maya</b> বাটনে চাপ দিন। অ্যাপটি ব্লুটুথে মায়াকে স্বয়ংক্রিয়ভাবে খুঁজে নেবে।</li>
-                  <li>মায়াকে সিলেক্ট করে আপনার ওয়াই-ফাই পাসওয়ার্ড দিয়ে দিন।</li>
-                  <li>এনক্রিপ্টেড ব্লুটুথের মাধ্যমে পাসওয়ার্ড পৌঁছে যাবে এবং মায়া সফলভাবে কানেক্ট হয়ে যাবে।</li>
+                  <li>মায়াকে USB-C দিয়ে চালু করুন। নতুন মায়া নিজে থেকেই ব্লুটুথ পেয়ারিং চালু করে।</li>
+                  <li><b>T2</b> (ডান পা) চেপে মেনু খুলুন।</li>
+                  <li><b>T2</b> চাপতে থাকুন যতক্ষণ না শেষ আইটেম <b>Setup &middot; PAIR WITH APP</b> আসে।</li>
+                  <li><b>T1</b> (বাম পা) চাপুন। স্ক্রিনে <b>PAIR WITH APP</b>, মায়ার ব্লুটুথ নাম আর একটা QR কোড দেখাবে। এই স্ক্রিনেই রাখুন: পা ছুঁলে স্ক্রিনটা বন্ধ হয়ে যায়।</li>
                 </ol>
               </div>
 
               <div className="rounded-2xl border border-black/10 bg-[#f5f5f7] p-6">
-                <span className="font-bold text-xs text-[#0071e3]">পদ্ধতি ২ (অ্যাপ ছাড়া)</span>
-                <h3 className="font-bold text-base text-[#1d1d1f] mt-1">মায়ার নিজস্ব ওয়াই-ফাই হটস্পট</h3>
+                <span className="font-bold text-xs text-[#0071e3]">অ্যাপে</span>
+                <h3 className="font-bold text-base text-[#1d1d1f] mt-1">পেয়ার করে ওয়াই-ফাই পাঠান</h3>
                 <ol className="mt-3 list-decimal space-y-2 pl-4 text-black/75 leading-relaxed">
-                  <li>ডান পা (T2) ২.৫ সেকেন্ড চেপে ধরে সেটআপ মোডে যান।</li>
-                  <li>মায়ার স্ক্রিনে পাসওয়ার্ডসহ <code className="rounded bg-black/10 px-1 font-bold text-[#0071e3]">MAYA-SETUP</code> হটস্পট ভেসে উঠবে।</li>
-                  <li>ফোন বা ল্যাপটপের ওয়াই-ফাই দিয়ে এতে যুক্ত হোন।</li>
-                  <li>ব্রাউজারে <code className="font-bold text-[#1d1d1f]">http://192.168.4.1</code> লিখে আপনার বাসার ওয়াই-ফাই সেভ করে দিন।</li>
+                  <li><a href="/app" className="text-[#0071e3] underline">maya.xentoryxlabs.site/app</a> থেকে অ্যাপ ইন্সটল করে সাইন ইন করুন।</li>
+                  <li>ড্যাশবোর্ডে <b>Pair a Maya</b> চাপুন। Bluetooth, Location আর Nearby devices-এর অনুমতি চাইলে দিন।</li>
+                  <li><b>Discovered Maya Devices</b> তালিকা থেকে আপনার মায়ায় চাপুন, অথবা <b>Scan Maya QR Code</b> চেপে মায়ার স্ক্রিনের QR স্ক্যান করুন।</li>
+                  <li>ফোনে আসা ব্লুটুথ <b>pairing request</b>-এ রাজি হন।</li>
+                  <li>বাসার ২.৪ GHz ওয়াই-ফাই বাছুন (বা নিজে লিখুন), পাসওয়ার্ড দিয়ে <b>Send Wi-Fi to Maya</b> চাপুন।</li>
+                  <li>মায়ার স্ক্রিনে <b>CONNECTING</b>, তারপর <b>HELLO</b> আসবে। অ্যাপে দেখাবে <b>Maya is Ready to Explore!</b></li>
                 </ol>
               </div>
+            </div>
+
+            <div className="mt-4 rounded-xl border border-black/10 bg-[#ffffff] p-4 font-mono text-xs text-black/70 leading-relaxed">
+              <b>আগেই সেটআপ করা?</b> তখন মেনুতে Setup থাকে না। চালুর পর ৯০ সেকেন্ড মায়া তার সেভ করা ওয়াই-ফাই না পেলে (নতুন রাউটার বা পাসওয়ার্ড) নিজেই ব্লুটুথ পেয়ারিং চালু করে: অ্যাপ থেকে আবার পেয়ার করুন। মায়াকে অন্য কাউকে দিতে চাইলে আগে <b>Reset Device</b> করুন।
             </div>
 
             <div className="mt-4 rounded-xl border border-black/10 bg-[#ffffff] p-4 font-mono text-xs text-black/70">
@@ -803,10 +803,10 @@ export default function DocsPageBn() {
                 <div className="text-xs font-mono text-white/70">আমাদের ইঞ্জিনিয়ারিং সাপোর্ট টিম ২৪ ঘণ্টার মধ্যে সহায়তা প্রদান করে।</div>
               </div>
               <a
-                href="mailto:contact@xentoryx.com"
+                href="mailto:xentoryxlabs@gmail.com"
                 className="rounded-full bg-[#0071e3] px-6 py-3 font-mono text-xs font-bold text-black transition hover:bg-white"
               >
-                contact@xentoryx.com
+                xentoryxlabs@gmail.com
               </a>
             </div>
 

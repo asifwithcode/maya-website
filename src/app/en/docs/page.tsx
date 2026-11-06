@@ -82,12 +82,6 @@ const CONTROLS: { action: string; face: string; screens: string; tag: string }[]
     tag: "Dual Touch",
   },
   {
-    action: "Hold T2 for 2.5 s",
-    face: "Instant Setup / BLE Pairing mode from anywhere.",
-    screens: "Instant Setup / BLE Pairing mode from anywhere.",
-    tag: "Setup Shortcut",
-  },
-  {
     action: "ESP32 BOOT Button (Base)",
     face: "Hardware system restart / warm reboot.",
     screens: "Hardware system restart / warm reboot.",
@@ -258,8 +252,8 @@ const TROUBLESHOOTING_CATEGORIES = [
         a: "Verify that your Wi-Fi password does not contain unsupported high-byte Unicode characters. Maya connects to standard WPA / WPA2-Personal networks; 802.1X Enterprise networks (such as university or corporate networks requiring a username and certificate) and public captive portal login pages are not supported.",
       },
       {
-        q: "How do I setup Wi-Fi if I don't have the Android app nearby?",
-        a: "Maya has a built-in fallback Access Point mode! Put Maya into Setup mode (hold T2 for 2.5s). Maya broadcasts her own Wi-Fi hotspot named 'MAYA-SETUP'. Connect to it with any smartphone, iPhone, or laptop, enter the password shown on her screen, and open 192.168.4.1 in your browser to configure your Wi-Fi credentials.",
+        q: "Can I set up Wi-Fi without the app?",
+        a: "No. Maya gets your Wi-Fi only from the MAYA Companion Android app, over Bluetooth. If you don't have an Android phone, borrow one for the setup: once Maya is online she works without it.",
       },
       {
         q: "Can Maya be used completely without any Wi-Fi connection?",
@@ -273,11 +267,11 @@ const TROUBLESHOOTING_CATEGORIES = [
     items: [
       {
         q: "The MAYA Companion App cannot discover Maya during scanning",
-        a: "1) Ensure Bluetooth and Location services ('Nearby Devices' permission on Android 12+) are turned ON with all permissions granted. 2) Ensure Maya is on the Setup screen (hold T2 for 2.5 seconds). 3) Keep your phone within 1 meter of Maya during discovery.",
+        a: "1) Ensure Bluetooth and Location services ('Nearby Devices' permission on Android 12+) are turned ON with all permissions granted. 2) Open Maya's pairing screen: tap T2 to open the menu, tap T2 until Setup, then tap T1 (see BLE Pairing & Wi-Fi Setup). 3) Keep your phone within 1 meter of Maya during discovery.",
       },
       {
         q: "Pairing fails, hangs at 'Connecting', or times out",
-        a: "Open your Android device's system Bluetooth settings. If you previously paired Maya, locate 'MAYA' or 'ESP32' in the paired devices list and tap 'Forget / Unpair'. Then restart the MAYA Companion App, hold T2 on Maya for 2.5s to refresh the QR pairing state, and retry.",
+        a: "Open your Android device's system Bluetooth settings. If you previously paired Maya, locate 'MAYA' or 'ESP32' in the paired devices list and tap 'Forget / Unpair'. Then restart the MAYA Companion App, open Setup on Maya again from the menu, and retry.",
       },
       {
         q: "Wi-Fi details won't send to Maya over Bluetooth",
@@ -492,7 +486,7 @@ export default function DocsPage() {
                 ],
                 [
                   "4. Mobile BLE Pairing",
-                  "Open the MAYA Companion App, tap 'Pair New Maya', scan the on-screen QR code or let BLE auto-discover her, and configure your 2.4 GHz Wi-Fi.",
+                  "Open the MAYA Companion app, tap 'Pair a Maya', pick your Maya from the list (or scan the QR on her Setup screen) and send her your 2.4 GHz Wi-Fi.",
                 ],
               ].map(([t, d], i) => (
                 <li key={t} className="rounded-2xl border border-black/10 bg-[#f5f5f7] p-5 flex flex-col justify-between">
@@ -551,9 +545,9 @@ export default function DocsPage() {
                 </p>
               </div>
               <div className="rounded-xl border border-black/10 bg-[#f5f5f7] p-4">
-                <span className="font-bold text-[#1d1d1f]">Instant Setup Shortcut (T2 Hold):</span>
+                <span className="font-bold text-[#1d1d1f]">Pairing screen (Setup):</span>
                 <p className="mt-1 text-black/70 leading-relaxed">
-                  Hold T2 (right foot) for 2.5 seconds from anywhere to immediately pull up the Bluetooth LE Claim and Wi-Fi QR Code screen.
+                  Tap T2 to open the menu, keep tapping T2 to the last item, <b>Setup</b>, and tap T1. Setup is in the menu until Maya is set up; after that its place shows Reset Device.
                 </p>
               </div>
             </div>
@@ -649,31 +643,37 @@ export default function DocsPage() {
           <Section>
             <H2 id="pairing" n={6}>BLE Pairing & Wi-Fi Setup</H2>
             <p className={P}>
-              Maya supports two simple configuration methods. Follow either path to get your companion online:
+              Maya gets your Wi-Fi from the MAYA Companion Android app over Bluetooth. This is the only way to set her up, and it takes about a minute.
             </p>
 
             <div className="mt-6 grid gap-6 md:grid-cols-2 font-mono text-xs">
               <div className="rounded-2xl border border-black/10 bg-[#f5f5f7] p-6">
-                <span className="font-bold text-xs text-[#0071e3]">Method A (Recommended)</span>
-                <h3 className="font-bold text-base text-[#1d1d1f] mt-1">Automatic Bluetooth LE Pairing</h3>
+                <span className="font-bold text-xs text-[#0071e3]">On Maya</span>
+                <h3 className="font-bold text-base text-[#1d1d1f] mt-1">Open the pairing screen</h3>
                 <ol className="mt-3 list-decimal space-y-2 pl-4 text-black/75 leading-relaxed">
-                  <li>Power on Maya and open the MAYA Companion Android App.</li>
-                  <li>Tap <b>Pair New Maya</b>. The app scans for nearby Maya beacons over Bluetooth Low Energy.</li>
-                  <li>Select your device and enter your Wi-Fi credentials when prompted.</li>
-                  <li>Credentials are securely sent via encrypted BLE, and Maya joins your Wi-Fi automatically.</li>
+                  <li>Plug in Maya. A new Maya turns on Bluetooth pairing by herself.</li>
+                  <li>Tap <b>T2</b> (right foot) to open the menu.</li>
+                  <li>Keep tapping <b>T2</b> until the last item, <b>Setup &middot; PAIR WITH APP</b>.</li>
+                  <li>Tap <b>T1</b> (left foot). Maya shows <b>PAIR WITH APP</b>, her Bluetooth name and a QR code. Leave her on this screen: touching a foot closes it.</li>
                 </ol>
               </div>
 
               <div className="rounded-2xl border border-black/10 bg-[#f5f5f7] p-6">
-                <span className="font-bold text-xs text-[#0071e3]">Method B (No App Required)</span>
-                <h3 className="font-bold text-base text-[#1d1d1f] mt-1">Standalone Web Access Point</h3>
+                <span className="font-bold text-xs text-[#0071e3]">In the app</span>
+                <h3 className="font-bold text-base text-[#1d1d1f] mt-1">Pair and send your Wi-Fi</h3>
                 <ol className="mt-3 list-decimal space-y-2 pl-4 text-black/75 leading-relaxed">
-                  <li>Hold T2 (right foot) for 2.5 seconds to enter Setup screen.</li>
-                  <li>Maya broadcasts a Wi-Fi hotspot named <code className="rounded bg-black/10 px-1 font-bold text-[#0071e3]">MAYA-SETUP</code>.</li>
-                  <li>Connect to this hotspot from your phone or laptop. The password is displayed on Maya&rsquo;s screen.</li>
-                  <li>Open browser at <code className="font-bold text-[#1d1d1f]">http://192.168.4.1</code> and submit your Wi-Fi credentials.</li>
+                  <li>Install the app from <a href="/en/app" className="text-[#0071e3] underline">maya.xentoryxlabs.site/app</a> and sign in.</li>
+                  <li>On the dashboard tap <b>Pair a Maya</b>. Allow Bluetooth, Location and Nearby devices when asked.</li>
+                  <li>Under <b>Discovered Maya Devices</b> tap your Maya, or tap <b>Scan Maya QR Code</b> and scan the QR on her screen.</li>
+                  <li>Accept the Bluetooth <b>pairing request</b> on your phone.</li>
+                  <li>Pick your 2.4 GHz Wi-Fi (or enter it manually), type the password and tap <b>Send Wi-Fi to Maya</b>.</li>
+                  <li>Maya shows <b>CONNECTING</b>, then <b>HELLO</b>. The app says <b>Maya is Ready to Explore!</b></li>
                 </ol>
               </div>
+            </div>
+
+            <div className="mt-4 rounded-xl border border-black/10 bg-[#ffffff] p-4 font-mono text-xs text-black/70 leading-relaxed">
+              <b>Already set up?</b> Setup is no longer in the menu. If Maya can&rsquo;t reach her saved Wi-Fi for 90 seconds after you plug her in (new router or password), she turns on Bluetooth pairing by herself: pair again from the app. To give Maya to someone else, use <b>Reset Device</b> first.
             </div>
 
             <div className="mt-4 rounded-xl border border-black/10 bg-[#ffffff] p-4 font-mono text-xs text-black/70">
@@ -811,10 +811,10 @@ export default function DocsPage() {
                 <div className="text-xs font-mono text-white/70">Our engineering and hardware support team responds within 24 hours.</div>
               </div>
               <a
-                href="mailto:contact@xentoryx.com"
+                href="mailto:xentoryxlabs@gmail.com"
                 className="rounded-full bg-[#0071e3] px-6 py-3 font-mono text-xs font-bold text-black transition hover:bg-white"
               >
-                contact@xentoryx.com
+                xentoryxlabs@gmail.com
               </a>
             </div>
 
