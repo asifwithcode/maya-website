@@ -38,14 +38,15 @@ export default function StructuredData({ lang, content }: { lang: Lang; content:
     {
       "@type": "Product",
       "@id": `${SITE_URL}/#product`,
-      name: isBn ? "মায়া — জীবন্ত মুখের ডেস্ক রোবট" : "Maya — the living desk robot",
+      name: isBn ? "মায়া (MAYA) ডেস্ক কম্প্যানিয়ন রোবট" : "MAYA Desk Companion Robot",
+      alternateName: ["MAYA robot", "MAYA desktop robot", "Smart desk robot", "মায়া রোবট"],
       description: isBn
-        ? "নরম ডেস্ক রোবট: গোল জীবন্ত মুখ, আটটা মুড, এগারোটা স্ক্রিন, সাতটা গেম আর বাংলা চিরকুট।"
-        : "A soft desk companion robot with a round living face, 8 moods, 11 screens, 7 games and Bangla notes.",
+        ? "স্মার্ট ডেস্ক কম্প্যানিয়ন রোবট: গোল জীবন্ত মুখ, আটটা মুড, এগারোটা স্ক্রিন, সাতটা গেম আর বাংলা চিরকুট। অফিস বা পড়ার টেবিলের জন্য।"
+        : "A smart desk companion robot with a round living face, 8 moods, 11 screens, 7 games and Bangla notes, made for your office or study desk.",
       image: PHOTOS,
       brand: { "@type": "Brand", name: "Maya" },
       manufacturer: { "@id": orgId },
-      category: "Desk robot",
+      category: "Desk companion robot",
       url: pageUrl,
       offers: {
         "@type": "Offer",

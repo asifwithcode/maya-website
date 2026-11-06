@@ -69,12 +69,17 @@ export function VisionHero() {
         <div className="vh-copy absolute inset-x-0 bottom-0 px-5 pb-8 sm:px-10 sm:pb-14 lg:px-[6vw]">
           <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between md:gap-8">
             <div>
-              <h1 className="flex overflow-hidden pb-1 text-[56px] font-semibold leading-[0.95] tracking-[-0.04em] text-[#1d1d1f] sm:text-[96px] lg:text-[128px]">
-                {"Maya".split("").map((c, i) => (
-                  <span key={i} className="vh-letter inline-block">
-                    {c}
-                  </span>
-                ))}
+              <h1>
+                <span className="vh-fade block text-[15px] font-semibold text-[#bf4800] opacity-0 sm:text-[17px]">
+                  {isBn ? "স্মার্ট ডেস্ক কম্প্যানিয়ন রোবট" : "Smart Desk Companion Robot"}
+                </span>{" "}
+                <span className="flex overflow-hidden pb-1 text-[56px] font-semibold leading-[0.95] tracking-[-0.04em] text-[#1d1d1f] sm:text-[96px] lg:text-[128px]">
+                  {"Maya".split("").map((c, i) => (
+                    <span key={i} className="vh-letter inline-block">
+                      {c}
+                    </span>
+                  ))}
+                </span>
               </h1>
               <p className="vh-fade mt-2 max-w-[600px] text-[19px] font-semibold leading-snug tracking-[-0.015em] text-[#1d1d1f] opacity-0 sm:text-[24px] lg:text-[28px]">
                 {isBn

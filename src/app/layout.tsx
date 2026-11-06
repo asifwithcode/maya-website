@@ -7,12 +7,24 @@ const DESCRIPTION =
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://themaya.site"),
-  title: "MAYA — The Living Desk Robot | Xentoryx",
+  title: "MAYA — Desk Companion Robot | Xentoryx",
   description: DESCRIPTION,
   applicationName: "Maya",
   keywords: [
-    "Maya robot", "desk robot", "desk companion", "AI desk robot Bangladesh", "robot toy Bangladesh",
-    "মায়া রোবট", "ডেস্ক রোবট", "বাংলা রোবট", "Xentoryx",
+    // primary
+    "desk companion robot", "desktop companion robot", "smart desk robot", "interactive desk robot",
+    "mini desktop robot", "personal desk robot", "smart companion device",
+    // secondary / long tail
+    "cute desk robot", "smart desktop gadget", "interactive desktop gadget", "smart office companion",
+    "IoT desktop device", "mini robot for home and office", "unique smart desk gadgets",
+    "small robot for desktop", "desk robot gift",
+    // Bangladesh
+    "desk companion robot Bangladesh", "smart desk robot Bangladesh", "desktop robot price in Bangladesh",
+    "robot price in Bangladesh", "smart gadgets Bangladesh", "unique desk gadgets BD",
+    // brand
+    "MAYA robot", "MAYA desk companion", "MAYA desktop robot", "MAYA robot Bangladesh", "Xentoryx",
+    // Bangla
+    "মায়া রোবট", "ডেস্ক রোবট", "ডেস্ক কম্প্যানিয়ন রোবট", "স্মার্ট গ্যাজেট", "রোবটের দাম", "বাংলা রোবট",
   ],
   authors: [{ name: "Xentoryx Labs", url: "https://themaya.site" }],
   creator: "Xentoryx Labs",
@@ -31,13 +43,13 @@ export const metadata: Metadata = {
     siteName: "MAYA by Xentoryx Labs",
     locale: "bn_BD",
     alternateLocale: ["en_US"],
-    title: "MAYA — The Living Desk Robot",
+    title: "MAYA — Desk Companion Robot",
     description: DESCRIPTION,
     images: [{ url: "/images/og-maya.jpg", width: 1200, height: 630, alt: "MAYA desk robot, Bunny edition" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "MAYA — The Living Desk Robot",
+    title: "MAYA — Desk Companion Robot",
     description: DESCRIPTION,
     images: ["/images/og-maya.jpg"],
   },

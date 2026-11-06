@@ -7,6 +7,7 @@ import Editions from "./Editions";
 import AppDownload from "./AppDownload";
 import Specs from "./Specs";
 import Reserve from "./Reserve";
+import Faq from "./Faq";
 import Footer from "./Footer";
 import SmoothScroll from "./SmoothScroll";
 import AutoReveal from "./AutoReveal";
@@ -39,6 +40,7 @@ export default async function HomePage({ lang }: { lang: Lang }) {
           <Editions />
           <AppDownload />
           <Specs />
+          <Faq />
           <Reserve />
         </main>
         <Footer />
