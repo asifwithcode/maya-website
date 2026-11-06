@@ -2,85 +2,67 @@
 
 import type { ReactNode } from "react";
 import MayaFace from "./MayaFace";
-import { gsap, revealChildren, revealLines, useGsap } from "./motion";
 import { useT } from "./i18n";
+import { useContent } from "./content";
 
-// texts live in i18n.tsx (features.items), in the same order
-const ART: ReactNode[] = [
-  (
-      <div key="art0" className="rounded-full border-[6px] border-[#f4efe9] shadow-lg">
-        <MayaFace mood="idle" className="h-20 w-20" still />
-      </div>
-  ),
-  (
-      <div key="art1" className="rounded-2xl bg-night px-4 py-3 font-bangla text-sm leading-snug text-white shadow-lg">
-        <span className="text-eye">নিজের খেয়াল রাখো</span>
-        <br />
-        পানি খাও!
-      </div>
-  ),
-  (
-      <div key="art2" className="flex gap-2">
-        <span className="grid h-12 w-16 place-items-center rounded-xl bg-eye text-xs font-semibold text-white">T1</span>
-        <span className="grid h-12 w-16 place-items-center rounded-xl bg-ink text-xs font-semibold text-paper">T2</span>
-      </div>
-  ),
-  (
-      <svg key="art3" viewBox="0 0 80 80" className="h-20 w-20" aria-hidden="true">
-        <circle cx="40" cy="40" r="32" fill="none" stroke="currentColor" strokeOpacity="0.12" strokeWidth="7" />
-        <circle data-ring cx="40" cy="40" r="32" fill="none" stroke="#e1899b" strokeWidth="7" strokeLinecap="round" pathLength={1} strokeDasharray="1" strokeDashoffset="0.3" transform="rotate(-90 40 40)" />
-        <text x="40" y="46" textAnchor="middle" fontSize="18" fontWeight="600" fill="currentColor">25</text>
-      </svg>
-  ),
-  (
-      <svg key="art4" viewBox="0 0 80 60" className="h-16 w-20" aria-hidden="true">
-        <path d="M8 26a46 46 0 0 1 64 0M18 36a32 32 0 0 1 44 0M28 46a18 18 0 0 1 24 0" fill="none" stroke="currentColor" strokeWidth="5" strokeLinecap="round" />
-        <circle cx="40" cy="54" r="4" fill="#e1899b" />
-      </svg>
-  ),
-  (
-      <svg key="art5" viewBox="0 0 64 72" className="h-16 w-14" aria-hidden="true">
-        <path d="M18 30v-8a14 14 0 0 1 28 0v8" fill="none" stroke="currentColor" strokeWidth="5" />
-        <rect x="8" y="30" width="48" height="36" rx="10" fill="currentColor" />
-        <circle cx="32" cy="46" r="5" fill="#e1899b" />
-      </svg>
-  ),
+const VISUALS: ReactNode[] = [
+  <div key="face" className="h-28 w-28 overflow-hidden rounded-full bg-black shadow-[0_0_0_6px_#1d1d1f]">
+    <MayaFace mood="idle" className="h-full w-full p-3" still />
+  </div>,
+  <div key="note" className="rounded-2xl bg-[#1d1d1f] px-5 py-4 text-left shadow-sm">
+    <span className="text-[11px] text-[#86868b]">মায়া</span>
+    <p className="mt-0.5 font-bangla text-[17px] font-semibold text-white">নিজের খেয়াল রাখো, পানি খাও!</p>
+  </div>,
+  <div key="touch" className="flex gap-3">
+    <span className="flex h-16 w-16 items-center justify-center rounded-full bg-[#f5f5f7] text-[13px] text-[#6e6e73]">L</span>
+    <span className="flex h-16 w-16 items-center justify-center rounded-full bg-[#0071e3] text-[13px] text-white">R</span>
+  </div>,
+  <div key="timer" className="relative flex h-28 w-28 items-center justify-center">
+    <svg viewBox="0 0 100 100" className="h-full w-full -rotate-90">
+      <circle cx="50" cy="50" r="42" fill="none" stroke="#e8e8ed" strokeWidth="7" />
+      <circle cx="50" cy="50" r="42" fill="none" stroke="#0071e3" strokeWidth="7" strokeDasharray="263.9" strokeDashoffset="66" strokeLinecap="round" />
+    </svg>
+    <span className="absolute text-[20px] font-semibold tabular-nums text-[#1d1d1f]">25:00</span>
+  </div>,
+  <div key="pair" className="flex items-center gap-3 text-[13px] text-[#1d1d1f]">
+    <span className="rounded-full bg-[#f5f5f7] px-4 py-2">Bluetooth</span>
+    <span className="text-[#86868b]">→</span>
+    <span className="rounded-full bg-[#f5f5f7] px-4 py-2">Wi‑Fi</span>
+  </div>,
+  <svg key="lock" viewBox="0 0 48 48" className="h-20 w-20 text-[#1d1d1f]" fill="none" stroke="currentColor" strokeWidth="2.5">
+    <rect x="10" y="21" width="28" height="20" rx="5" />
+    <path d="M16 21v-5a8 8 0 0 1 16 0v5" strokeLinecap="round" />
+  </svg>,
 ];
 
 export default function Features() {
-  const { t } = useT();
-  const ref = useGsap<HTMLElement>((root, reduce) => {
-    revealLines(root.querySelector("h2")!, reduce);
-    revealChildren(root, reduce);
-    if (reduce) return;
-    gsap.fromTo(
-      root.querySelector("[data-ring]"),
-      { attr: { "stroke-dashoffset": 1 } },
-      { attr: { "stroke-dashoffset": 0.3 }, duration: 1.6, ease: "power2.out", scrollTrigger: { trigger: root.querySelector("[data-ring]"), start: "top 85%" } },
-    );
-  });
+  const { lang, t } = useT();
+  const { copy } = useContent();
+  const items = copy?.features?.items;
 
   return (
-    <section ref={ref} id="features" className="bg-paper px-5 py-28 sm:px-8 md:py-40">
-      <div className="mx-auto grid max-w-7xl gap-14 md:grid-cols-[0.9fr_1.1fr]">
-        <div className="md:sticky md:top-28 md:self-start">
-          <p className="text-[0.7rem] font-medium uppercase tracking-[0.22em] text-eye-deep">{t.features.kicker}</p>
-          <h2 className="mt-3 text-5xl font-semibold leading-[0.98] tracking-[-0.04em] sm:text-7xl">
-            {t.features.title} <span className="text-ink-faint">{t.features.titleSoft}</span>
+    <section id="features" className="bg-[#f5f5f7] px-4 py-14 sm:px-6 sm:py-20">
+      <div className="mx-auto max-w-[1024px]">
+        <div className="text-center">
+          <h2 className="headline text-[#1d1d1f]">
+            {t.features.title} <span className="text-[#86868b]">{t.features.titleSoft}</span>
           </h2>
         </div>
-        <ol data-reveal-group className="border-t border-ink/10">
-          {ART.map((art, i) => (
-            <li key={i} data-reveal className="grid grid-cols-[2.5rem_1fr] gap-x-4 border-b border-ink/10 py-9 sm:grid-cols-[3rem_1fr_7rem] sm:items-center">
-              <span className="font-mono text-xs text-ink-faint">{String(i + 1).padStart(2, "0")}</span>
-              <div>
-                <h3 className="text-2xl font-semibold tracking-tight">{t.features.items[i][0]}</h3>
-                <p className="mt-2 max-w-md text-ink-soft">{t.features.items[i][1]}</p>
+
+        <div className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+          {t.features.items.map(([fallbackTitle, fallbackDesc], k) => {
+            const it = items?.[k];
+            const title = it ? (lang === "bn" ? it.titleBn : it.titleEn) : fallbackTitle;
+            const desc = it ? (lang === "bn" ? it.descBn : it.descEn) : fallbackDesc;
+            return (
+              <div key={k} className="lift flex flex-col rounded-[28px] bg-white p-8 sm:p-10">
+                <div className="flex h-40 items-center justify-center">{VISUALS[k]}</div>
+                <h3 className="mt-8 text-[24px] font-semibold leading-tight tracking-tight text-[#1d1d1f]">{title}</h3>
+                <p className="mt-3 text-[17px] leading-relaxed text-[#6e6e73]">{desc}</p>
               </div>
-              <div className="col-start-2 mt-5 flex sm:col-start-3 sm:mt-0 sm:justify-end">{art}</div>
-            </li>
-          ))}
-        </ol>
+            );
+          })}
+        </div>
       </div>
     </section>
   );

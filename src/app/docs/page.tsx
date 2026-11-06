@@ -8,96 +8,357 @@ import PrintButton from "@/components/site/PrintButton";
 import { GAMES, MOODS, SPECS } from "@/components/site/data";
 
 export const metadata: Metadata = {
-  title: "Maya user guide",
+  title: "Maya User Guide, Software & Comprehensive Troubleshooting | Xentoryx",
   description:
-    "Set up Maya, learn the touch controls, moods, menu and games, pair her with the app, update firmware and reset her.",
+    "Complete technical guide for Maya desktop companion: unboxing, BLE pairing, dual capacitive touch controls, 8 moods, 10 menu screens, 7 arcade games, firmware updates, and comprehensive troubleshooting tips.",
+  alternates: { languages: { en: "/docs", bn: "/bn/docs" } },
 };
 
-// Everything here follows the current firmware (Firmware/src/main.cpp, MayaMenuUI, MayaGamesUI).
 const TOC = [
-  ["start", "Quick start"],
-  ["controls", "Touch controls"],
-  ["moods", "Moods"],
-  ["menu", "The menu"],
-  ["games", "Games"],
-  ["pairing", "Pairing and Wi-Fi"],
-  ["accessories", "Accessories"],
-  ["firmware", "Firmware updates"],
-  ["reset", "Factory reset"],
-  ["care", "Care and safety"],
-  ["specs", "Specifications"],
-  ["help", "Troubleshooting"],
+  ["apps", "Software & Apps"],
+  ["start", "Quick Start Guide"],
+  ["controls", "Touch Controls & Gestures"],
+  ["moods", "Moods & Personality"],
+  ["menu", "Carousel Menu & Screens"],
+  ["games", "Arcade Games"],
+  ["pairing", "BLE Pairing & Wi-Fi"],
+  ["accessories", "Accessories & Modular Snaps"],
+  ["firmware", "Firmware Updates"],
+  ["reset", "Factory Reset"],
+  ["care", "Care & Maintenance"],
+  ["specs", "Technical Specifications"],
+  ["help", "Troubleshooting & FAQs"],
 ] as const;
 
-const CONTROLS: [string, string, string][] = [
-  ["Tap T1 (head)", "Pet her. She gets happy.", "Select, jump, flap, fire, drop"],
-  ["Tap T1 3–4 times fast", "She gets annoyed", "—"],
-  ["Tap T1 5+ times fast", "She gets angry", "—"],
-  ["Tap T2 (side)", "Open the menu", "Menu: next item. Screens: back to the menu"],
-  ["Hold T1 for 1 s", "—", "Leave the current screen or game"],
-  ["Hold T2 for 1 s", "—", "Leave the games list, back to the menu"],
-  ["Hold T1 + T2 for 2 s", "Go to sleep / wake up", "—"],
-  ["Hold T2 for 2.5 s", "Setup / pairing mode, from anywhere", "Setup / pairing mode, from anywhere"],
+const CONTROLS: { action: string; face: string; screens: string; tag: string }[] = [
+  {
+    action: "Tap T1 (Left Foot)",
+    face: "Pet her! Cycles Happy, Wink, Adore, and Laugh expressions with Bangla dialogue.",
+    screens: "Select item, Jump (Dino), Flap (Flappy), Fire (Shooter), Drop (Stack), Lap (Stopwatch).",
+    tag: "Primary Tap",
+  },
+  {
+    action: "Rapid Tap T1 (3–4 times)",
+    face: "She gets annoyed with dizzy eyes and shakes her head.",
+    screens: "—",
+    tag: "Gesture",
+  },
+  {
+    action: "Rapid Tap T1 (5+ times)",
+    face: "She gets angry! Eyes burst with fury and she demands you stop poking her.",
+    screens: "—",
+    tag: "Gesture",
+  },
+  {
+    action: "Hold T1 for 800 ms",
+    face: "Deep affection reaction! Animated beating hearts and romantic eye glow.",
+    screens: "—",
+    tag: "Hold",
+  },
+  {
+    action: "Tap T2 (Right Foot)",
+    face: "Opens the 3D glowing carousel menu.",
+    screens: "Menu: Step to next screen. Inside screens: Back / cancel.",
+    tag: "Menu / Nav",
+  },
+  {
+    action: "Hold T1 for 1.0 s",
+    face: "—",
+    screens: "Exit active screen or quit current arcade minigame back to menu.",
+    tag: "Exit",
+  },
+  {
+    action: "Hold T2 for 1.0 s",
+    face: "—",
+    screens: "Exit arcade games list back to main carousel menu.",
+    tag: "Back",
+  },
+  {
+    action: "Hold T1 + T2 together (1.8 s)",
+    face: "Interactive Sleep Mode! Kawaii sleeping eyes, breathing glow, floating Zzz & stars.",
+    screens: "Wakes Maya up instantly or puts her into gentle sleep from any screen.",
+    tag: "Dual Touch",
+  },
+  {
+    action: "Hold T2 for 2.5 s",
+    face: "Instant Setup / BLE Pairing mode from anywhere.",
+    screens: "Instant Setup / BLE Pairing mode from anywhere.",
+    tag: "Setup Shortcut",
+  },
+  {
+    action: "ESP32 BOOT Button (Base)",
+    face: "Hardware system restart / warm reboot.",
+    screens: "Hardware system restart / warm reboot.",
+    tag: "Hardware",
+  },
 ];
 
-const MENU: [string, string][] = [
-  ["Maya face", "Back to her eyes."],
-  ["Digital clock", "Time and date, synced from the internet."],
-  ["Live weather", "Temperature, sky and humidity for your city."],
-  ["Notifications", "Your 5 latest alerts from the app."],
-  ["Pomodoro", "25 minutes focus, 5 minutes break."],
-  ["Timer & lap", "Stopwatch with laps. T1 starts and stops."],
-  ["Focus stats", "How much you focused today and this week."],
-  ["Mini games", "The arcade. See Games below."],
-  ["System info", "Wi-Fi, memory, uptime and firmware version."],
-  ["Setup / Reset device", "Setup shows until Maya is paired. After that, this slot becomes Reset device."],
+const MENU_DETAILS = [
+  {
+    title: "1. Maya Face & Living Eyes",
+    subtitle: "Active Companion Mode",
+    desc: "The primary personality view featuring real-time parametric RoboEyes, realistic glancing, auto blinking, and touch-reactive emotions. Autonomous expression engine shifts moods periodically.",
+  },
+  {
+    title: "2. Digital Clock & Calendar",
+    subtitle: "NTP Internet Synchronized",
+    desc: "Clean neon cyber aesthetic clock showing 12/24-hour time, day, and date. Automatically synchronizes with international time servers over Wi-Fi without manual adjustments.",
+  },
+  {
+    title: "3. Live Weather & Forecast",
+    subtitle: "Real-time City Metrics",
+    desc: "Displays current outdoor temperature, weather condition icons (sunny, rainy, cloudy, stormy), relative humidity percentage, and target location set via the mobile app.",
+  },
+  {
+    title: "4. Phone Notification Relay",
+    subtitle: "Mirrored Alerts",
+    desc: "Displays the 5 most recent alerts received on your connected Android device (calls, SMS, WhatsApp, reminders). Never miss an important alert while working.",
+  },
+  {
+    title: "5. Pomodoro Focus Timer",
+    subtitle: "Productivity Arc Engine",
+    desc: "Standard 25-minute focused sprint followed by a 5-minute restorative break. Displayed with an animated glowing neon progress arc and subtle completion pulses.",
+  },
+  {
+    title: "6. Stopwatch & Lap Counter",
+    subtitle: "Millisecond Precision",
+    desc: "High-precision timer for workout laps, sprints, or study pacing. Tap T1 to start, pause, or record new lap splits; tap T2 to reset.",
+  },
+  {
+    title: "7. Focus Productivity Stats",
+    subtitle: "Daily & Weekly Telemetry",
+    desc: "Visual summary of your deep work minutes accumulated today and over the current week, helping you maintain productive study or coding streaks.",
+  },
+  {
+    title: "8. Mini Games (Retro Arcade)",
+    subtitle: "7 Built-in 60 FPS Games",
+    desc: "Built-in arcade suite featuring Dino, Flappy, Space Shooter, Tower Stack, Circle Pong, Reflex Rush, and Brick Breaker with persistent high scores.",
+  },
+  {
+    title: "9. System Info & Diagnostics",
+    subtitle: "Hardware Telemetry",
+    desc: "Real-time hardware status monitor showing Wi-Fi SSID, RSSI signal strength dBm, local IP address, available RAM heap, system uptime, and active firmware version.",
+  },
+  {
+    title: "10. Setup / Factory Reset",
+    subtitle: "Device Onboarding & Memory Wipe",
+    desc: "Shows BLE pairing QR code before initial configuration. Once claimed, this screen converts into a safety-locked factory reset utility with hold-to-wipe confirmation.",
+  },
 ];
 
-const GAME_CONTROLS: Record<string, string> = {
-  dino: "T1 jump",
-  flappy: "T1 flap",
-  shooter: "T1 fire",
-  stack: "T1 drop",
-  pong: "T1 reverse",
-  reflex: "T1 on the flash",
-  brick: "T1 paddle",
-};
-
-const HELP: [string, string][] = [
-  [
-    "The screen stays black",
-    "Use a 5 V USB charger that gives at least 1 A, and try another cable. Some thin cables only charge phones and drop the voltage.",
-  ],
-  [
-    "Touch does nothing right after plugging in",
-    "Maya ignores touch for the first 3 seconds while she calibrates. Keep your hands off her until she says hi.",
-  ],
-  [
-    "She won't join my Wi-Fi",
-    "Maya works on 2.4 GHz only. If your router mixes 2.4 and 5 GHz under one name, turn on a separate 2.4 GHz network.",
-  ],
-  ["Pairing fails or times out", "Hold T2 for 2.5 s to restart setup, keep the phone close, and try again from the app."],
-  [
-    "Weather or time is wrong",
-    "Both come from the internet. Check System info for the Wi-Fi status, and set your city in the app.",
-  ],
-  ["An accessory is loose", "Push it straight down until it seats. If it still wobbles, write to us and we'll send a new one."],
+const GAME_DETAILS = [
+  {
+    id: "dino",
+    name: "Maya Dino Runner",
+    genre: "Infinite Runner",
+    controls: "Tap T1 to Jump",
+    desc: "Help Dino leap over desert cacti and obstacles under cycling sun and moon lighting. Speed progressively accelerates.",
+  },
+  {
+    id: "flappy",
+    name: "Flappy Maya",
+    genre: "Endless Tapper",
+    controls: "Tap T1 to Flap",
+    desc: "Fly through narrow gaps between floating obstacles. Precision timing is required as physics gravity pulls Maya downward.",
+  },
+  {
+    id: "shooter",
+    name: "Space Shooter",
+    genre: "Retro Arcade",
+    controls: "Tap T1 to Fire Lasers",
+    desc: "Defend Maya's orbital station by blasting descending alien invaders and asteroid hazards with rapid-fire energy lasers.",
+  },
+  {
+    id: "stack",
+    name: "Tower Stack",
+    genre: "Physics Timing",
+    controls: "Tap T1 to Drop Block",
+    desc: "Align horizontally oscillating blocks to construct the tallest skyscraper possible. Overhanging overhangs are sliced off!",
+  },
+  {
+    id: "pong",
+    name: "Circle Pong",
+    genre: "360° Circular Action",
+    controls: "Tap T1 to Reverse Paddle",
+    desc: "Designed specifically for Maya's circular display! Keep the bouncing photon particle trapped inside the circular ring by reversing paddle direction.",
+  },
+  {
+    id: "reflex",
+    name: "Reflex Rush",
+    genre: "Speed Reaction",
+    controls: "Tap T1 on Flash",
+    desc: "Test your human reaction speed down to the millisecond. Wait for the neon target to flash and strike T1 instantly.",
+  },
+  {
+    id: "brick",
+    name: "Brick Breaker",
+    genre: "Classic Breakout",
+    controls: "Tap T1 to Guide Paddle",
+    desc: "Bounce the power orb to shatter multilayer neon brick barricades without letting the ball slip past your defensive paddle.",
+  },
 ];
 
-function H2({ id, n, children }: { id: string; n: number; children: React.ReactNode }) {
+const TROUBLESHOOTING_CATEGORIES = [
+  {
+    category: "Power, Screen & Boot Issues",
+    badge: "Hardware & Power",
+    items: [
+      {
+        q: "The screen stays completely black and nothing turns on",
+        a: "Ensure you are using a reliable 5V USB charger capable of delivering at least 1.0A (1000mA). Thin, cheap, or charge-only USB cables often cause voltage drops below the 4.7V required by the ESP32-C3 and GC9A01 display. Try a certified USB-C data cable and connect directly to a dedicated wall adapter or USB 3.0 port.",
+      },
+      {
+        q: "Maya keeps rebooting in an endless loop (bootloop / brownout restart)",
+        a: "Bootloops are almost always caused by insufficient current during Wi-Fi transmission bursts (where the ESP32 radio pulls up to 350mA peak). If powered via an unpowered USB hub, weak PC front-panel port, or long extension cable, brownout protection restarts the chip. Switch to a standard 5V / 2A phone charging brick.",
+      },
+      {
+        q: "The display backlight lights up white/grey, but no face or graphics appear",
+        a: "A blank illuminated screen indicates the display has power but SPI communication did not initialize cleanly. Unplug the USB-C cable, wait 5 seconds, and firmly reconnect it. If the issue persists, connect Maya to a PC and inspect the device in MAYA Studio to verify firmware integrity.",
+      },
+      {
+        q: "Maya froze or is completely unresponsive to touch",
+        a: "You can trigger a hardware reset without unplugging by momentarily pressing the micro BOOT button located on the ESP32 module (accessible near the rear/base). Alternatively, disconnect and reconnect the USB-C power supply.",
+      },
+    ],
+  },
+  {
+    category: "Touch Sensors & Gestures",
+    badge: "Capacitive Input",
+    items: [
+      {
+        q: "Touch pads do nothing right after plugging in Maya",
+        a: "This is completely normal and intentional. The TTP223 capacitive touch controllers execute an automatic baseline calibration for the first 3 seconds after receiving power. Keep your fingers completely off Maya's body and feet during this period. Once she waves hello and opens her eyes, touch inputs are active.",
+      },
+      {
+        q: "Random phantom touches or ghost triggers happen by themselves",
+        a: "Capacitive sensors are sensitive to electrical noise. Common causes include: using an ungrounded laptop power adapter, running on an unshielded noisy cheap charger, or placing Maya directly on a conductive metal desk mat. Place Maya on a clean, dry, non-conductive surface (wood, plastic, or cloth mousepad) and use a grounded power source.",
+      },
+      {
+        q: "Touch pad feels insensitive or requires multiple taps to register",
+        a: "Touch pads are located inside the left (T1) and right (T2) foot pads. Ensure you make firm, flat contact with the fleshy pad of your finger rather than just a fingernail tip. Also ensure your hands and the base are dry.",
+      },
+      {
+        q: "Dual-touch sleep mode (T1 + T2 hold) is difficult to trigger",
+        a: "Both T1 (left foot) and T2 (right foot) must be touched at the exact same moment and held continuously for 1.8 seconds. When held together, a circular progress ring will animate around the center. Hold steady until the ring completes 100%. Letting go before 1.8s cancels the sleep trigger.",
+      },
+    ],
+  },
+  {
+    category: "Wi-Fi & Network Connectivity",
+    badge: "Wireless Networking",
+    items: [
+      {
+        q: "My home Wi-Fi network does not show up during setup",
+        a: "Maya's ESP32-C3 hardware radio operates exclusively on 2.4 GHz (802.11 b/g/n). It does not support 5 GHz Wi-Fi frequencies. If your router uses a combined single SSID with band steering, temporarily enable a dedicated 2.4 GHz Wi-Fi network or guest network in your router settings.",
+      },
+      {
+        q: "Wi-Fi connection fails or drops connection frequently",
+        a: "Verify that your Wi-Fi password does not contain unsupported high-byte Unicode characters. Maya connects to standard WPA / WPA2-Personal networks; 802.1X Enterprise networks (such as university or corporate networks requiring a username and certificate) and public captive portal login pages are not supported.",
+      },
+      {
+        q: "How do I setup Wi-Fi if I don't have the Android app nearby?",
+        a: "Maya has a built-in fallback Access Point mode! Put Maya into Setup mode (hold T2 for 2.5s). Maya broadcasts her own Wi-Fi hotspot named 'MAYA-SETUP'. Connect to it with any smartphone, iPhone, or laptop, enter the password shown on her screen, and open 192.168.4.1 in your browser to configure your Wi-Fi credentials.",
+      },
+      {
+        q: "Can Maya be used completely without any Wi-Fi connection?",
+        a: "Yes, 100%! Maya's animated eyes, 8 emotional moods, petting interactions, Bangla cards, Pomodoro focus timer, stopwatch, and all 7 arcade minigames run entirely on-device without internet. Wi-Fi is only required for live weather updates, NTP time synchronization, and phone notifications.",
+      },
+    ],
+  },
+  {
+    category: "Mobile App & Bluetooth LE Pairing",
+    badge: "Bluetooth & App",
+    items: [
+      {
+        q: "The MAYA Companion App cannot discover Maya during scanning",
+        a: "1) Ensure Bluetooth and Location services ('Nearby Devices' permission on Android 12+) are turned ON with all permissions granted. 2) Ensure Maya is on the Setup screen (hold T2 for 2.5 seconds). 3) Keep your phone within 1 meter of Maya during discovery.",
+      },
+      {
+        q: "Pairing fails, hangs at 'Connecting', or times out",
+        a: "Open your Android device's system Bluetooth settings. If you previously paired Maya, locate 'MAYA' or 'ESP32' in the paired devices list and tap 'Forget / Unpair'. Then restart the MAYA Companion App, hold T2 on Maya for 2.5s to refresh the QR pairing state, and retry.",
+      },
+      {
+        q: "Wi-Fi details won't send to Maya over Bluetooth",
+        a: "1) Open your phone's Bluetooth settings, find 'MAYA' in the paired devices list and tap 'Forget / Unpair'. 2) Turn Bluetooth off, wait a few seconds, then turn it back on. 3) Open the MAYA Companion App again and resend your Wi-Fi details. This clears a stale Bluetooth bond, which is the most common cause.",
+      },
+      {
+        q: "Phone notifications are not arriving on Maya's display",
+        a: "1) Ensure the MAYA Companion App has 'Notification Access' enabled in Android Settings > Apps > Special App Access > Notification Access. 2) Ensure Android battery optimization is set to 'Unrestricted' for MAYA Companion so background sync isn't killed. 3) Ensure Bluetooth remains connected between your phone and Maya.",
+      },
+    ],
+  },
+  {
+    category: "Time, Weather & Sync Metrics",
+    badge: "Data Sync",
+    items: [
+      {
+        q: "The clock shows 00:00 or the wrong date/time",
+        a: "Maya gets accurate time from international NTP (Network Time Protocol) servers over the internet. Check Menu > System Info to confirm Wi-Fi status is 'CONNECTED'. By default, Maya synchronizes to UTC+6 (Bangladesh Standard Time). You can configure local timezone offset via the mobile app.",
+      },
+      {
+        q: "Live Weather displays '--' or shows the wrong city",
+        a: "Weather data is retrieved from weather services via the internet. Open the MAYA Companion App, navigate to Settings, enter your correct city name (e.g., 'Dhaka', 'Chittagong'), and save. Maya updates weather within 60 seconds.",
+      },
+      {
+        q: "Pomodoro focus stats did not sync with the app",
+        a: "Maya logs focus statistics locally and pushes telemetry whenever Bluetooth or MQTT connection is active. Ensure your phone is in range or Maya is connected to Wi-Fi to sync daily study minutes.",
+      },
+    ],
+  },
+  {
+    category: "Firmware Flashing & MAYA Studio",
+    badge: "PC Software",
+    items: [
+      {
+        q: "MAYA Studio for Windows does not detect Maya's COM port",
+        a: "1) Ensure you are using a 4-wire USB-C data cable (some cables only contain power wires for charging phones). 2) In Windows Device Manager, look under 'Ports (COM & LPT)'. If you see a yellow exclamation mark, install the ESP32-C3 USB JTAG/CDC or CH340 driver. 3) Try a different USB port on your PC.",
+      },
+      {
+        q: "Firmware flashing fails halfway through or shows a write error",
+        a: "Force ROM bootloader mode: Unplug USB-C, press and hold the physical BOOT button on the rear of Maya, plug the USB-C cable back in, and release the BOOT button after 2 seconds. Now select the COM port in MAYA Studio and click Flash Firmware.",
+      },
+      {
+        q: "Will updating firmware erase my Wi-Fi credentials or high scores?",
+        a: "Standard firmware updates flash only the application code partition (0x10000) and preserve the non-volatile storage (NVS) partition where Wi-Fi passwords, high scores, and pairing tokens are stored.",
+      },
+    ],
+  },
+  {
+    category: "Accessories, Shell & Hardware Care",
+    badge: "Physical Care",
+    items: [
+      {
+        q: "An accessory (ears, crown, sprout) feels loose or wobbles",
+        a: "Maya's accessories are precision-engineered to fit friction-fit socket mounts without adhesives. Align the accessory pin with the top socket and push straight down until it seats flush. If 3D printed tolerance feels loose over time, adding a tiny strip of paper tape to the accessory pin provides a snug fit.",
+      },
+      {
+        q: "The back of Maya feels slightly warm to the touch",
+        a: "Mild warmth around the lower rear housing is completely normal. The ESP32-C3 dual-core processor, Wi-Fi radio, and IPS display backlight draw approximately 0.8W–1.2W during continuous operation.",
+      },
+      {
+        q: "Can I leave Maya plugged in 24/7 on my desk?",
+        a: "Yes! Maya was specifically engineered as an always-on desktop companion. She features thermal throttled power management and interactive sleep mode to minimize display wear when not in active use.",
+      },
+    ],
+  },
+];
+
+function H2({ id, n, children }: { id: string; n?: number; children: React.ReactNode }) {
   return (
-    <h2 id={id} className="scroll-mt-24 text-2xl font-semibold tracking-tight sm:text-3xl">
-      <span className="mr-3 font-script text-xl font-normal text-eye">{String(n).padStart(2, "0")}</span>
+    <h2 id={id} className="scroll-mt-24 text-2xl font-bold tracking-tight sm:text-3xl text-[#1d1d1f]">
+      {n !== undefined && (
+        <span className="mr-3 font-mono text-xl font-bold text-[#0071e3]">[{String(n).padStart(2, "0")}]</span>
+      )}
       {children}
     </h2>
   );
 }
 
 function Section({ children }: { children: React.ReactNode }) {
-  return <section className="border-t border-ink/10 py-12 first:border-0 first:pt-0 print:break-inside-avoid">{children}</section>;
+  return <section className="border-t border-black/10 py-12 first:border-0 first:pt-0 print:break-inside-avoid">{children}</section>;
 }
 
-const P = "mt-4 max-w-2xl leading-relaxed text-ink-soft";
+const P = "mt-4 max-w-2xl leading-relaxed text-black/75 font-mono text-xs";
 
 export default function DocsPage() {
   return (
@@ -107,42 +368,53 @@ export default function DocsPage() {
         <Nav home={false} />
       </div>
 
-      <header className="bg-cream pb-14 pt-28 print:bg-white print:pt-0">
+      <header className="bg-[#f5f5f7] pb-14 pt-28 print:bg-white print:pt-0 border-b border-black/10">
         <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-8 px-4 sm:px-8 md:flex-row md:items-end">
           <div>
-            <span className="text-sm font-medium text-eye-deep">User guide · Firmware v1</span>
-            <h1 className="mt-2 text-5xl font-semibold tracking-tight sm:text-6xl">
-              Getting to know <span className="font-script font-normal text-eye-deep">Maya</span>
+            <div className="flex items-center gap-2 mb-2 font-mono text-xs text-[#0071e3]">
+              <span className="h-2 w-2 rounded-full bg-[#0071e3]" />
+              <span>Official Technical Manual & Software Suite · Firmware v1.5</span>
+            </div>
+            <h1 className="mt-2 text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-[#1d1d1f]">
+              Getting to know <span className="text-[#0071e3]">Maya</span>
             </h1>
-            <p className="mt-4 max-w-lg text-lg text-ink-soft">
-              Everything you need, from the first plug-in to factory reset. Five minutes to read, and she&rsquo;ll
-              teach you the rest herself.
+            <p className="mt-4 max-w-xl text-base sm:text-lg text-black/70 font-mono text-xs leading-relaxed">
+              Comprehensive handbook covering hardware setup, BLE pairing, capacitive foot touch gestures, 8 moods, 10 UI screens, 7 arcade games, and full diagnostic troubleshooting.
             </p>
           </div>
-          <PrintButton />
+
+          <div className="flex items-center gap-3">
+            <Link
+              href="/bn/docs"
+              className="rounded-full border border-black/20 bg-white px-4 py-2 font-mono text-xs font-bold text-[#1d1d1f] transition hover:bg-[#e8e8ed]"
+            >
+              বাংলা গাইড পড়ুন →
+            </Link>
+            <PrintButton />
+          </div>
         </div>
       </header>
 
-      <div className="mx-auto grid max-w-6xl gap-12 px-4 py-14 sm:px-8 lg:grid-cols-[13rem_1fr]">
+      <div className="mx-auto grid max-w-6xl gap-12 px-4 py-14 sm:px-8 lg:grid-cols-[14rem_1fr]">
         <aside className="print:hidden">
           <nav className="sticky top-24 hidden lg:block" aria-label="On this page">
-            <div className="text-xs font-semibold uppercase tracking-[0.14em] text-ink-faint">On this page</div>
+            <div className="font-mono text-xs font-bold text-black/40">Documentation Index</div>
             <ol className="mt-4 space-y-2 text-sm">
               {TOC.map(([id, label]) => (
                 <li key={id}>
-                  <a href={`#${id}`} className="text-ink-soft transition-colors hover:text-eye-deep">
+                  <a href={`#${id}`} className="font-mono text-xs text-black/70 transition-colors hover:text-[#0071e3]">
                     {label}
                   </a>
                 </li>
               ))}
             </ol>
           </nav>
-          <details className="rounded-2xl border border-ink/10 p-4 lg:hidden">
-            <summary className="cursor-pointer text-sm font-semibold">On this page</summary>
-            <ol className="mt-3 grid grid-cols-2 gap-2 text-sm">
+          <details className="rounded-2xl border border-black/10 p-4 lg:hidden">
+            <summary className="cursor-pointer text-sm font-semibold font-mono">Table of Contents</summary>
+            <ol className="mt-3 grid grid-cols-2 gap-2 text-xs font-mono">
               {TOC.map(([id, label]) => (
                 <li key={id}>
-                  <a href={`#${id}`} className="text-ink-soft">
+                  <a href={`#${id}`} className="text-black/70 hover:text-[#0071e3]">
                     {label}
                   </a>
                 </li>
@@ -152,237 +424,426 @@ export default function DocsPage() {
         </aside>
 
         <article className="min-w-0">
+
+          {/* Section: Official Apps Download */}
           <Section>
-            <H2 id="start" n={1}>Quick start</H2>
-            <ol className="mt-6 grid gap-4 sm:grid-cols-3">
+            <div id="apps" className="scroll-mt-24 space-y-6">
+              <div className="rounded-3xl border border-black/15 bg-[#f5f5f7] p-6 sm:p-8">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-black/10 pb-4 mb-6">
+                  <div>
+                    <span className="font-mono text-xs font-bold text-[#0071e3]">
+                      Software Ecosystem
+                    </span>
+                    <h2 className="text-2xl font-bold tracking-tight text-[#1d1d1f] mt-1">
+                      Download Official Companion Apps
+                    </h2>
+                  </div>
+                  <span className="self-start rounded-full bg-[#1d1d1f] px-3 py-1 font-mono text-[11px] font-bold text-white">
+                    v1.5.2 Latest Suite
+                  </span>
+                </div>
+
+                <div className="grid gap-6 md:grid-cols-2">
+                  {/* Android Companion */}
+                  <div className="flex flex-col justify-between rounded-2xl border border-black/10 bg-[#ffffff] p-6">
+                    <div>
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="font-mono text-[10px] font-bold text-black/50">Mobile Companion</span>
+                        <span className="font-mono text-[10px] font-bold text-[#0071e3]">Android 8.0+</span>
+                      </div>
+                      <h3 className="font-bold text-xl text-[#1d1d1f]">MAYA Companion for Android</h3>
+                      <p className="font-mono text-xs text-black/70 mt-2 leading-relaxed">
+                        Instant Bluetooth LE scanning and pairing, 2.4 GHz Wi-Fi provisioning, realtime notification relay (WhatsApp, SMS, calls), mood customization, and focus analytics.
+                      </p>
+                    </div>
+                    <div className="mt-6">
+                      <a
+                        href="/app"
+                        download
+                        className="flex items-center justify-center gap-2 rounded-full bg-[#1d1d1f] px-6 py-3 font-mono text-xs font-bold text-white shadow-sm transition hover:bg-[#0071e3] hover:text-black"
+                      >
+                        <span>↓ Download APK Package</span>
+                        <span className="text-[10px] opacity-70">33.5 MB</span>
+                      </a>
+                    </div>
+                  </div>
+
+                  {/* Desktop Studio */}
+                  <div className="flex flex-col justify-between rounded-2xl border border-black/10 bg-[#ffffff] p-6">
+                    <div>
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="font-mono text-[10px] font-bold text-black/50">Desktop Diagnostic Suite</span>
+                        <span className="font-mono text-[10px] font-bold text-[#0071e3]">Windows 10 / 11</span>
+                      </div>
+                      <h3 className="font-bold text-xl text-[#1d1d1f]">MAYA Studio for Windows</h3>
+                      <p className="font-mono text-xs text-black/70 mt-2 leading-relaxed">
+                        High-speed USB flashing utility (921,600 baud), serial console diagnostic monitor, NVS configuration inspector, and custom eye expression testing.
+                      </p>
+                    </div>
+                    <div className="mt-6">
+                      <a
+                        href="#firmware"
+                        className="flex items-center justify-center gap-2 rounded-full border border-black/20 bg-white px-6 py-3 font-mono text-xs font-bold text-[#1d1d1f] shadow-sm transition hover:bg-[#e8e8ed]"
+                      >
+                        <span>USB Web / Desktop Flasher →</span>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Section>
+
+          {/* Section: Quick Start */}
+          <Section>
+            <H2 id="start" n={1}>Quick Start Guide</H2>
+            <p className={P}>
+              Maya is ready to run right out of the box with zero complex assembly. Follow these four foundational steps:
+            </p>
+            <ol className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {[
-                ["Plug in", "Connect the USB-C cable to any 5 V / 1 A charger or computer. Maya has no battery, so she stays plugged in."],
-                ["Say hi", "She waves hello, then her eyes start looking around. Wait for that before you touch her."],
-                ["Pair", "Open the Maya app and follow the steps. The app finds her over Bluetooth and gives her your Wi-Fi."],
+                [
+                  "1. Power Connection",
+                  "Connect the included USB-C cable to any regulated 5V / 1A+ charger. Maya has no internal battery and is engineered as an always-on desktop companion.",
+                ],
+                [
+                  "2. Sensor Auto-Calibration",
+                  "Keep your hands off her body for the first 3 seconds after plugging in. Her dual capacitive sensors calibrate their baseline capacitance during boot.",
+                ],
+                [
+                  "3. Interactive Greeting",
+                  "Maya waves hello on her 240x240 circular IPS screen, opens her living eyes, and begins glancing around your workspace.",
+                ],
+                [
+                  "4. Mobile BLE Pairing",
+                  "Open the MAYA Companion App, tap 'Pair New Maya', scan the on-screen QR code or let BLE auto-discover her, and configure your 2.4 GHz Wi-Fi.",
+                ],
               ].map(([t, d], i) => (
-                <li key={t} className="rounded-2xl bg-bg-2 p-5">
-                  <div className="grid h-7 w-7 place-items-center rounded-full bg-ink text-xs font-semibold text-paper">{i + 1}</div>
-                  <div className="mt-3 font-semibold">{t}</div>
-                  <p className="mt-1 text-sm leading-relaxed text-ink-soft">{d}</p>
+                <li key={t} className="rounded-2xl border border-black/10 bg-[#f5f5f7] p-5 flex flex-col justify-between">
+                  <div>
+                    <div className="grid h-7 w-7 place-items-center rounded-full bg-[#1d1d1f] text-xs font-bold text-white">
+                      {i + 1}
+                    </div>
+                    <div className="mt-3 font-bold text-sm text-[#1d1d1f]">{t}</div>
+                    <p className="mt-2 text-xs font-mono leading-relaxed text-black/70">{d}</p>
+                  </div>
                 </li>
               ))}
             </ol>
-            <p className={P}>
-              Maya works without Wi-Fi too: her face, moods, clock, timers and games all run on the device. Wi-Fi adds
-              weather, notifications and time sync.
-            </p>
+            <div className="mt-6 rounded-2xl border border-[#0071e3]/30 bg-[#0071e3]/5 p-5 font-mono text-xs text-black/80">
+              <span className="font-bold text-[#0071e3]">Offline Freedom Note:</span> Wi-Fi is completely optional! Maya's living eyes, 8 emotional moods, petting responses, Pomodoro timer, stopwatch, and 7 arcade minigames work 100% offline. Connecting to Wi-Fi adds real-time internet weather, automatic NTP clock synchronization, and mobile notification relay.
+            </div>
           </Section>
 
+          {/* Section: Touch Controls */}
           <Section>
-            <H2 id="controls" n={2}>Touch controls</H2>
+            <H2 id="controls" n={2}>Touch Controls & Gestures</H2>
             <p className={P}>
-              Maya has two hidden touch pads. <b className="text-ink">T1</b> is on top of her head, <b className="text-ink">T2</b> is
-              on the side. A light touch is enough; you don&rsquo;t need to press.
+              Maya features two ultra-responsive capacitive touch sensors hidden inside her feet. <b className="text-[#1d1d1f]">T1 is located on her left foot</b> and <b className="text-[#1d1d1f]">T2 is on her right foot</b>. A gentle finger touch is all that is needed.
             </p>
-            <div className="mt-6 overflow-x-auto rounded-2xl border border-ink/10">
-              <table className="w-full min-w-[34rem] text-left text-sm">
-                <thead className="bg-bg-2 text-xs uppercase tracking-wider text-ink-faint">
+            <div className="mt-6 overflow-hidden rounded-2xl border border-black/10">
+              <table className="w-full text-left text-sm">
+                <thead className="bg-[#f5f5f7] text-xs font-semibold font-mono text-black/60">
                   <tr>
-                    <th className="px-4 py-3 font-semibold">Touch</th>
-                    <th className="px-4 py-3 font-semibold">On her face</th>
-                    <th className="px-4 py-3 font-semibold">In menus and games</th>
+                    <th className="p-3 sm:p-4">Input Action</th>
+                    <th className="p-3 sm:p-4">Tag</th>
+                    <th className="p-3 sm:p-4">On Living Face</th>
+                    <th className="p-3 sm:p-4">In Screens & Games</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-ink/10">
-                  {CONTROLS.map(([a, b, c]) => (
-                    <tr key={a}>
-                      <td className="whitespace-nowrap px-4 py-3 font-semibold">{a}</td>
-                      <td className="px-4 py-3 text-ink-soft">{b}</td>
-                      <td className="px-4 py-3 text-ink-soft">{c}</td>
+                <tbody className="divide-y divide-black/10 font-mono text-xs bg-[#ffffff]">
+                  {CONTROLS.map((c) => (
+                    <tr key={c.action} className="hover:bg-black/5 transition-colors">
+                      <td className="p-3 sm:p-4 font-bold text-[#1d1d1f]">{c.action}</td>
+                      <td className="p-3 sm:p-4">
+                        <span className="rounded-full bg-black/10 px-2 py-0.5 text-[10px] font-bold text-black/70">
+                          {c.tag}
+                        </span>
+                      </td>
+                      <td className="p-3 sm:p-4 text-black/80">{c.face}</td>
+                      <td className="p-3 sm:p-4 text-black/70">{c.screens}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
+            <div className="mt-4 grid gap-3 sm:grid-cols-2 font-mono text-xs">
+              <div className="rounded-xl border border-black/10 bg-[#f5f5f7] p-4">
+                <span className="font-bold text-[#1d1d1f]">Dual-Touch Sleep Engine (T1 + T2):</span>
+                <p className="mt-1 text-black/70 leading-relaxed">
+                  Hold both feet simultaneously for 1.8 seconds. A circular progress ring fills up. When complete, Maya enters interactive sleep with peaceful breathing, glowing Zzz, and twinkling stars. Repeat to wake her up!
+                </p>
+              </div>
+              <div className="rounded-xl border border-black/10 bg-[#f5f5f7] p-4">
+                <span className="font-bold text-[#1d1d1f]">Instant Setup Shortcut (T2 Hold):</span>
+                <p className="mt-1 text-black/70 leading-relaxed">
+                  Hold T2 (right foot) for 2.5 seconds from anywhere to immediately pull up the Bluetooth LE Claim and Wi-Fi QR Code screen.
+                </p>
+              </div>
+            </div>
           </Section>
 
+          {/* Section: Moods */}
           <Section>
-            <H2 id="moods" n={3}>Moods</H2>
+            <H2 id="moods" n={3}>Moods & Living Personality</H2>
             <p className={P}>
-              Maya&rsquo;s mood changes on its own through the day, and with how you treat her. Now and then she shows
-              a little card in Bangla. Tap T1 or T2 to close it.
+              Maya is powered by an autonomous procedural eye engine with realistic saccades, pupil dilations, blinks, and eight dynamic emotional states:
             </p>
-            <ul className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
+            <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
               {MOODS.map((m) => (
-                <li key={m.id} className="flex flex-col items-center rounded-2xl bg-bg-2 p-4 text-center">
-                  <MayaFace mood={m.id} className="h-16 w-16" still />
-                  <div className="mt-3 text-sm font-semibold">{m.label}</div>
-                  <div className="font-bangla text-xs text-ink-faint">{m.bn}</div>
-                </li>
-              ))}
-            </ul>
-            <p className={P}>
-              <b className="text-ink">Bedtime:</b> hold T1 and T2 together for about 2 seconds and Maya goes to sleep. Poke
-              her while she sleeps and she&rsquo;ll grumble at you, then doze off again. Hold both pads again to wake
-              her.
-            </p>
-          </Section>
-
-          <Section>
-            <H2 id="menu" n={4}>The menu</H2>
-            <p className={P}>
-              Tap T2 on her face to open the carousel. Tap T2 again to turn to the next item, and T1 to open it. Inside
-              any screen, T2 takes you back to the menu.
-            </p>
-            <dl className="mt-6 grid gap-px overflow-hidden rounded-2xl border border-ink/10 bg-ink/10 sm:grid-cols-2">
-              {MENU.map(([k, v]) => (
-                <div key={k} className="bg-card p-4">
-                  <dt className="text-sm font-semibold">{k}</dt>
-                  <dd className="mt-1 text-sm text-ink-soft">{v}</dd>
-                </div>
-              ))}
-            </dl>
-          </Section>
-
-          <Section>
-            <H2 id="games" n={5}>Games</H2>
-            <p className={P}>
-              Open <b className="text-ink">Mini games</b> from the menu. T2 picks the next game and T1 starts it. Every game
-              is played with T1. Hold T1 for a second to stop a game, or hold T2 to leave the arcade. High scores are
-              saved on Maya and survive unplugging.
-            </p>
-            <ul className="mt-6 grid gap-3 sm:grid-cols-2">
-              {GAMES.map((g) => (
-                <li key={g.id} className="flex items-start justify-between gap-4 rounded-2xl bg-bg-2 p-4">
-                  <div>
-                    <div className="font-semibold">{g.name}</div>
-                    <div className="mt-0.5 text-sm text-ink-soft">{g.text}</div>
+                <div key={m.id} className="rounded-2xl border border-black/10 bg-[#f5f5f7] p-4 text-center">
+                  <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-white shadow-inner">
+                    <MayaFace mood={m.id} className="h-12 w-12" />
                   </div>
-                  <span className="shrink-0 rounded-full bg-card px-2.5 py-1 text-xs font-medium text-eye-deep">
-                    {GAME_CONTROLS[g.id]}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </Section>
-
-          <Section>
-            <H2 id="pairing" n={6}>Pairing and Wi-Fi</H2>
-            <p className={P}>
-              A new Maya opens the setup screen with a QR code. In the app, tap <b className="text-ink">Pair New Maya</b>, scan
-              the code, and choose your Wi-Fi. The app talks to her over Bluetooth, and the connection is encrypted end
-              to end. Once paired, Maya belongs to your account, and nobody else can claim her.
-            </p>
-            <ul className="mt-5 max-w-2xl list-disc space-y-2 pl-5 text-ink-soft">
-              <li>
-                To get back to setup at any time, <b className="text-ink">hold T2 for 2.5 seconds</b>.
-              </li>
-              <li>
-                No app nearby? Open <b className="text-ink">Wi-Fi setup</b>: Maya makes her own hotspot called{" "}
-                <code className="rounded bg-bg-2 px-1.5 py-0.5 text-sm">MAYA-SETUP</code>. Its password is shown on her
-                screen. Join it with your phone and enter your Wi-Fi in the page that opens.
-              </li>
-              <li>Maya needs 2.4 GHz Wi-Fi. 5 GHz-only networks won&rsquo;t show up.</li>
-            </ul>
-          </Section>
-
-          <Section>
-            <H2 id="accessories" n={7}>Accessories</H2>
-            <p className={P}>
-              Bunny ears, panda ears, crown, sprout, headphones and backpack all plug in without glue or tools. To
-              change, pull the accessory straight up (or off her back, for the backpack) and push the new one in until
-              it sits flat. Every accessory fits every Maya.
-            </p>
-            <p className={P}>
-              Your box also has a 25 mm mini Maya keychain. It&rsquo;s small, so keep it away from young children.
-            </p>
-          </Section>
-
-          <Section>
-            <H2 id="firmware" n={8}>Firmware updates</H2>
-            <p className={P}>
-              Maya doesn&rsquo;t update over the air, so nothing changes without you knowing. When a new version is out,
-              we&rsquo;ll email you a link to our web updater:
-            </p>
-            <ol className="mt-5 max-w-2xl list-decimal space-y-2 pl-5 text-ink-soft">
-              <li>Connect Maya to a computer with a USB-C data cable.</li>
-              <li>Open the updater in Chrome or Edge on a computer (not a phone).</li>
-              <li>
-                Click <b className="text-ink">Connect &amp; Flash MAYA</b>, pick her port, and wait until it says done. Don&rsquo;t
-                unplug her during the update.
-              </li>
-            </ol>
-            <p className={P}>
-              If the updater asks whether to erase the device, choose <b className="text-ink">No</b> to keep your Wi-Fi,
-              pairing and high scores. Erasing gives you a clean start, like a factory reset.
-            </p>
-          </Section>
-
-          <Section>
-            <H2 id="reset" n={9}>Factory reset</H2>
-            <p className={P}>
-              Resetting erases Wi-Fi, pairing, her name and high scores, and Maya starts again like new. Do this before you give
-              her to someone else.
-            </p>
-            <ol className="mt-5 max-w-2xl list-decimal space-y-2 pl-5 text-ink-soft">
-              <li>Open the menu (tap T2) and turn to <b className="text-ink">Reset device</b>.</li>
-              <li>Tap T1 to open it.</li>
-              <li>
-                <b className="text-ink">Hold T1 for 1.5 seconds</b> until the ring fills. Tap T2 instead to cancel.
-              </li>
-            </ol>
-            <p className={P}>After a reset, remove her from your account in the app too.</p>
-          </Section>
-
-          <Section>
-            <H2 id="care" n={10}>Care and safety</H2>
-            <ul className="mt-5 max-w-2xl list-disc space-y-2 pl-5 text-ink-soft">
-              <li>Use a regulated 5 V USB power source only.</li>
-              <li>
-                Maya&rsquo;s body is PLA plastic. Keep her out of direct sun, hot cars and away from heaters. PLA softens
-                above about 50 °C.
-              </li>
-              <li>Clean the screen with a dry microfiber cloth. For the body, use a soft dry brush. No water or solvents.</li>
-              <li>Keep her dry. She&rsquo;s not made for bathrooms or outdoors.</li>
-              <li>Not a toy for children under 3: the accessories and the keychain are small parts.</li>
-            </ul>
-          </Section>
-
-          <Section>
-            <H2 id="specs" n={11}>Specifications</H2>
-            <dl className="mt-6 divide-y divide-ink/10 border-y border-ink/10">
-              {SPECS.map(([k, v]) => (
-                <div key={k} className="grid gap-1 py-3 sm:grid-cols-[10rem_1fr]">
-                  <dt className="text-sm font-semibold">{k}</dt>
-                  <dd className="text-sm text-ink-soft">{v}</dd>
+                  <div className="mt-3 font-bold text-sm text-[#1d1d1f] capitalize">{m.label}</div>
+                  <div className="mt-0.5 font-mono text-[11px] text-[#0071e3] font-semibold">{m.bn}</div>
+                  <div className="mt-1 font-mono text-[10px] text-black/60 italic whitespace-pre-line leading-tight">
+                    &ldquo;{m.line}&rdquo;
+                  </div>
                 </div>
-              ))}
-            </dl>
-          </Section>
-
-          <Section>
-            <H2 id="help" n={12}>Troubleshooting</H2>
-            <div className="mt-6 space-y-3">
-              {HELP.map(([q, a]) => (
-                <details key={q} className="group rounded-2xl bg-bg-2 p-5">
-                  <summary className="flex cursor-pointer list-none items-center justify-between font-semibold">
-                    {q}
-                    <span className="text-ink-faint transition-transform group-open:rotate-45">+</span>
-                  </summary>
-                  <p className="mt-2 text-sm leading-relaxed text-ink-soft">{a}</p>
-                </details>
               ))}
             </div>
-            <div className="mt-10 flex flex-col items-start justify-between gap-4 rounded-[1.75rem] bg-night p-7 text-white sm:flex-row sm:items-center">
+
+            <div className="mt-6 space-y-3 font-mono text-xs">
+              <div className="rounded-2xl border border-black/10 bg-[#f5f5f7] p-5">
+                <div className="font-bold text-sm text-[#1d1d1f] mb-2">Special Personality Behaviors</div>
+                <ul className="list-disc space-y-1 pl-5 text-black/70">
+                  <li><b>Autonomous Expressions:</b> While idling, Maya cycles between 10 spontaneous facial expressions every 4.5 to 8.5 seconds (Happy, Curious, Winks, Laugh, Shy, Surprised, etc.).</li>
+                  <li><b>Long Idle &ldquo;Mon Kharap&rdquo; (Lonely Mode):</b> If left untouched for 75 seconds, Maya gets lonely, blushes shyly, and displays a heartwarming Bangla dialogue card requesting your attention.</li>
+                  <li><b>Bangla Dialogue Cards:</b> Every 3rd affectionate pet on T1 triggers a humorous and loving Bangla dialogue message on screen.</li>
+                </ul>
+              </div>
+            </div>
+          </Section>
+
+          {/* Section: Menu & Screens */}
+          <Section>
+            <H2 id="menu" n={4}>Carousel Menu & 10 UI Screens</H2>
+            <p className={P}>
+              Tap <b className="text-[#1d1d1f]">T2 (right foot)</b> to reveal the glowing 3D carousel menu. Each subsequent tap rotates to the next application card. Tap <b className="text-[#1d1d1f]">T1 (left foot)</b> to enter that screen. Inside any screen, hold T1 for 1 second to return.
+            </p>
+            <div className="mt-6 grid gap-4 sm:grid-cols-2">
+              {MENU_DETAILS.map((m) => (
+                <div key={m.title} className="rounded-2xl border border-black/10 bg-[#f5f5f7] p-5 font-mono text-xs">
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-sm text-[#1d1d1f]">{m.title}</span>
+                    <span className="rounded bg-black/10 px-2 py-0.5 text-[10px] font-bold text-black/60">
+                      {m.subtitle}
+                    </span>
+                  </div>
+                  <p className="mt-2 text-black/70 leading-relaxed">{m.desc}</p>
+                </div>
+              ))}
+            </div>
+          </Section>
+
+          {/* Section: Games */}
+          <Section>
+            <H2 id="games" n={5}>Arcade Games Suite</H2>
+            <p className={P}>
+              Launch <b className="text-[#1d1d1f]">Mini games</b> from the carousel menu. Cycle through games with T2 and launch with T1. All games run at a fluid 60 FPS and are played using T1. High scores are permanently saved in Maya&rsquo;s onboard flash memory.
+            </p>
+            <div className="mt-6 grid gap-4 sm:grid-cols-2">
+              {GAME_DETAILS.map((g) => (
+                <div key={g.id} className="flex flex-col justify-between rounded-2xl border border-black/10 bg-[#f5f5f7] p-5 font-mono text-xs">
+                  <div>
+                    <div className="flex items-center justify-between">
+                      <span className="font-bold text-sm text-[#1d1d1f]">{g.name}</span>
+                      <span className="rounded-full bg-[#0071e3] px-2.5 py-0.5 text-[10px] font-bold text-black">
+                        {g.genre}
+                      </span>
+                    </div>
+                    <p className="mt-2 text-black/70 leading-relaxed">{g.desc}</p>
+                  </div>
+                  <div className="mt-4 flex items-center justify-between border-t border-black/10 pt-3">
+                    <span className="text-[11px] text-black/50">Control:</span>
+                    <span className="rounded bg-[#1d1d1f] px-2.5 py-1 text-[11px] font-bold text-white">
+                      {g.controls}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <p className="mt-4 font-mono text-xs text-black/60">
+              <b>Tip:</b> In any game, hold T1 or T2 for 1.0 second to exit back to the arcade menu.
+            </p>
+          </Section>
+
+          {/* Section: Pairing & Wi-Fi */}
+          <Section>
+            <H2 id="pairing" n={6}>BLE Pairing & Wi-Fi Setup</H2>
+            <p className={P}>
+              Maya supports two simple configuration methods. Follow either path to get your companion online:
+            </p>
+
+            <div className="mt-6 grid gap-6 md:grid-cols-2 font-mono text-xs">
+              <div className="rounded-2xl border border-black/10 bg-[#f5f5f7] p-6">
+                <span className="font-bold text-xs text-[#0071e3]">Method A (Recommended)</span>
+                <h3 className="font-bold text-base text-[#1d1d1f] mt-1">Automatic Bluetooth LE Pairing</h3>
+                <ol className="mt-3 list-decimal space-y-2 pl-4 text-black/75 leading-relaxed">
+                  <li>Power on Maya and open the MAYA Companion Android App.</li>
+                  <li>Tap <b>Pair New Maya</b>. The app scans for nearby Maya beacons over Bluetooth Low Energy.</li>
+                  <li>Select your device and enter your Wi-Fi credentials when prompted.</li>
+                  <li>Credentials are securely sent via encrypted BLE, and Maya joins your Wi-Fi automatically.</li>
+                </ol>
+              </div>
+
+              <div className="rounded-2xl border border-black/10 bg-[#f5f5f7] p-6">
+                <span className="font-bold text-xs text-[#0071e3]">Method B (No App Required)</span>
+                <h3 className="font-bold text-base text-[#1d1d1f] mt-1">Standalone Web Access Point</h3>
+                <ol className="mt-3 list-decimal space-y-2 pl-4 text-black/75 leading-relaxed">
+                  <li>Hold T2 (right foot) for 2.5 seconds to enter Setup screen.</li>
+                  <li>Maya broadcasts a Wi-Fi hotspot named <code className="rounded bg-black/10 px-1 font-bold text-[#0071e3]">MAYA-SETUP</code>.</li>
+                  <li>Connect to this hotspot from your phone or laptop. The password is displayed on Maya&rsquo;s screen.</li>
+                  <li>Open browser at <code className="font-bold text-[#1d1d1f]">http://192.168.4.1</code> and submit your Wi-Fi credentials.</li>
+                </ol>
+              </div>
+            </div>
+
+            <div className="mt-4 rounded-xl border border-black/10 bg-[#ffffff] p-4 font-mono text-xs text-black/70">
+              <b>Wi-Fi Specifications:</b> 2.4 GHz only (802.11 b/g/n, HT20, WPA/WPA2-PSK). 5 GHz Wi-Fi and enterprise networks requiring username/password authentication are not supported.
+            </div>
+          </Section>
+
+          {/* Section: Accessories */}
+          <Section>
+            <H2 id="accessories" n={7}>Accessories & Modular Snaps</H2>
+            <p className={P}>
+              Maya is fully modular. Her bunny ears, panda ears, royal crown, sprout, DJ headphones, and mini backpack snap in smoothly with snug friction mounts:
+            </p>
+            <div className="mt-5 grid gap-4 sm:grid-cols-3 font-mono text-xs">
+              <div className="rounded-2xl border border-black/10 bg-[#f5f5f7] p-4">
+                <div className="font-bold text-sm text-[#1d1d1f]">1. Installing</div>
+                <p className="mt-1 text-black/70 leading-relaxed">
+                  Align the accessory base pin with the socket on Maya&rsquo;s head (or rear socket for the backpack) and push straight down until flush.
+                </p>
+              </div>
+              <div className="rounded-2xl border border-black/10 bg-[#f5f5f7] p-4">
+                <div className="font-bold text-sm text-[#1d1d1f]">2. Swapping</div>
+                <p className="mt-1 text-black/70 leading-relaxed">
+                  Grip the accessory firmly and pull straight upward. Avoid twisting side-to-side to protect the 3D-printed alignment pins.
+                </p>
+              </div>
+              <div className="rounded-2xl border border-black/10 bg-[#f5f5f7] p-4">
+                <div className="font-bold text-sm text-[#1d1d1f]">3. Collector Keychain</div>
+                <p className="mt-1 text-black/70 leading-relaxed">
+                  Your box includes a miniature 25 mm Maya keychain. Keep away from small children under 3 years old due to small parts.
+                </p>
+              </div>
+            </div>
+          </Section>
+
+          {/* Section: Firmware */}
+          <Section>
+            <H2 id="firmware" n={8}>Firmware Updates</H2>
+            <p className={P}>
+              Maya can be flashed and upgraded using our desktop software or USB web updater:
+            </p>
+            <ol className="mt-5 max-w-2xl list-decimal space-y-2 pl-5 font-mono text-xs text-black/70">
+              <li>Connect Maya to your computer using a verified 4-wire USB-C data cable.</li>
+              <li>Launch <b>MAYA Studio for Windows</b>.</li>
+              <li>Select your device&rsquo;s serial COM port (detected as USB-JTAG/CDC or CH340).</li>
+              <li>Click <b>Flash Firmware</b>. The tool uploads the latest binary at 921,600 baud.</li>
+              <li>Do not disconnect Maya while the flashing progress bar is running. Once complete, Maya reboots automatically.</li>
+            </ol>
+          </Section>
+
+          {/* Section: Reset */}
+          <Section>
+            <H2 id="reset" n={9}>Factory Reset Procedure</H2>
+            <p className={P}>
+              A factory reset completely wipes stored Wi-Fi credentials, Bluetooth bonds, custom robot names, and game high scores, returning Maya to out-of-the-box factory state:
+            </p>
+            <ol className="mt-5 max-w-2xl list-decimal space-y-2 pl-5 font-mono text-xs text-black/70">
+              <li>Tap T2 (right foot) to open the menu and step to <b>Reset device</b>.</li>
+              <li>Tap T1 (left foot) to open the reset confirmation view.</li>
+              <li>
+                <b className="text-[#1d1d1f]">Hold T1 continuously for 1.5 seconds</b>. A numeric percentage counter counts from 0% to 100% while the glowing ring sweeps closed.
+              </li>
+              <li>Release once 100% is reached. Maya clears her flash memory partitions and reboots into clean setup mode.</li>
+            </ol>
+            <p className="mt-3 font-mono text-xs text-black/60">
+              <b>Cancel:</b> Releasing T1 before 1.5 seconds or tapping T2 instantly cancels the reset and returns to the menu.
+            </p>
+          </Section>
+
+          {/* Section: Care */}
+          <Section>
+            <H2 id="care" n={10}>Care & Maintenance</H2>
+            <ul className="mt-5 max-w-2xl list-disc space-y-2 pl-5 font-mono text-xs text-black/70">
+              <li><b>Power Standard:</b> Always use a regulated 5V USB power supply (1A to 2.4A). Never connect high-voltage non-standard adapters.</li>
+              <li><b>Heat Sensitivity:</b> Maya&rsquo;s chassis is crafted from high-precision matte PLA. Keep her away from direct summer sunlight, radiators, or hot parked cars. PLA begins softening above 50 °C (122 °F).</li>
+              <li><b>Display Cleaning:</b> Wipe the circular glass display with a clean, dry microfiber cloth. Avoid spraying water or chemical solvents directly onto the device.</li>
+              <li><b>Chassis Care:</b> Dust the body with a soft dry nylon brush. Never submerge in water or place in damp environments like bathrooms.</li>
+              <li><b>Child Safety:</b> Not suitable for unsupervised children under 3 years due to small accessories and keychain.</li>
+            </ul>
+          </Section>
+
+          {/* Section: Specs */}
+          <Section>
+            <H2 id="specs" n={11}>Technical Specifications</H2>
+            <dl className="mt-6 divide-y divide-black/10 border-y border-black/10 font-mono text-xs">
+              {SPECS.map(([k, v]) => (
+                <div key={k} className="grid gap-1 py-3 sm:grid-cols-[12rem_1fr]">
+                  <dt className="font-bold text-[#1d1d1f]">{k}</dt>
+                  <dd className="text-black/70">{v}</dd>
+                </div>
+              ))}
+            </dl>
+          </Section>
+
+          {/* Section: Troubleshooting */}
+          <Section>
+            <H2 id="help" n={12}>Comprehensive Troubleshooting & Diagnostics</H2>
+            <p className={P}>
+              Encountering an issue? Check our detailed troubleshooting guide organized by category below:
+            </p>
+
+            <div className="mt-8 space-y-8">
+              {TROUBLESHOOTING_CATEGORIES.map((cat) => (
+                <div key={cat.category} className="space-y-3">
+                  <div className="flex items-center gap-2 border-b border-black/10 pb-2">
+                    <span className="font-mono text-xs font-bold text-[#0071e3]">
+                      {cat.badge}
+                    </span>
+                    <h3 className="font-bold text-lg text-[#1d1d1f]">{cat.category}</h3>
+                  </div>
+
+                  <div className="space-y-3">
+                    {cat.items.map((item) => (
+                      <details key={item.q} className="group rounded-2xl border border-black/10 bg-[#f5f5f7] p-5 font-mono text-xs">
+                        <summary className="flex cursor-pointer list-none items-center justify-between font-bold text-sm text-[#1d1d1f]">
+                          {item.q}
+                          <span className="text-[#0071e3] transition-transform group-open:rotate-45 text-base font-bold ml-2">
+                            +
+                          </span>
+                        </summary>
+                        <p className="mt-3 leading-relaxed text-black/75 border-t border-black/5 pt-2">
+                          {item.a}
+                        </p>
+                      </details>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-12 flex flex-col items-start justify-between gap-4 rounded-3xl bg-[#1d1d1f] p-7 text-white sm:flex-row sm:items-center">
               <div>
-                <div className="text-lg font-semibold">Still stuck?</div>
-                <div className="text-sm text-white/60">Write to us. A real person answers, usually within a day.</div>
+                <div className="text-lg font-bold">Still need technical assistance?</div>
+                <div className="text-xs font-mono text-white/70">Our engineering and hardware support team responds within 24 hours.</div>
               </div>
               <a
                 href="mailto:contact@xentoryx.com"
-                className="rounded-full bg-eye px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-eye-deep"
+                className="rounded-full bg-[#0071e3] px-6 py-3 font-mono text-xs font-bold text-black transition hover:bg-white"
               >
                 contact@xentoryx.com
               </a>
             </div>
-            <p className="mt-8 text-sm text-ink-faint print:hidden">
-              <Link href="/" className="text-eye-deep hover:underline">
-                ← Back to Maya
+
+            <p className="mt-8 font-mono text-xs text-black/50 print:hidden">
+              <Link href="/" className="text-[#0071e3] font-bold hover:underline">
+                ← Back to Home
               </Link>
             </p>
           </Section>

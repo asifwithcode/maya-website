@@ -7,13 +7,13 @@ export type Lang = "en" | "bn";
 const en = {
   nav: {
     moods: "Moods", features: "Features", screens: "Screens", editions: "Editions", specs: "Specs", guide: "Guide",
-    reserve: "Reserve", open: "Open menu", close: "Close menu", other: "বাংলা", otherLabel: "বাংলায় দেখুন",
+    reserve: "Order", order: "Order now", open: "Open menu", close: "Close menu", other: "বাংলা", otherLabel: "বাংলায় দেখুন",
     toDark: "Switch to dark mode", toLight: "Switch to light mode",
   },
   hero: {
     kicker: "Season One · Made in Bangladesh",
     line: "A tiny desk robot with a living face. Tap her.",
-    reserve: "Reserve yours", moods: "Meet her moods", dress: "Dress her up", caption: "Soft from every side.",
+    reserve: "Order now", moods: "Meet her moods", dress: "Dress her up", caption: "Soft from every side.",
     looks: { plain: "Classic", bunny: "Bunny", panda: "Panda", crown: "Royal", sprout: "Sprout", headphones: "Beats", backpack: "Explorer" },
     srTitle: "Maya, a tiny desk robot with a living face",
   },
@@ -32,7 +32,7 @@ const en = {
     items: [
       ["A perfectly round face.", "1.28″ round IPS, 240 × 240 pixels on a 40 MHz bus, so every blink is smooth."],
       ["Little notes, in your language.", "Now and then she shows a card in Bangla: a good-morning, a nudge to drink water, a grumble."],
-      ["Pat her. She notices.", "Two hidden touch pads. A pat makes her happy, a poke too many makes her grumpy."],
+      ["Touch her feet. She notices.", "Two capacitive touch pads on her left and right feet. A tap makes her happy, a poke too many makes her grumpy."],
       ["A focus buddy.", "Pomodoro on a glowing arc: 25 minutes of work, 5 of rest, and a gentle reminder to stand up."],
       ["Set up in a minute.", "The Maya app finds her over Bluetooth and hands over your Wi-Fi. Weather, time and notifications follow."],
       ["Only yours.", "Each Maya has its own key. Pairing is encrypted end to end and only the owner's phone can claim her."],
@@ -40,14 +40,14 @@ const en = {
   },
   screens: {
     kicker: "Neon UI · LVGL 8.4", title: "More than a face.",
-    text: "Tap the side pad and a 3D carousel spins up: eleven screens and a pocket arcade, all on one round display.",
+    text: "Tap her right leg and a 3D carousel spins up: eleven screens and a pocket arcade, all on one round display.",
     arcadeKicker: "The arcade", arcade: "7 games, played with one finger.",
     items: {} as Record<string, [string, string]>, // English comes from data.ts
   },
   editions: {
     kicker: "Season One · Launch price", title: "Seven boxes.", titleSoft: "One Maya.",
-    text: "Every edition is the same Maya with its own accessory, eyes and mini keychain. Reserve now, pay when she ships.",
-    reserve: "Reserve", mini: "mini keychain",
+    text: "Every edition is the same Maya with its own accessory, eyes and mini keychain. Order today, pay cash on delivery.",
+    reserve: "Order now", mini: "mini keychain",
     items: {
       bunny: ["Bunny Edition", "Bunny ears", "Curious eyes"],
       panda: ["Panda Edition", "Panda ears", "Big round eyes"],
@@ -60,8 +60,8 @@ const en = {
     combo: {
       kicker: "The combo", name: "Complete Collection", best: "Best value",
       text: "One Maya, every look. Swap accessories whenever you like.",
-      save: "You save", button: "Reserve the collection",
-      features: ["Maya, fully assembled", "All 6 accessories", "All 6 mini keychains", "Ships first, before single orders"],
+      save: "You save", button: "Order the collection",
+      features: ["Maya, fully assembled", "All 6 accessories", "All 6 mini keychains", "Free mini keychains included"],
     },
     extras: [
       ["Extra accessory", "Fits every Maya"],
@@ -81,12 +81,12 @@ const en = {
     box: null as string[] | null,
   },
   reserve: {
-    title: "Reserve your Maya.",
-    text: "No payment today, just a place in line. We'll email you when Season One is ready, in the order reservations came in.",
-    count: (n: number) => `${n} ${n === 1 ? "person has" : "people have"} already reserved.`,
-    thanks: "Thank you!", thanksText: "You're on the list. Maya can't wait to meet you.",
+    title: "Order your Maya.",
+    text: "In stock and ready to ship. Pay cash on delivery anywhere in Bangladesh.",
+    count: (n: number) => `${n} ${n === 1 ? "order" : "orders"} placed so far.`,
+    thanks: "Thank you!", thanksText: "Your order is confirmed. We'll call you shortly to arrange delivery.",
     name: "Name", namePh: "Your name", email: "Email", edition: "Edition", qty: "Qty",
-    submit: "Reserve, pay later", loading: "Reserving…", error: "Something went wrong.",
+    submit: "Place order", loading: "Placing order…", error: "Something went wrong.",
     classic: "Classic, no accessory", surprise: "Surprise me",
   },
   footer: { rights: "Xentoryx Labs. Designed and printed in Bangladesh.", guide: "User guide" },
@@ -97,13 +97,13 @@ type Dict = typeof en;
 const bn: Dict = {
   nav: {
     moods: "মুড", features: "ফিচার", screens: "স্ক্রিন", editions: "এডিশন", specs: "স্পেক", guide: "গাইড",
-    reserve: "রিজার্ভ", open: "মেনু খুলুন", close: "মেনু বন্ধ করুন", other: "English", otherLabel: "View in English",
+    reserve: "অর্ডার", order: "অর্ডার করুন", open: "মেনু খুলুন", close: "মেনু বন্ধ করুন", other: "English", otherLabel: "View in English",
     toDark: "ডার্ক মোডে যান", toLight: "লাইট মোডে যান",
   },
   hero: {
     kicker: "প্রথম সিজন · বাংলাদেশে তৈরি",
     line: "জীবন্ত মুখের এক ছোট্ট ডেস্ক রোবট। ওকে একটু ছুঁয়ে দেখুন।",
-    reserve: "রিজার্ভ করুন", moods: "ওর মুডগুলো দেখুন", dress: "সাজিয়ে দিন", caption: "সব দিক থেকেই নরম।",
+    reserve: "অর্ডার করুন", moods: "ওর মুডগুলো দেখুন", dress: "সাজিয়ে দিন", caption: "সব দিক থেকেই নরম।",
     looks: { plain: "ক্লাসিক", bunny: "বানি", panda: "পান্ডা", crown: "রয়্যাল", sprout: "চারা", headphones: "বিটস", backpack: "এক্সপ্লোরার" },
     srTitle: "মায়া, জীবন্ত মুখের এক ছোট্ট ডেস্ক রোবট",
   },
@@ -122,7 +122,7 @@ const bn: Dict = {
     items: [
       ["একদম গোল একটা মুখ।", "১.২৮″ গোল IPS ডিসপ্লে, ২৪০ × ২৪০ পিক্সেল, ৪০ MHz বাসে চলে, তাই প্রতিটা পলক মসৃণ।"],
       ["ছোট্ট চিরকুট, আপনার ভাষায়।", "মাঝে মাঝে সে বাংলায় একটা কার্ড দেখায়: শুভ সকাল, পানি খাওয়ার কথা মনে করানো, কিংবা একটু অভিমান।"],
-      ["আদর করুন, সে টের পায়।", "দুটো লুকানো টাচ প্যাড। আলতো আদরে সে খুশি হয়, বেশি খোঁচালে রেগে যায়।"],
+      ["পায়ে ছুঁলেই সে টের পায়।", "দুটো ক্যাপাসিটিভ টাচ প্যাড—বাঁ পা আর ডান পায়ে। আলতো স্পর্শে সে খুশি হয়, বেশি খোঁচালে রেগে যায়।"],
       ["মনোযোগের সঙ্গী।", "উজ্জ্বল বৃত্তে পোমোডোরো: ২৫ মিনিট কাজ, ৫ মিনিট বিরতি, আর উঠে দাঁড়ানোর আলতো তাগাদা।"],
       ["এক মিনিটেই সেটআপ।", "Maya অ্যাপ ব্লুটুথে ওকে খুঁজে নিয়ে আপনার Wi-Fi দিয়ে দেয়। তারপর আবহাওয়া, সময় আর নোটিফিকেশন।"],
       ["শুধু আপনার।", "প্রতিটা মায়ার নিজের চাবি আছে। পেয়ারিং পুরোটা এনক্রিপ্টেড, আর শুধু মালিকের ফোনই ওকে নিজের করতে পারে।"],
@@ -130,7 +130,7 @@ const bn: Dict = {
   },
   screens: {
     kicker: "নিয়ন UI · LVGL 8.4", title: "শুধু একটা মুখ নয়।",
-    text: "পাশের প্যাডে ছুঁলে একটা 3D ক্যারোসেল ঘুরে ওঠে: এগারোটা স্ক্রিন আর পকেটে আস্ত একটা আর্কেড, সব একটা গোল ডিসপ্লেতে।",
+    text: "ডান পায়ে ছুঁলেই একটা 3D ক্যারোসেল ঘুরে ওঠে: এগারোটা স্ক্রিন আর পকেটে আস্ত একটা আর্কেড, সব একটা গোল ডিসপ্লেতে।",
     arcadeKicker: "আর্কেড", arcade: "৭টা গেম, খেলা যায় এক আঙুলে।",
     items: {
       clock: ["ঘড়ি", "নিয়ন অ্যানালগ ঘড়ি, মসৃণ সেকেন্ডের কাঁটা আর তারিখ।"],
@@ -155,8 +155,8 @@ const bn: Dict = {
   },
   editions: {
     kicker: "প্রথম সিজন · লঞ্চ মূল্য", title: "সাতটা বাক্স।", titleSoft: "একটাই মায়া।",
-    text: "প্রতিটা এডিশনে একই মায়া, শুধু আলাদা অ্যাক্সেসরি, চোখ আর মিনি কি-চেইন। এখন রিজার্ভ করুন, দাম দেবেন পাঠানোর সময়।",
-    reserve: "রিজার্ভ", mini: "মিনি কি-চেইন",
+    text: "প্রতিটা এডিশনে একই মায়া, শুধু আলাদা অ্যাক্সেসরি, চোখ আর মিনি কি-চেইন। আজই অর্ডার করুন, টাকা দিন ডেলিভারির সময়।",
+    reserve: "অর্ডার করুন", mini: "মিনি কি-চেইন",
     items: {
       bunny: ["বানি এডিশন", "খরগোশের কান", "কৌতূহলী চোখ"],
       panda: ["পান্ডা এডিশন", "পান্ডার কান", "বড় গোল চোখ"],
@@ -169,8 +169,8 @@ const bn: Dict = {
     combo: {
       kicker: "কম্বো", name: "কমপ্লিট কালেকশন", best: "সেরা দামে",
       text: "একটা মায়া, সব সাজ। যখন খুশি অ্যাক্সেসরি বদলান।",
-      save: "আপনি বাঁচাচ্ছেন", button: "কালেকশন রিজার্ভ করুন",
-      features: ["পুরো জোড়া লাগানো মায়া", "৬টা অ্যাক্সেসরি", "৬টা মিনি কি-চেইন", "সিঙ্গেল অর্ডারের আগে পাঠানো হবে"],
+      save: "আপনি বাঁচাচ্ছেন", button: "কালেকশন অর্ডার করুন",
+      features: ["পুরো জোড়া লাগানো মায়া", "৬টা অ্যাক্সেসরি", "৬টা মিনি কি-চেইন", "সব মিনি কি-চেইন সাথে"],
     },
     extras: [
       ["বাড়তি অ্যাক্সেসরি", "সব মায়ায় লাগে"],
@@ -189,7 +189,7 @@ const bn: Dict = {
     rows: [
       ["মস্তিষ্ক", "ESP32-C3, ১৬০ MHz RISC-V, ৪০০ KB SRAM, ৪ MB ফ্ল্যাশ"],
       ["ডিসপ্লে", "১.২৮″ গোল IPS, ২৪০ × ২৪০, ৪০ MHz SPI"],
-      ["টাচ", "দুটো ক্যাপাসিটিভ প্যাড"],
+      ["টাচ", "দুটো ক্যাপাসিটিভ প্যাড: বাঁ পায়ে ট্যাপ, ডান পায়ে মেনু"],
       ["ওয়্যারলেস", "২.৪ GHz Wi-Fi আর ব্লুটুথ LE সেটআপ"],
       ["ক্লাউড", "TLS-এ এনক্রিপ্টেড MQTT"],
       ["ইন্টারফেস", "LVGL 8.4, ১১টা স্ক্রিন, 3D ক্যারোসেল মেনু"],
@@ -201,12 +201,12 @@ const bn: Dict = {
     box: ["মায়া, পুরো জোড়া লাগানো", "আপনার পছন্দের অ্যাক্সেসরি", "২৫ মি.মি. মিনি মায়া কি-চেইন", "USB-C কেবল", "কুইক স্টার্ট কার্ড"],
   },
   reserve: {
-    title: "আপনার মায়া রিজার্ভ করুন।",
-    text: "আজ কোনো টাকা লাগবে না, শুধু লাইনে আপনার জায়গা। প্রথম সিজন তৈরি হলে রিজার্ভের ক্রম অনুযায়ী আমরা ইমেইল করব।",
-    count: (n: number) => `${n.toLocaleString("bn-BD")} জন ইতিমধ্যে রিজার্ভ করেছেন।`,
-    thanks: "ধন্যবাদ!", thanksText: "আপনি লিস্টে আছেন। মায়া আপনার সাথে দেখা করার জন্য অপেক্ষা করছে।",
+    title: "আপনার মায়া অর্ডার করুন।",
+    text: "স্টকে আছে, পাঠানোর জন্য তৈরি। সারা বাংলাদেশে ক্যাশ অন ডেলিভারি।",
+    count: (n: number) => `এ পর্যন্ত ${n.toLocaleString("bn-BD")}টি অর্ডার হয়েছে।`,
+    thanks: "ধন্যবাদ!", thanksText: "আপনার অর্ডার কনফার্ম হয়েছে। ডেলিভারির জন্য আমরা শীঘ্রই ফোন করব।",
     name: "নাম", namePh: "আপনার নাম", email: "ইমেইল", edition: "এডিশন", qty: "সংখ্যা",
-    submit: "রিজার্ভ করুন, পরে টাকা দিন", loading: "রিজার্ভ হচ্ছে…", error: "কিছু একটা ভুল হয়েছে।",
+    submit: "অর্ডার কনফার্ম করুন", loading: "অর্ডার হচ্ছে…", error: "কিছু একটা ভুল হয়েছে।",
     classic: "ক্লাসিক, অ্যাক্সেসরি ছাড়া", surprise: "চমকে দিন",
   },
   footer: { rights: "Xentoryx Labs। বাংলাদেশে ডিজাইন ও প্রিন্ট করা।", guide: "ইউজার গাইড" },

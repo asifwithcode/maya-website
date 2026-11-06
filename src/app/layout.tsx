@@ -1,37 +1,28 @@
-import type { Metadata, Viewport } from "next";
-import { Inter, Borel, Hind_Siliguri } from "next/font/google";
+import type { Metadata } from "next";
+import MotionProvider from "@/components/MotionProvider";
 import "./globals.css";
 
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-});
-
-const borel = Borel({
-  subsets: ["latin"],
-  weight: "400",
-  variable: "--font-borel",
-});
-
-const bangla = Hind_Siliguri({
-  subsets: ["bengali", "latin"],
-  weight: ["400", "600"],
-  variable: "--font-hind",
-});
+const DESCRIPTION =
+  "An ultra-tactile desk companion robot with a round living face, 8 moods, 11 screens, 7 games, and Bangla dialogue. Designed by Xentoryx.";
 
 export const metadata: Metadata = {
-  title: "Maya by Xentoryx",
-  description: "A tiny desk robot with a living face. Made in Bangladesh.",
+  metadataBase: new URL("https://maya.xentoryxlabs.site"),
+  title: "MAYA — The Living Desk Robot | Xentoryx",
+  description: DESCRIPTION,
+  openGraph: {
+    type: "website",
+    siteName: "MAYA by Xentoryx Labs",
+    title: "MAYA — The Living Desk Robot",
+    description: DESCRIPTION,
+    images: [{ url: "/images/og-maya.jpg", width: 1200, height: 630, alt: "MAYA desk robot, Bunny edition" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "MAYA — The Living Desk Robot",
+    description: DESCRIPTION,
+    images: ["/images/og-maya.jpg"],
+  },
 };
-
-export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f6f4f1" },
-    { media: "(prefers-color-scheme: dark)", color: "#0e0e10" },
-  ],
-};
-
-const THEME_SCRIPT = `(function(){try{var m=document.cookie.match(/(?:^|; )theme=(light|dark)/);var t=m?m[1]:(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.setAttribute("data-theme",t)}catch(e){}})()`;
 
 export default function RootLayout({
   children,
@@ -39,12 +30,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" data-theme="light" suppressHydrationWarning className={`${inter.variable} ${borel.variable} ${bangla.variable}`}>
+    <html lang="en" suppressHydrationWarning className="scroll-smooth">
       <head>
-        {/* theme before first paint: saved choice (cookie) or the system setting */}
-        <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        {/* eslint-disable-next-line @next/next/no-page-custom-font */}
+        <link
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Hind+Siliguri:wght@400;500;600;700&display=swap"
+          rel="stylesheet"
+        />
       </head>
-      <body>{children}</body>
+      <body className="min-h-screen bg-white text-[#1d1d1f] antialiased">
+        <MotionProvider>{children}</MotionProvider>
+      </body>
     </html>
   );
 }

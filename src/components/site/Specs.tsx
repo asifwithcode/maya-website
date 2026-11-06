@@ -3,76 +3,73 @@
 import Image from "next/image";
 import Link from "next/link";
 import { IN_THE_BOX, SPECS } from "./data";
-import { revealChildren, revealLines, useGsap } from "./motion";
 import { bnDigits, useT } from "./i18n";
+import { useContent } from "./content";
 
 export default function Specs() {
   const { lang, t } = useT();
+  const { copy } = useContent();
   const s = t.specs;
-  const rows = s.rows ?? SPECS;
-  const box = s.box ?? IN_THE_BOX;
-  const ref = useGsap<HTMLElement>((root, reduce) => {
-    root.querySelectorAll<HTMLElement>("h2").forEach((h) => revealLines(h, reduce));
-    revealChildren(root, reduce);
-  });
+  const dyn = copy?.specs;
+  const isBn = lang === "bn";
+
+  const rows: [string, string][] =
+    dyn?.rows && dyn.rows.length > 0
+      ? dyn.rows.map((r) => [isBn ? r.labelBn : r.labelEn, isBn ? r.valBn : r.valEn])
+      : (s.rows ?? SPECS);
+
+  const box: string[] =
+    dyn?.box && dyn.box.length > 0 ? dyn.box.map((b) => (isBn ? b.bn : b.en)) : (s.box ?? IN_THE_BOX);
 
   return (
-    <section ref={ref} id="specs" className="bg-bg px-5 py-28 sm:px-8 md:py-40">
-      <div className="mx-auto max-w-7xl">
-        <div className="grid gap-14 md:grid-cols-[0.9fr_1.1fr]">
-          <div className="md:sticky md:top-28 md:self-start">
-            <p className="text-[0.7rem] font-medium uppercase tracking-[0.22em] text-eye-deep">{s.kicker}</p>
-            <h2 className="mt-3 text-5xl font-semibold leading-[0.98] tracking-[-0.04em] sm:text-7xl">{s.title}</h2>
-            <div className="mt-10 hidden max-w-xs rounded-[1.75rem] bg-paper p-6 md:block">
-              <div className="relative mx-auto aspect-[220/336] w-28">
-                <Image src="/showcase/art/maya-headphones.svg" alt="" fill unoptimized sizes="112px" className="object-contain" />
-              </div>
-              <h3 className="mt-5 font-semibold">{s.inBox}</h3>
-              <ul className="mt-3 space-y-1.5 text-sm text-ink-soft">
-                {box.map((x) => (
-                  <li key={x} className="flex gap-2">
-                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-eye" />
-                    {x}
-                  </li>
-                ))}
-              </ul>
+    <section id="specs" className="bg-white px-4 py-14 sm:px-6 sm:py-20">
+      <div className="mx-auto max-w-[980px]">
+        <h2 className="headline text-center text-[#1d1d1f]">{s.title}</h2>
+
+        <dl className="mt-10 border-t border-[#d2d2d7]">
+          {rows.map(([k, v]) => (
+            <div key={k} className="grid grid-cols-1 gap-1 border-b border-[#d2d2d7] py-5 sm:grid-cols-[14rem_1fr]">
+              <dt className="text-[17px] font-semibold text-[#1d1d1f]">{k}</dt>
+              <dd className="text-[17px] leading-relaxed text-[#6e6e73]">{v}</dd>
             </div>
+          ))}
+        </dl>
+
+        <div className="mt-12 grid grid-cols-1 items-center gap-10 md:grid-cols-2">
+          <div className="relative aspect-[16/11] w-full overflow-hidden rounded-[28px] bg-[#f5f5f7]">
+            <Image src="/images/packaging/mockup.png" alt="Maya retail box" fill className="object-contain p-6" />
           </div>
-          <dl data-reveal-group className="border-t border-ink/10">
-            {rows.map(([k, v]) => (
-              <div key={k} data-reveal className="grid gap-1 border-b border-ink/10 py-5 sm:grid-cols-[9rem_1fr]">
-                <dt className="text-sm font-semibold">{k}</dt>
-                <dd className="text-ink-soft">{v}</dd>
-              </div>
-            ))}
-            <div data-reveal className="py-5 md:hidden">
-              <dt className="text-sm font-semibold">{s.inBox}</dt>
-              <dd className="mt-1 text-ink-soft">{box.join(" · ")}</dd>
-            </div>
-          </dl>
+          <div>
+            <h3 className="text-[28px] font-semibold tracking-tight text-[#1d1d1f] sm:text-[32px]">{s.inBox}</h3>
+            <ul className="mt-6 space-y-3 text-[17px] text-[#1d1d1f]">
+              {box.map((x) => (
+                <li key={x} className="border-b border-[#d2d2d7] pb-3">
+                  {x}
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
 
-        <div className="mt-28 grid gap-14 md:mt-40 md:grid-cols-[0.9fr_1.1fr]">
-          <div>
-            <p className="text-[0.7rem] font-medium uppercase tracking-[0.22em] text-eye-deep">{s.startKicker}</p>
-            <h2 className="mt-3 text-5xl font-semibold leading-[0.98] tracking-[-0.04em] sm:text-7xl">{s.startTitle}</h2>
-            <p className="mt-5 max-w-sm text-ink-soft">
-              {s.guideBefore}{" "}
-              <Link href="/docs" className="text-ink underline decoration-eye underline-offset-4">
-                {s.guideLink}
-              </Link>
-              {lang === "bn" ? "।" : "."}
-            </p>
-          </div>
-          <ol data-reveal-group className="grid gap-4 sm:grid-cols-3">
-            {s.steps.map(([title, d], i) => (
-              <li key={title} data-reveal className="rounded-[1.5rem] bg-paper p-6">
-                <span className="font-script text-3xl text-eye">{lang === "bn" ? bnDigits(String(i + 1)) : i + 1}</span>
-                <h3 className="mt-4 font-semibold">{title}</h3>
-                <p className="mt-1.5 text-sm leading-relaxed text-ink-soft">{d}</p>
-              </li>
+        <div className="mt-14">
+          <h3 className="text-center text-[32px] font-semibold tracking-tight text-[#1d1d1f] sm:text-[40px]">{s.startTitle}</h3>
+          <div className="mt-12 grid grid-cols-1 gap-10 sm:grid-cols-3">
+            {s.steps.map(([title, desc], i) => (
+              <div key={title} className="text-center">
+                <span className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-[#f5f5f7] text-[17px] font-semibold text-[#1d1d1f]">
+                  {isBn ? bnDigits(String(i + 1)) : i + 1}
+                </span>
+                <h4 className="mt-4 text-[21px] font-semibold tracking-tight text-[#1d1d1f]">{title}</h4>
+                <p className="mt-2 text-[17px] leading-relaxed text-[#6e6e73]">{desc}</p>
+              </div>
             ))}
-          </ol>
+          </div>
+          <p className="mt-12 text-center text-[17px] text-[#6e6e73]">
+            {s.guideBefore}{" "}
+            <Link href={isBn ? "/bn/docs" : "/docs"} className="text-[#0066cc] hover:underline">
+              {s.guideLink} ›
+            </Link>
+          </p>
         </div>
       </div>
     </section>

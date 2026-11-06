@@ -3,71 +3,57 @@
 import { useState } from "react";
 import MayaFace from "./MayaFace";
 import { MOODS } from "./data";
-import { gsap, ScrollTrigger, useGsap } from "./motion";
 import { useT } from "./i18n";
 
 export default function Moods() {
-  const { t } = useT();
+  const { lang, t } = useT();
   const [i, setI] = useState(0);
+  const [pokes, setPokes] = useState(0);
   const mood = MOODS[i];
+  const isBn = lang === "bn";
 
-  const ref = useGsap<HTMLElement>((root, reduce) => {
-    gsap.from(root.querySelector("[data-face]"), {
-      scale: 0.7,
-      opacity: 0,
-      duration: 1.4,
-      ease: "expo.out",
-      scrollTrigger: { trigger: root, start: "top 70%" },
-    });
-    if (reduce) return;
-    ScrollTrigger.create({
-      trigger: root,
-      start: "top top",
-      end: `+=${MOODS.length * 55}%`,
-      pin: true,
-      onUpdate: (s) => setI(Math.min(MOODS.length - 1, Math.floor(s.progress * MOODS.length))),
-    });
-  });
+  const handleTap = () => {
+    const n = pokes + 1;
+    setPokes(n);
+    const target = n % 3 === 0 ? "annoyed" : n % 5 === 0 ? "dizzy" : "happy";
+    const idx = MOODS.findIndex((m) => m.id === target);
+    if (idx >= 0) setI(idx);
+  };
 
   return (
-    <section ref={ref} id="moods" className="relative flex min-h-[100svh] items-center overflow-hidden bg-night text-white">
-      <div className="mx-auto grid w-full max-w-7xl items-center gap-8 px-5 py-20 sm:px-8 md:grid-cols-[1fr_1fr] md:gap-20 md:py-24">
-        <div data-face className="relative mx-auto aspect-square w-[min(56vw,30rem)] md:w-[min(78vw,30rem)]">
-          <div className="absolute inset-[-6%] rounded-full bg-eye/20 blur-3xl" />
-          <div className="relative h-full w-full rounded-full border-[14px] border-[#f4efe9] shadow-[0_40px_120px_-30px_rgba(225,137,155,0.45)]">
-            <MayaFace mood={mood.id} className="h-full w-full" />
-          </div>
-        </div>
+    <section id="moods" className="bg-black px-6 py-14 text-[#f5f5f7] sm:py-20">
+      <div className="mx-auto max-w-[980px] text-center">
+        <p className="text-[17px] font-semibold text-[#86868b]">{isBn ? "পার্সোনালিটি" : "Personality"}</p>
+        <h2 className="headline mt-2">{t.moods.title}</h2>
+        <p className="mx-auto mt-5 max-w-[640px] text-[19px] leading-relaxed text-[#86868b] sm:text-[21px]">
+          {t.moods.text}
+        </p>
 
-        <div>
-          <p className="text-[0.7rem] font-medium uppercase tracking-[0.22em] text-eye">{t.moods.kicker}</p>
-          <h2 className="mt-3 text-3xl font-semibold tracking-[-0.03em] sm:text-6xl">{t.moods.title}</h2>
-          <p className="mt-4 hidden max-w-md text-white/55 sm:block">
-            {t.moods.text}
+        <div className="mt-10 flex flex-col items-center">
+          <button
+            type="button"
+            onClick={handleTap}
+            aria-label={isBn ? "মায়াকে ট্যাপ করুন" : "Tap Maya"}
+            className="breathe relative aspect-square w-64 overflow-hidden rounded-full bg-black transition-transform duration-300 hover:scale-[1.03] active:scale-95 sm:w-80"
+          >
+            <MayaFace mood={mood.id} className="h-full w-full p-6" />
+          </button>
+          <p className="mt-6 text-[14px] text-[#86868b]">
+            {isBn ? "মুখে ট্যাপ করে দেখুন।" : "Tap her face and see what happens."}
           </p>
 
-          <div className="mt-6 flex items-baseline gap-4 sm:mt-12">
-            <span className="font-mono text-sm text-white/40">
-              {String(i + 1).padStart(2, "0")} / {String(MOODS.length).padStart(2, "0")}
-            </span>
-            <span key={mood.id} className="animate-[moodIn_.6s_cubic-bezier(.16,1,.3,1)] text-5xl font-semibold tracking-tight sm:text-7xl">
-              {t.moods.labels[mood.id] ?? mood.label}
-            </span>
-          </div>
-          <p key={mood.bn} className="mt-4 animate-[moodIn_.6s_.05s_cubic-bezier(.16,1,.3,1)_both] whitespace-pre-line font-bangla text-xl text-white/70">
-            {mood.line}
+          <p key={mood.id} className="pop mt-8 min-h-[4.5rem] whitespace-pre-line font-bangla text-[26px] font-semibold leading-snug text-white sm:text-[32px]">
+            &ldquo;{mood.line}&rdquo;
           </p>
 
-          <div className="mt-6 flex flex-wrap gap-1.5 sm:mt-10" role="tablist" aria-label={t.nav.moods}>
+          <div className="mt-10 flex flex-wrap justify-center gap-2">
             {MOODS.map((m, k) => (
               <button
                 key={m.id}
                 type="button"
-                role="tab"
-                aria-selected={k === i}
                 onClick={() => setI(k)}
-                className={`rounded-full px-3.5 py-1.5 text-[0.8rem] transition ${
-                  k === i ? "bg-white text-[#1d1d1f]" : "bg-white/[0.06] text-white/60 hover:bg-white/10"
+                className={`rounded-full px-4 py-2 text-[14px] transition-all duration-300 active:scale-95 ${
+                  k === i ? "scale-105 bg-[#f5f5f7] text-black" : "bg-[#1d1d1f] text-[#f5f5f7] hover:bg-[#2d2d2f]"
                 }`}
               >
                 {t.moods.labels[m.id] ?? m.label}

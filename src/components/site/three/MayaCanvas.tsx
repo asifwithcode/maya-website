@@ -40,7 +40,7 @@ export default function MayaCanvas({ look, progress, className }: Props) {
     scene.environmentIntensity = 0.6;
 
     const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 50);
-    camera.position.set(0, 0.55, 7.2);
+    camera.position.set(0, 0.36, 6.4);
 
     const key = new THREE.DirectionalLight(0xffffff, 2.3);
     key.position.set(1.4, 5.2, 3.2);
@@ -151,7 +151,7 @@ export default function MayaCanvas({ look, progress, className }: Props) {
       renderer.domElement.style.height = "100%";
       camera.aspect = w / h;
       // keep Maya the same size on tall phones
-      camera.position.z = w / h < 0.8 ? 7.2 / Math.max(0.55, (w / h) * 1.15) : 7.2;
+      camera.position.z = w / h < 0.8 ? 6.4 / Math.max(0.55, (w / h) * 1.15) : 6.4;
       camera.updateProjectionMatrix();
     };
     const ro = new ResizeObserver(resize);
@@ -198,9 +198,9 @@ export default function MayaCanvas({ look, progress, className }: Props) {
       }
       yaw += (yawTarget - yaw) * (reduce ? 1 : 0.05);
       stage.rotation.y = -0.18 + pointer.x * 0.12 + yaw + p * Math.PI * 2;
-      stage.position.y = 0.05 + (reduce ? 0 : Math.sin(t * 1.4) * 0.025);
-      camera.position.y = 0.55 - p * 0.15;
-      camera.lookAt(0, 0.38 - p * 0.1, 0);
+      stage.position.y = 0.22 + (reduce ? 0 : Math.sin(t * 1.4) * 0.025);
+      camera.position.y = 0.42 - p * 0.15;
+      camera.lookAt(0, 0.45 - p * 0.1, 0);
       renderer.render(scene, camera);
     };
     tick();

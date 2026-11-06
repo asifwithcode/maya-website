@@ -1,146 +1,126 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { scrollToId } from "./SmoothScroll";
 import { useT } from "./i18n";
 
-const LINKS = ["moods", "features", "screens", "editions", "specs"] as const;
-
-function ThemeToggle() {
-  const { t } = useT();
-  const toggle = () => {
-    const root = document.documentElement;
-    const next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
-    root.setAttribute("data-theme", next);
-    document.cookie = `theme=${next}; path=/; max-age=31536000; samesite=lax`;
-  };
-  // the icon follows data-theme through CSS, so server and client render the same markup
-  return (
-    <button
-      type="button"
-      onClick={toggle}
-      className="group grid h-9 w-9 place-items-center rounded-full text-ink-soft transition hover:bg-ink/5 hover:text-ink"
-    >
-      <span className="sr-only dark:hidden">{t.nav.toDark}</span>
-      <span className="sr-only hidden dark:inline">{t.nav.toLight}</span>
-      <svg viewBox="0 0 24 24" className="h-[18px] w-[18px] dark:hidden" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
-        <path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5Z" strokeLinejoin="round" />
-      </svg>
-      <svg viewBox="0 0 24 24" className="hidden h-[18px] w-[18px] dark:block" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true">
-        <circle cx="12" cy="12" r="4" />
-        <path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4" />
-      </svg>
-    </button>
-  );
-}
-
 export default function Nav({ home = true }: { home?: boolean }) {
   const { lang, t } = useT();
-  const [solid, setSolid] = useState(false);
-  const [hidden, setHidden] = useState(false);
   const [open, setOpen] = useState(false);
-  const last = useRef(0);
+  const [scrolled, setScrolled] = useState(false);
   const base = lang === "bn" ? "/bn" : "/";
   const otherHref = lang === "bn" ? "/" : "/bn";
+  const isBn = lang === "bn";
 
   useEffect(() => {
-    const onScroll = () => {
-      const y = window.scrollY;
-      setSolid(y > 24);
-      setHidden(y > 400 && y > last.current + 4);
-      if (y < last.current - 4) setHidden(false);
-      last.current = y;
-    };
+    const onScroll = () => setScrolled(window.scrollY > 8);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   const go = (id: string) => (e: React.MouseEvent) => {
+    setOpen(false);
     if (!home) return;
     e.preventDefault();
-    setOpen(false);
     scrollToId(id);
   };
   const href = (id: string) => (home ? `#${id}` : `${base === "/" ? "" : base}/#${id}`);
 
+  const links: [string, string][] = [
+    ["moods", t.nav.moods],
+    ["features", t.nav.features],
+    ["screens", t.nav.screens],
+    ["editions", t.nav.editions],
+    ["download", isBn ? "অ্যাপ" : "App"],
+    ["specs", t.nav.specs],
+  ];
+
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 transition-[transform,background-color,border-color] duration-500 ease-[cubic-bezier(.16,1,.3,1)] ${
-        hidden && !open ? "-translate-y-full" : "translate-y-0"
-      } ${solid || open ? "border-b border-ink/[0.06] bg-paper/75 backdrop-blur-xl" : "border-b border-transparent"}`}
+      className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${
+        scrolled || open
+          ? "bg-white/80 backdrop-blur-xl backdrop-saturate-150 border-b border-black/[0.08]"
+          : "bg-white/0"
+      }`}
     >
-      <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 sm:px-8">
-        <Link href={base} className="flex items-baseline gap-2" aria-label="Maya">
-          <span className="font-script text-2xl leading-none">maya</span>
-          <span className="hidden text-[0.65rem] font-medium uppercase tracking-[0.2em] text-ink-faint sm:inline">by Xentoryx</span>
+      <div className="mx-auto flex h-12 max-w-[1024px] items-center justify-between px-4 sm:px-6">
+        <Link href={base} aria-label="Maya by Xentoryx" className="text-[17px] font-semibold tracking-tight text-[#1d1d1f]">
+          Maya
         </Link>
 
-        <ul className="hidden items-center gap-7 text-[0.85rem] text-ink-soft md:flex">
-          {LINKS.map((id) => (
-            <li key={id}>
-              <a href={href(id)} onClick={go(id)} className="transition-colors hover:text-ink">
-                {t.nav[id]}
-              </a>
-            </li>
+        <nav className="hidden items-center gap-7 md:flex" aria-label="Main Navigation">
+          {links.map(([id, label]) => (
+            <a
+              key={id}
+              href={href(id)}
+              onClick={go(id)}
+              className="text-[12px] text-[#1d1d1f]/80 transition-colors hover:text-[#1d1d1f]"
+            >
+              {label}
+            </a>
           ))}
-          <li>
-            <Link href="/docs" className="transition-colors hover:text-ink">
-              {t.nav.guide}
-            </Link>
-          </li>
-        </ul>
+          <Link
+            href={isBn ? "/bn/docs" : "/docs"}
+            className="text-[12px] text-[#1d1d1f]/80 transition-colors hover:text-[#1d1d1f]"
+          >
+            {t.nav.guide}
+          </Link>
+        </nav>
 
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-3">
           <Link
             href={otherHref}
-            hrefLang={lang === "bn" ? "en" : "bn"}
+            hrefLang={isBn ? "en" : "bn"}
+            className="text-[12px] text-[#1d1d1f]/80 hover:text-[#1d1d1f]"
             aria-label={t.nav.otherLabel}
-            className={`grid h-9 min-w-9 place-items-center rounded-full px-2.5 text-[0.8rem] font-medium text-ink-soft transition hover:bg-ink/5 hover:text-ink ${
-              lang === "en" ? "font-bangla" : ""
-            }`}
+            title={t.nav.otherLabel}
           >
-            {t.nav.other}
+            {isBn ? "EN" : "বাং"}
           </Link>
-          <ThemeToggle />
           <a
-            href={href("reserve")}
-            onClick={go("reserve")}
-            className="ml-1 rounded-full bg-ink px-4 py-2 text-[0.8rem] font-medium text-paper transition hover:bg-eye-deep hover:text-white"
+            href={href("order")}
+            onClick={go("order")}
+            className="rounded-full bg-[#0071e3] px-3.5 py-1 text-[12px] text-white transition-colors hover:bg-[#0077ed]"
           >
-            {t.nav.reserve}
+            {t.nav.order}
           </a>
           <button
             type="button"
-            aria-label={open ? t.nav.close : t.nav.open}
+            onClick={() => setOpen(!open)}
             aria-expanded={open}
-            onClick={() => setOpen((o) => !o)}
-            className="grid h-9 w-9 place-items-center rounded-full md:hidden"
+            aria-label={open ? t.nav.close : t.nav.open}
+            className="flex h-8 w-8 items-center justify-center text-[#1d1d1f] md:hidden"
           >
-            <span className="relative block h-3 w-5">
-              <span className={`absolute left-0 top-0 h-[1.5px] w-5 bg-ink transition ${open ? "translate-y-[5px] rotate-45" : ""}`} />
-              <span className={`absolute bottom-0 left-0 h-[1.5px] w-5 bg-ink transition ${open ? "-translate-y-[5px] -rotate-45" : ""}`} />
-            </span>
+            <svg viewBox="0 0 24 24" className="h-[18px] w-[18px]" fill="none" stroke="currentColor" strokeWidth="1.5">
+              {open ? <path d="M6 18L18 6M6 6l12 12" /> : <path d="M4 9h16M4 15h16" />}
+            </svg>
           </button>
         </div>
-      </nav>
+      </div>
 
       {open && (
-        <ul className="border-t border-ink/[0.06] px-5 pb-6 pt-2 md:hidden">
-          {LINKS.map((id) => (
-            <li key={id}>
-              <a href={href(id)} onClick={go(id)} className="block py-3 text-2xl font-medium tracking-tight">
-                {t.nav[id]}
+        <div className="border-t border-black/[0.06] bg-white px-6 pb-8 pt-4 md:hidden">
+          <div className="flex flex-col">
+            {links.map(([id, label]) => (
+              <a
+                key={id}
+                href={href(id)}
+                onClick={go(id)}
+                className="border-b border-black/[0.06] py-3 text-[22px] font-semibold tracking-tight text-[#1d1d1f]"
+              >
+                {label}
               </a>
-            </li>
-          ))}
-          <li>
-            <Link href="/docs" className="block py-3 text-2xl font-medium tracking-tight">
+            ))}
+            <Link
+              href={isBn ? "/bn/docs" : "/docs"}
+              className="py-3 text-[22px] font-semibold tracking-tight text-[#1d1d1f]"
+            >
               {t.nav.guide}
             </Link>
-          </li>
-        </ul>
+          </div>
+        </div>
       )}
     </header>
   );
