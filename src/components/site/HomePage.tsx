@@ -1,6 +1,5 @@
 import Nav from "./Nav";
-import Hero from "./Hero";
-import Manifesto from "./Manifesto";
+import { VisionHero, VisionStatement, VisionExpand, VisionEditions } from "./VisionStory";
 import Moods from "./Moods";
 import Features from "./Features";
 import Screens from "./Screens";
@@ -28,8 +27,10 @@ export default async function HomePage({ lang }: { lang: Lang }) {
         <AutoReveal />
         <Nav />
         <main>
-          <Hero />
-          <Manifesto />
+          <VisionHero />
+          <VisionStatement />
+          <VisionExpand />
+          <VisionEditions />
           <Moods />
           <Features />
           <Screens />

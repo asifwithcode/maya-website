@@ -8,7 +8,7 @@ export default function AutoReveal() {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const picked = Array.from(
       document.querySelectorAll<HTMLElement>(
-        "main section:not(#top) :is(h2, h2 + p, .headline + p, .grid > *, dl > div, ul > li, form > *, [data-reveal])",
+        "main section:not(#top):not([data-no-reveal]) :is(h2, h2 + p, .headline + p, .grid > *, dl > div, ul > li, form > *, [data-reveal])",
       ),
     );
     const set = new Set(picked);
