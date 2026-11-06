@@ -3,11 +3,11 @@ import LegalPage from "@/components/site/LegalPage";
 import { TERMS } from "@/components/site/legal";
 
 export const metadata: Metadata = {
-  title: "Terms of Use · Maya",
-  description: "The terms for ordering Maya and using the robot and the MAYA Companion app.",
-  alternates: { languages: { en: "/terms", bn: "/bn/terms" } },
+  title: "ব্যবহারের শর্তাবলি · মায়া",
+  description: "মায়া অর্ডার আর রোবট ও MAYA Companion অ্যাপ ব্যবহারের শর্ত।",
+  alternates: { canonical: "/terms", languages: { bn: "/terms", en: "/en/terms" } },
 };
 
 export default function Page() {
-  return <LegalPage doc={TERMS.en} lang="en" otherHref="/bn/terms" otherLabel="বাংলায় পড়ুন →" />;
+  return <LegalPage doc={TERMS.bn} lang="bn" otherHref="/en/terms" otherLabel="Read in English →" />;
 }

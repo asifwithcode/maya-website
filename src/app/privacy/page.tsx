@@ -3,11 +3,11 @@ import LegalPage from "@/components/site/LegalPage";
 import { PRIVACY } from "@/components/site/legal";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy · Maya",
-  description: "How Xentoryx Labs handles your information when you order Maya or use the robot and app.",
-  alternates: { languages: { en: "/privacy", bn: "/bn/privacy" } },
+  title: "প্রাইভেসি পলিসি · মায়া",
+  description: "মায়া অর্ডার আর রোবট ও অ্যাপ ব্যবহারে Xentoryx Labs আপনার তথ্য কীভাবে রাখে।",
+  alternates: { canonical: "/privacy", languages: { bn: "/privacy", en: "/en/privacy" } },
 };
 
 export default function Page() {
-  return <LegalPage doc={PRIVACY.en} lang="en" otherHref="/bn/privacy" otherLabel="বাংলায় পড়ুন →" />;
+  return <LegalPage doc={PRIVACY.bn} lang="bn" otherHref="/en/privacy" otherLabel="Read in English →" />;
 }

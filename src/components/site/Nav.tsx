@@ -4,13 +4,14 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { scrollToId } from "./SmoothScroll";
 import { useT } from "./i18n";
+import { pathFor } from "./paths";
 
 export default function Nav({ home = true }: { home?: boolean }) {
   const { lang, t } = useT();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const base = lang === "bn" ? "/bn" : "/";
-  const otherHref = lang === "bn" ? "/" : "/bn";
+  const base = pathFor(lang);
+  const otherHref = pathFor(lang === "bn" ? "en" : "bn");
   const isBn = lang === "bn";
 
   useEffect(() => {
@@ -62,7 +63,7 @@ export default function Nav({ home = true }: { home?: boolean }) {
             </a>
           ))}
           <Link
-            href={isBn ? "/bn/docs" : "/docs"}
+            href={pathFor(lang, "docs")}
             className="text-[12px] text-[#1d1d1f]/80 transition-colors hover:text-[#1d1d1f]"
           >
             {t.nav.guide}
@@ -114,7 +115,7 @@ export default function Nav({ home = true }: { home?: boolean }) {
               </a>
             ))}
             <Link
-              href={isBn ? "/bn/docs" : "/docs"}
+              href={pathFor(lang, "docs")}
               className="py-3 text-[22px] font-semibold tracking-tight text-[#1d1d1f]"
             >
               {t.nav.guide}

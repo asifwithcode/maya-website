@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useT } from "./i18n";
+import { pathFor } from "./paths";
 
 export default function AppDownload() {
   const { lang } = useT();
@@ -43,7 +44,7 @@ export default function AppDownload() {
             <a href="/app" download className="btn-primary">
               {isBn ? "অ্যান্ড্রয়েডের জন্য ডাউনলোড" : "Download for Android"}
             </a>
-            <Link href={isBn ? "/bn/docs" : "/docs"} className="link-more">
+            <Link href={pathFor(isBn ? "bn" : "en", "docs")} className="link-more">
               {isBn ? "ইউজার গাইড পড়ুন" : "Read the user guide"} <span aria-hidden>›</span>
             </Link>
           </div>

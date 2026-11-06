@@ -3,6 +3,7 @@ import Nav from "@/components/site/Nav";
 import Footer from "@/components/site/Footer";
 import HtmlLang from "@/components/site/HtmlLang";
 import type { LegalDoc } from "@/components/site/legal";
+import { LangProvider } from "@/components/site/i18n";
 
 /** Privacy / terms page in the same look as the user guide. */
 export default function LegalPage({
@@ -17,7 +18,7 @@ export default function LegalPage({
   otherLabel: string;
 }) {
   return (
-    <>
+    <LangProvider lang={lang}>
       <HtmlLang lang={lang} />
       <Nav home={false} />
 
@@ -55,6 +56,6 @@ export default function LegalPage({
       </main>
 
       <Footer />
-    </>
+    </LangProvider>
   );
 }

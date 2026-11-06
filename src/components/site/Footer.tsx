@@ -3,14 +3,15 @@
 import Link from "next/link";
 import { useT } from "./i18n";
 import { useContent } from "./content";
+import { pathFor } from "./paths";
 
 export default function Footer() {
   const { lang, t } = useT();
   const { copy } = useContent();
   const comp = copy?.company;
   const isBn = lang === "bn";
-  const home = isBn ? "/bn" : "";
-  const docs = isBn ? "/bn/docs" : "/docs";
+  const home = lang === "bn" ? "" : pathFor("en");
+  const docs = pathFor(lang, "docs");
 
   const cols: { title: string; links: [string, string, boolean?][] }[] = [
     {
@@ -36,8 +37,8 @@ export default function Footer() {
         [isBn ? "Bluetooth ও Wi‑Fi সেটআপ" : "Bluetooth & Wi‑Fi setup", `${docs}#pairing`],
         [isBn ? "সমস্যা সমাধান" : "Troubleshooting", `${docs}#help`],
         [isBn ? "অ্যান্ড্রয়েড অ্যাপ" : "Android app", "/app", true],
-        [isBn ? "প্রাইভেসি পলিসি" : "Privacy policy", isBn ? "/bn/privacy" : "/privacy"],
-        [isBn ? "ব্যবহারের শর্তাবলি" : "Terms of use", isBn ? "/bn/terms" : "/terms"],
+        [isBn ? "প্রাইভেসি পলিসি" : "Privacy policy", pathFor(lang, "privacy")],
+        [isBn ? "ব্যবহারের শর্তাবলি" : "Terms of use", pathFor(lang, "terms")],
       ],
     },
     {

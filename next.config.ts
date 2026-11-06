@@ -13,6 +13,10 @@ const nextConfig: NextConfig = {
     return [
       // Temporary (307): the target changes with every app release.
       { source: "/app", destination: CURRENT_APK, permanent: false },
+      // Bangla is the default language now (plain paths); English moved to /en.
+      // Old /bn links (and the booklet's QR codes) keep working.
+      { source: "/bn", destination: "/", permanent: true },
+      { source: "/bn/:path*", destination: "/:path*", permanent: true },
     ];
   },
 };

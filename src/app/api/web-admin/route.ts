@@ -48,7 +48,7 @@ function sanitizeText(val: string | null | undefined, fallback: string): string 
 const refreshPaths = () => {
   try {
     revalidatePath("/");
-    revalidatePath("/bn");
+    revalidatePath("/en");
   } catch (e) {
     console.warn("revalidatePath error in web-admin api:", e);
   }

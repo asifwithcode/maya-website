@@ -5,6 +5,7 @@ import Link from "next/link";
 import { IN_THE_BOX, SPECS } from "./data";
 import { bnDigits, useT } from "./i18n";
 import { useContent } from "./content";
+import { pathFor } from "./paths";
 
 export default function Specs() {
   const { lang, t } = useT();
@@ -66,7 +67,7 @@ export default function Specs() {
           </div>
           <p className="mt-12 text-center text-[17px] text-[#6e6e73]">
             {s.guideBefore}{" "}
-            <Link href={isBn ? "/bn/docs" : "/docs"} className="text-[#0066cc] hover:underline">
+            <Link href={pathFor(isBn ? "bn" : "en", "docs")} className="text-[#0066cc] hover:underline">
               {s.guideLink} ›
             </Link>
           </p>

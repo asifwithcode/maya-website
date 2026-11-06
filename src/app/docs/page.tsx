@@ -6,338 +6,339 @@ import HtmlLang from "@/components/site/HtmlLang";
 import MayaFace from "@/components/site/MayaFace";
 import PrintButton from "@/components/site/PrintButton";
 import { GAMES, MOODS, SPECS } from "@/components/site/data";
+import { LangProvider } from "@/components/site/i18n";
 
 export const metadata: Metadata = {
-  title: "Maya User Guide, Software & Comprehensive Troubleshooting | Xentoryx",
+  title: "মায়া ইউজার গাইড, সফটওয়্যার ও পূর্ণাঙ্গ সমস্যা সমাধান | Xentoryx",
   description:
-    "Complete technical guide for Maya desktop companion: unboxing, BLE pairing, dual capacitive touch controls, 8 moods, 10 menu screens, 7 arcade games, firmware updates, and comprehensive troubleshooting tips.",
-  alternates: { languages: { en: "/docs", bn: "/bn/docs" } },
+    "মায়া ডেস্কটপ কম্প্যানিয়নের সম্পূর্ণ টেকনিক্যাল গাইড: আনবক্সিং, ব্লুটুথ পেয়ারিং, দুই পায়ের ক্যাপাসিটিভ টাচ কন্ট্রোল, ৮টি মুড, ১০টি মেনু স্ক্রিন, ৭টি আর্কেড গেম এবং বিস্তারিত সমস্যা সমাধানের টিপস।",
+  alternates: { canonical: "/docs", languages: { bn: "/docs", en: "/en/docs" } },
 };
 
-const TOC = [
-  ["apps", "Software & Apps"],
-  ["start", "Quick Start Guide"],
-  ["controls", "Touch Controls & Gestures"],
-  ["moods", "Moods & Personality"],
-  ["menu", "Carousel Menu & Screens"],
-  ["games", "Arcade Games"],
-  ["pairing", "BLE Pairing & Wi-Fi"],
-  ["accessories", "Accessories & Modular Snaps"],
-  ["firmware", "Firmware Updates"],
-  ["reset", "Factory Reset"],
-  ["care", "Care & Maintenance"],
-  ["specs", "Technical Specifications"],
-  ["help", "Troubleshooting & FAQs"],
+const TOC_BN = [
+  ["apps", "সফটওয়্যার ও অ্যাপস"],
+  ["start", "শুরু করা ও সেটআপ"],
+  ["controls", "টাচ কন্ট্রোল ও জেসচার"],
+  ["moods", "মুড ও জীবন্ত আচরণ"],
+  ["menu", "ক্যারোসেল মেনু ও ১০টি স্ক্রিন"],
+  ["games", "আর্কেড গেমস নির্দেশিকা"],
+  ["pairing", "ব্লুটুথ ও ওয়াই-ফাই সেটআপ"],
+  ["accessories", "মডুলার অ্যাক্সেসরিজ"],
+  ["firmware", "ফার্মওয়্যার আপডেট"],
+  ["reset", "ফ্যাক্টরি রিসেট পদ্ধতি"],
+  ["care", "যত্ন ও সতর্কতা"],
+  ["specs", "হার্ডওয়্যার স্পেসিফিকেশন"],
+  ["help", "সমস্যা সমাধান ও FAQ"],
 ] as const;
 
-const CONTROLS: { action: string; face: string; screens: string; tag: string }[] = [
+const CONTROLS_BN: { action: string; face: string; screens: string; tag: string }[] = [
   {
-    action: "Tap T1 (Left Foot)",
-    face: "Pet her! Cycles Happy, Wink, Adore, and Laugh expressions with Bangla dialogue.",
-    screens: "Select item, Jump (Dino), Flap (Flappy), Fire (Shooter), Drop (Stack), Lap (Stopwatch).",
-    tag: "Primary Tap",
+    action: "T1 (বাম পায়ে) একবার আলতো ট্যাপ",
+    face: "আদর দেওয়া! খুশি, চোখ টেপা, আদর ও হাসির অ্যানিমেশনের সাথে মিষ্টি বাংলা ডায়ালগ কার্ড।",
+    screens: "আইটেম সিলেক্ট, লাফ (ডাইনো), ডানা ঝাপটানো (ফ্ল্যাপি), লেজার গুলি (শুটার), ড্রপ (স্ট্যাক), ল্যাপ কাউন্টার।",
+    tag: "মূল ট্যাপ",
   },
   {
-    action: "Rapid Tap T1 (3–4 times)",
-    face: "She gets annoyed with dizzy eyes and shakes her head.",
+    action: "T1 দ্রুত ৩–৪ বার ট্যাপ",
+    face: "বিরক্ত হওয়া! চোখ গোল করে মাথা নাড়াবে এবং বিরক্তি প্রকাশ করবে।",
     screens: "—",
-    tag: "Gesture",
+    tag: "জেসচার",
   },
   {
-    action: "Rapid Tap T1 (5+ times)",
-    face: "She gets angry! Eyes burst with fury and she demands you stop poking her.",
+    action: "T1 দ্রুত ৫+ বার ট্যাপ",
+    face: "রেগে যাওয়া! চোখের আগুন জ্বলে উঠবে এবং তাকে বিরক্ত না করতে কড়া সতর্কবার্তা দেবে।",
     screens: "—",
-    tag: "Gesture",
+    tag: "জেসচার",
   },
   {
-    action: "Hold T1 for 800 ms",
-    face: "Deep affection reaction! Animated beating hearts and romantic eye glow.",
+    action: "T1 ৮০০ মিলি-সেকেন্ড চেপে ধরা",
+    face: "গভীর ভালোবাসার প্রতিক্রিয়া! চোখে ভালোবাসার হার্ট অ্যানিমেশন ভেসে উঠবে।",
     screens: "—",
-    tag: "Hold",
+    tag: "হোল্ড",
   },
   {
-    action: "Tap T2 (Right Foot)",
-    face: "Opens the 3D glowing carousel menu.",
-    screens: "Menu: Step to next screen. Inside screens: Back / cancel.",
-    tag: "Menu / Nav",
+    action: "T2 (ডান পায়ে) একবার আলতো ট্যাপ",
+    face: "থ্রিডি নিয়ন ক্যারোসেল মেনু খুলে যাবে।",
+    screens: "মেনুতে: পরের স্ক্রিনে যাওয়া। স্ক্রিনের ভেতর: ব্যাক বা ক্যানসেল।",
+    tag: "মেনু / নেভিগেশন",
   },
   {
-    action: "Hold T1 for 1.0 s",
+    action: "T1 ১.০ সেকেন্ড চেপে ধরা",
     face: "—",
-    screens: "Exit active screen or quit current arcade minigame back to menu.",
-    tag: "Exit",
+    screens: "চলতি স্ক্রিন বা মিনি গেম থেকে তাত্ক্ষণিক বের হয়ে মেনুতে ফেরা।",
+    tag: "প্রস্থান",
   },
   {
-    action: "Hold T2 for 1.0 s",
+    action: "T2 ১.০ সেকেন্ড চেপে ধরা",
     face: "—",
-    screens: "Exit arcade games list back to main carousel menu.",
-    tag: "Back",
+    screens: "আর্কেড গেমসের তালিকা থেকে সরাসরি মূল মেনুতে ফেরা।",
+    tag: "ব্যাক",
   },
   {
-    action: "Hold T1 + T2 together (1.8 s)",
-    face: "Interactive Sleep Mode! Kawaii sleeping eyes, breathing glow, floating Zzz & stars.",
-    screens: "Wakes Maya up instantly or puts her into gentle sleep from any screen.",
-    tag: "Dual Touch",
+    action: "T1 + T2 একসাথে ১.৮ সেকেন্ড চেপে ধরা",
+    face: "ইন্টারেক্টিভ স্লিপ ইঞ্জিন! কিউট ঘুমানোর চোখ, জিপুজি মৃদু আলো, ভাসমান Zzz ও মিটিমিটি তারা।",
+    screens: "যেকোনো স্ক্রিন থেকে মায়াকে ঘুম পাড়ানো বা জাগিয়ে তোলা।",
+    tag: "ডুয়াল টাচ",
   },
   {
-    action: "Hold T2 for 2.5 s",
-    face: "Instant Setup / BLE Pairing mode from anywhere.",
-    screens: "Instant Setup / BLE Pairing mode from anywhere.",
-    tag: "Setup Shortcut",
+    action: "T2 ২.৫ সেকেন্ড চেপে ধরা",
+    face: "যেকোনো অবস্থা থেকে সরাসরি পেয়ারিং মোড ও কিউআর কোড চালু।",
+    screens: "যেকোনো অবস্থা থেকে সরাসরি পেয়ারিং মোড ও কিউআর কোড চালু।",
+    tag: "শর্টকাট",
   },
   {
-    action: "ESP32 BOOT Button (Base)",
-    face: "Hardware system restart / warm reboot.",
-    screens: "Hardware system restart / warm reboot.",
-    tag: "Hardware",
+    action: "ESP32 BOOT বাটন (পেছনে)",
+    face: "হার্ডওয়্যার সিস্টেম রিস্টার্ট / সফট রিবুট।",
+    screens: "হার্ডওয়্যার সিস্টেম রিস্টার্ট / সফট রিবুট।",
+    tag: "হার্ডওয়্যার",
   },
 ];
 
-const MENU_DETAILS = [
+const MENU_DETAILS_BN = [
   {
-    title: "1. Maya Face & Living Eyes",
-    subtitle: "Active Companion Mode",
-    desc: "The primary personality view featuring real-time parametric RoboEyes, realistic glancing, auto blinking, and touch-reactive emotions. Autonomous expression engine shifts moods periodically.",
+    title: "১. মায়ার চোখ ও মুখ",
+    subtitle: "অ্যাক্টিভ ব্যক্তিত্ব",
+    desc: "মায়ার মূল জীবন্ত স্ক্রিন যেখানে রোবো-আইজ ডাইনামিকভাবে তাকায়, চোখের পলক ফেলে এবং টাচে অনুভূতি প্রকাশ করে। প্রতি কয়েক সেকেন্ড পর পর স্বয়ংক্রিয়ভাবে নতুন নতুন এক্সপ্রেশন দেয়।",
   },
   {
-    title: "2. Digital Clock & Calendar",
-    subtitle: "NTP Internet Synchronized",
-    desc: "Clean neon cyber aesthetic clock showing 12/24-hour time, day, and date. Automatically synchronizes with international time servers over Wi-Fi without manual adjustments.",
+    title: "২. ডিজিটাল ঘড়ি ও ক্যালেন্ডার",
+    subtitle: "NTP ইন্টারনেট সিঙ্ক",
+    desc: "সাইবার নান্দনিক ডিজাইনের ডিজিটাল ঘড়ি যা ওয়াই-ফাইয়ের মাধ্যমে আন্তর্জাতিক সার্ভার থেকে প্রতি সেকেন্ডে নিখুঁত সময় ও তারিখ আপডেট রাখে।",
   },
   {
-    title: "3. Live Weather & Forecast",
-    subtitle: "Real-time City Metrics",
-    desc: "Displays current outdoor temperature, weather condition icons (sunny, rainy, cloudy, stormy), relative humidity percentage, and target location set via the mobile app.",
+    title: "৩. লাইভ আবহাওয়া ও পূর্বাভাস",
+    subtitle: "শহরের রিয়েলটাইম আবহাওয়া",
+    desc: "আপনার শহরের বর্তমান তাপমাত্রা, আকাশের অবস্থা (রোদ, বৃষ্টি, মেঘ), এবং আর্দ্রতার শতাংশ প্রদর্শন করে যা মোবাইল অ্যাপের মাধ্যমে নির্ধারিত হয়।",
   },
   {
-    title: "4. Phone Notification Relay",
-    subtitle: "Mirrored Alerts",
-    desc: "Displays the 5 most recent alerts received on your connected Android device (calls, SMS, WhatsApp, reminders). Never miss an important alert while working.",
+    title: "৪. ফোন নোটিফিকেশন মিরর",
+    subtitle: "সরাসরি সতর্কবার্তা",
+    desc: "আপনার অ্যান্ড্রয়েড ফোনে আসা সর্বশেষ ৫টি নোটিফিকেশন (কল, মেসেজ, হোয়াটসঅ্যাপ, রিমাইন্ডার) মায়ার স্ক্রিনে সাথে সাথে ফুটে ওঠে।",
   },
   {
-    title: "5. Pomodoro Focus Timer",
-    subtitle: "Productivity Arc Engine",
-    desc: "Standard 25-minute focused sprint followed by a 5-minute restorative break. Displayed with an animated glowing neon progress arc and subtle completion pulses.",
+    title: "৫. পোমোডোরো ফোকাস টাইমার",
+    subtitle: "প্রোডাক্টিভিটি ইঞ্জিন",
+    desc: "২৫ মিনিট গভীর মনোযোগ দিয়ে কাজ বা পড়াশোনা এবং ৫ মিনিট হালকা বিরতির বৈজ্ঞানিক পোমোডোরো সাইকেল, যা উজ্জ্বল বৃত্তাকার নিয়ন আর্কে প্রদর্শিত হয়।",
   },
   {
-    title: "6. Stopwatch & Lap Counter",
-    subtitle: "Millisecond Precision",
-    desc: "High-precision timer for workout laps, sprints, or study pacing. Tap T1 to start, pause, or record new lap splits; tap T2 to reset.",
+    title: "৬. স্টপওয়াচ ও ল্যাপ কাউন্টার",
+    subtitle: "মিলিসেকেন্ড অ্যাকুরেসি",
+    desc: "কাজের গতি বা শরীরচর্চার হিসাব রাখতে নিখুঁত মিলিসেকেন্ড স্টপওয়াচ। T1 দিয়ে স্টার্ট, পজ ও ল্যাপ এবং T2 দিয়ে ক্লিয়ার করা যায়।",
   },
   {
-    title: "7. Focus Productivity Stats",
-    subtitle: "Daily & Weekly Telemetry",
-    desc: "Visual summary of your deep work minutes accumulated today and over the current week, helping you maintain productive study or coding streaks.",
+    title: "৭. ফোকাস পরিসংখ্যান",
+    subtitle: "দৈনিক ও সাপ্তাহিক হিসাব",
+    desc: "আজ এবং চলতি সপ্তাহে আপনি মোট কত মিনিট বা ঘণ্টা পূর্ণ মনোযোগ দিয়ে কাজ করেছেন তার দৃশ্যমান অ্যানালিটিক্স।",
   },
   {
-    title: "8. Mini Games (Retro Arcade)",
-    subtitle: "7 Built-in 60 FPS Games",
-    desc: "Built-in arcade suite featuring Dino, Flappy, Space Shooter, Tower Stack, Circle Pong, Reflex Rush, and Brick Breaker with persistent high scores.",
+    title: "৮. মিনি গেমস (আর্কেড)",
+    subtitle: "৭টি ক্লাসিক রেট্রো গেম",
+    desc: "বিল্ট-ইন ৬০ এফপিএস আর্কেড সুট যাতে রয়েছে ডাইনো, ফ্ল্যাপি, স্পেস শুটার, টাওয়ার স্ট্যাক, সার্কেল পং, রিফ্লেক্স এবং ব্রিক ব্রেকার।",
   },
   {
-    title: "9. System Info & Diagnostics",
-    subtitle: "Hardware Telemetry",
-    desc: "Real-time hardware status monitor showing Wi-Fi SSID, RSSI signal strength dBm, local IP address, available RAM heap, system uptime, and active firmware version.",
+    title: "৯. সিস্টেম ডায়াগনস্টিকস",
+    subtitle: "হার্ডওয়্যার স্ট্যাটাস",
+    desc: "রিয়েলটাইম সিস্টেম ইনফো: কানেক্টেড Wi-Fi নাম, সিগন্যাল স্ট্রেংথ dBm, লোকাল IP অ্যাড্রেস, ফ্রি র‍্যাম হিপ, আপটাইম ও ফার্মওয়্যার ভার্সন।",
   },
   {
-    title: "10. Setup / Factory Reset",
-    subtitle: "Device Onboarding & Memory Wipe",
-    desc: "Shows BLE pairing QR code before initial configuration. Once claimed, this screen converts into a safety-locked factory reset utility with hold-to-wipe confirmation.",
+    title: "১০. ডিভাইস সেটআপ / রিসেট",
+    subtitle: "ডিভাইস ক্লেম ও মেমোরি ক্লিয়ার",
+    desc: "পেয়ারিংয়ের পূর্বে কিউআর কোড দেখায়। পেয়ারিং হয়ে গেলে এটি নিরাপদ ফ্যাক্টরি রিসেট মেনুতে পরিণত হয় যা হোল্ড করে কনফার্ম করতে হয়।",
   },
 ];
 
-const GAME_DETAILS = [
+const GAME_DETAILS_BN = [
   {
     id: "dino",
-    name: "Maya Dino Runner",
-    genre: "Infinite Runner",
-    controls: "Tap T1 to Jump",
-    desc: "Help Dino leap over desert cacti and obstacles under cycling sun and moon lighting. Speed progressively accelerates.",
+    name: "মায়া ডাইনো রানার",
+    genre: "ইনফিনিট রানার",
+    controls: "T1 দিয়ে লাফ",
+    desc: "দিন ও রাতের আলোর পরিবর্তনের সাথে মরুভূমির ক্যাকটাস ও বাধাগুলো লাফিয়ে পার করুন। সময়ের সাথে গতি বাড়তে থাকে।",
   },
   {
     id: "flappy",
-    name: "Flappy Maya",
-    genre: "Endless Tapper",
-    controls: "Tap T1 to Flap",
-    desc: "Fly through narrow gaps between floating obstacles. Precision timing is required as physics gravity pulls Maya downward.",
+    name: "ফ্ল্যাপি মায়া",
+    genre: "এন্ডলেস ট্যাপার",
+    controls: "T1 দিয়ে ডানা ঝাপটানো",
+    desc: "ভাসমান পাইপের ফাঁক দিয়ে সাবধানে উড়ে যান। অভিকর্ষ বলের টানে মায়া নিচে নামতে থাকলে সঠিক সময়ে ট্যাপ করতে হয়।",
   },
   {
     id: "shooter",
-    name: "Space Shooter",
-    genre: "Retro Arcade",
-    controls: "Tap T1 to Fire Lasers",
-    desc: "Defend Maya's orbital station by blasting descending alien invaders and asteroid hazards with rapid-fire energy lasers.",
+    name: "স্পেস শুটার",
+    genre: "রেট্রো গ্যালাক্সি আর্কেড",
+    controls: "T1 দিয়ে লেজার ফায়ার",
+    desc: "মহাকাশ স্টেশন রক্ষা করতে উপর থেকে ধেয়ে আসা এলিয়েন জাহাজ ও উল্কাপিণ্ডে লেজার ছুড়ে ধ্বংস করুন।",
   },
   {
     id: "stack",
-    name: "Tower Stack",
-    genre: "Physics Timing",
-    controls: "Tap T1 to Drop Block",
-    desc: "Align horizontally oscillating blocks to construct the tallest skyscraper possible. Overhanging overhangs are sliced off!",
+    name: "টাওয়ার স্ট্যাক",
+    genre: "টাইমিং ও ব্যালেন্স",
+    controls: "T1 দিয়ে ব্লক ড্রপ",
+    desc: "দুলতে থাকা ব্লককে ঠিক মাঝখানে ফেলে আকাশচুম্বী টাওয়ার গড়ে তুলুন। বাইরের অংশ কেটে বাদ পড়ে যাবে!",
   },
   {
     id: "pong",
-    name: "Circle Pong",
-    genre: "360° Circular Action",
-    controls: "Tap T1 to Reverse Paddle",
-    desc: "Designed specifically for Maya's circular display! Keep the bouncing photon particle trapped inside the circular ring by reversing paddle direction.",
+    name: "সার্কেল পং",
+    genre: "৩৬০° সার্কুলার অ্যাকশন",
+    controls: "T1 দিয়ে দিক পরিবর্তন",
+    desc: "মায়ার গোল স্ক্রিনের জন্য বিশেষভাবে তৈরি! বলকে বৃত্তের ভেতর আটকে রাখতে প্যাডেলের দিক পরিবর্তন করুন।",
   },
   {
     id: "reflex",
-    name: "Reflex Rush",
-    genre: "Speed Reaction",
-    controls: "Tap T1 on Flash",
-    desc: "Test your human reaction speed down to the millisecond. Wait for the neon target to flash and strike T1 instantly.",
+    name: "রিফ্লেক্স রাশ",
+    genre: "গতি ও সতর্কতা পরীক্ষা",
+    controls: "আলো জ্বলার সাথে সাথে T1",
+    desc: "আপনার চোখের পলক ও আঙুলের প্রতিক্রিয়া কতটা দ্রুত তা মিলিসেকেন্ডে মাপুন। আলো দেখামাত্রই ট্যাপ করুন।",
   },
   {
     id: "brick",
-    name: "Brick Breaker",
-    genre: "Classic Breakout",
-    controls: "Tap T1 to Guide Paddle",
-    desc: "Bounce the power orb to shatter multilayer neon brick barricades without letting the ball slip past your defensive paddle.",
+    name: "ব্রিক ব্রেকার",
+    genre: "ক্লাসিক ব্রেকআউট",
+    controls: "T1 দিয়ে প্যাডেল পরিচালনা",
+    desc: "বল বাউন্স করিয়ে বিভিন্ন স্তরের রঙিন ইটের দেয়াল ভেঙে গুড়িয়ে দিন। বলকে নিচে পড়তে দেওয়া যাবে না।",
   },
 ];
 
-const TROUBLESHOOTING_CATEGORIES = [
+const TROUBLESHOOTING_BN = [
   {
-    category: "Power, Screen & Boot Issues",
-    badge: "Hardware & Power",
+    category: "পাওয়ার, স্ক্রিন ও বুট সংক্রান্ত সমস্যা",
+    badge: "পাওয়ার ও হার্ডওয়্যার",
     items: [
       {
-        q: "The screen stays completely black and nothing turns on",
-        a: "Ensure you are using a reliable 5V USB charger capable of delivering at least 1.0A (1000mA). Thin, cheap, or charge-only USB cables often cause voltage drops below the 4.7V required by the ESP32-C3 and GC9A01 display. Try a certified USB-C data cable and connect directly to a dedicated wall adapter or USB 3.0 port.",
+        q: "স্ক্রিন সম্পূর্ণ কালো হয়ে আছে এবং কোনো আলো জ্বলছে না",
+        a: "মায়ার নিজস্ব কোনো ব্যাটারি নেই, তাই ভালো মানের ৫ ভোল্ট এবং কমপক্ষে ১.০ অ্যাম্পিয়ার (১০০০ মিলি-অ্যাম্পিয়ার) সম্পন্ন USB-C চার্জার ব্যবহার করুন। অনেক চিকন চার্জিং কেবল বিদ্যুৎ পরিবাহী তার পর্যাপ্ত থাকে না বলে ভোল্টেজ ৪.৭ ভোল্টের নিচে নেমে যায়। একটি ভালো ডেটা কেবল দিয়ে দেয়ালের অ্যাডাপ্টারে লাগান।",
       },
       {
-        q: "Maya keeps rebooting in an endless loop (bootloop / brownout restart)",
-        a: "Bootloops are almost always caused by insufficient current during Wi-Fi transmission bursts (where the ESP32 radio pulls up to 350mA peak). If powered via an unpowered USB hub, weak PC front-panel port, or long extension cable, brownout protection restarts the chip. Switch to a standard 5V / 2A phone charging brick.",
+        q: "মায়া বারবার রিস্টার্ট নিচ্ছে বা বুটলুপে আটকে আছে",
+        a: "এটি ৯৯% ক্ষেত্রে বিদ্যুৎ ঘাটতি বা আন্ডার-ভোল্টেজ (Brownout) সমস্যার কারণে ঘটে। মায়ার ওয়াই-ফাই যখন ডেটা ট্রান্সমিট করে তখন পিক কারেন্ট প্রয়োজন হয়। দুর্বল পিসি ইউএসবি পোর্ট বা দীর্ঘ এক্সটেনশন কর্ডের বদলে সরাসরি ভালো মোবাইল চার্জার ব্যবহার করুন।",
       },
       {
-        q: "The display backlight lights up white/grey, but no face or graphics appear",
-        a: "A blank illuminated screen indicates the display has power but SPI communication did not initialize cleanly. Unplug the USB-C cable, wait 5 seconds, and firmly reconnect it. If the issue persists, connect Maya to a PC and inspect the device in MAYA Studio to verify firmware integrity.",
+        q: "ডিসপ্লেতে সাদা আলো জ্বলছে কিন্তু চোখ বা গ্রাফিক্স আসছে না",
+        a: "স্ক্রিন পাওয়ার পেলেও SPI ডেটা লাইন ঠিকমতো সিঙ্ক না হলে এমন হতে পারে। কেবলটি খুলে ৫ সেকেন্ড অপেক্ষা করে আবার শক্ত করে লাগান। যদি সমাধান না হয়, পিসির MAYA Studio-তে কানেক্ট করে ফার্মওয়্যার রি-ফ্ল্যাশ করুন।",
       },
       {
-        q: "Maya froze or is completely unresponsive to touch",
-        a: "You can trigger a hardware reset without unplugging by momentarily pressing the micro BOOT button located on the ESP32 module (accessible near the rear/base). Alternatively, disconnect and reconnect the USB-C power supply.",
+        q: "মায়া হঠাৎ ফ্রিজ হয়ে গেছে বা কোনো টাচ নিচ্ছে না",
+        a: "মায়ার পেছনের দিকে থাকা মাইক্রো BOOT বাটনটি একবার আলতো চাপ দিন অথবা USB-C কেবলটি খুলে আবার যুক্ত করুন, সাথে সাথে রিবুট হয়ে নতুনের মতো কাজ করবে।",
       },
     ],
   },
   {
-    category: "Touch Sensors & Gestures",
-    badge: "Capacitive Input",
+    category: "টাচ সেন্সর ও জেসচার সংক্রান্ত সমস্যা",
+    badge: "ক্যাপাসিটিভ ইনপুট",
     items: [
       {
-        q: "Touch pads do nothing right after plugging in Maya",
-        a: "This is completely normal and intentional. The TTP223 capacitive touch controllers execute an automatic baseline calibration for the first 3 seconds after receiving power. Keep your fingers completely off Maya's body and feet during this period. Once she waves hello and opens her eyes, touch inputs are active.",
+        q: "পাওয়ার দেওয়ার সাথে সাথেই দুই পায়ের টাচ কাজ করছে না",
+        a: "এটি সম্পূর্ণ স্বাভাবিক এবং সিস্টেমের সুরক্ষা ফিচার। প্লাগ লাগানোর পর প্রথম ৩ সেকেন্ড TTP223 সেন্সর চারপাশের পরিবেশ অনুযায়ী অটো-ক্যালিব্রেট করে। এই ৩ সেকেন্ড মায়াকে স্পর্শ করবেন না। মায়া চোখ খুলে হাই বলার পর টাচ সক্রিয় হয়ে যায়।",
       },
       {
-        q: "Random phantom touches or ghost triggers happen by themselves",
-        a: "Capacitive sensors are sensitive to electrical noise. Common causes include: using an ungrounded laptop power adapter, running on an unshielded noisy cheap charger, or placing Maya directly on a conductive metal desk mat. Place Maya on a clean, dry, non-conductive surface (wood, plastic, or cloth mousepad) and use a grounded power source.",
+        q: "কেউ না ছুঁলেও একা একাই টাচ ইনপুট নিচ্ছে (ঘোস্ট টাচ)",
+        a: "ক্যাপাসিটিভ সেন্সর বৈদ্যুতিক নয়েজের প্রতি সংবেদনশীল। যদি আনগ্রাউন্ডেড ল্যাপটপ চার্জার ব্যবহার করেন বা মেটালের টেবিলে সরাসরি রাখেন তবে এমন হতে পারে। মায়াকে কাঠ, প্লাস্টিক বা মাউসপ্যাডের ওপর রাখুন এবং ভালো মানের চার্জার দিন।",
       },
       {
-        q: "Touch pad feels insensitive or requires multiple taps to register",
-        a: "Touch pads are located inside the left (T1) and right (T2) foot pads. Ensure you make firm, flat contact with the fleshy pad of your finger rather than just a fingernail tip. Also ensure your hands and the base are dry.",
+        q: "টাচ করতে জোরে চাপ দিতে হচ্ছে বা একাধিকবার ট্যাপ করতে হচ্ছে",
+        a: "মায়ার পায়ের ভেতরের অংশে সেন্সর থাকে। নখ দিয়ে না চেপে আঙুলের নরম মাংসল অংশ দিয়ে আলতো ও পুরো স্পর্শ করুন। হাত বা মায়ার পা ভেজা থাকলে মুছে শুকনো করে নিন।",
       },
       {
-        q: "Dual-touch sleep mode (T1 + T2 hold) is difficult to trigger",
-        a: "Both T1 (left foot) and T2 (right foot) must be touched at the exact same moment and held continuously for 1.8 seconds. When held together, a circular progress ring will animate around the center. Hold steady until the ring completes 100%. Letting go before 1.8s cancels the sleep trigger.",
+        q: "দুটো পা চেপে ধরেও স্লিপ মোড চালু হচ্ছে না",
+        a: "বাম পা (T1) এবং ডান পা (T2) ঠিক একই সাথে স্পর্শ করে পূর্ণ ১.৮ সেকেন্ড ধরে রাখতে হবে। মাঝখানে একটি বৃত্তাকার প্রোগ্রেস রিং ঘুরবে। রিংটি ১০০% পূর্ণ না হওয়া পর্যন্ত আঙুল সরাবেন না।",
       },
     ],
   },
   {
-    category: "Wi-Fi & Network Connectivity",
-    badge: "Wireless Networking",
+    category: "ওয়াই-ফাই ও নেটওয়ার্ক সংযোগ সমস্যা",
+    badge: "ওয়ারলেস নেটওয়ার্কিং",
     items: [
       {
-        q: "My home Wi-Fi network does not show up during setup",
-        a: "Maya's ESP32-C3 hardware radio operates exclusively on 2.4 GHz (802.11 b/g/n). It does not support 5 GHz Wi-Fi frequencies. If your router uses a combined single SSID with band steering, temporarily enable a dedicated 2.4 GHz Wi-Fi network or guest network in your router settings.",
+        q: "সেটআপের সময় আমার বাসার ওয়াই-ফাই নেটওয়ার্কের নাম আসছে না",
+        a: "মায়ার ESP32-C3 চিপ শুধুমাত্র ২.৪ GHz ওয়াই-ফাই ফ্রিকোয়েন্সিতে কাজ করে। এটি ৫ GHz ফ্রিকোয়েন্সি সমর্থন করে না। আপনার রাউটারে যদি 2.4G ও 5G একই নামে থাকে, তবে রাউটার সেটিংসে গিয়ে আলাদা ২.৪ GHz নেটওয়ার্ক চালু করে দিন।",
       },
       {
-        q: "Wi-Fi connection fails or drops connection frequently",
-        a: "Verify that your Wi-Fi password does not contain unsupported high-byte Unicode characters. Maya connects to standard WPA / WPA2-Personal networks; 802.1X Enterprise networks (such as university or corporate networks requiring a username and certificate) and public captive portal login pages are not supported.",
+        q: "ওয়াই-ফাই কানেক্ট হচ্ছে না বা বারবার ডিসকানেক্ট হয়ে যাচ্ছে",
+        a: "ওয়াই-ফাই পাসওয়ার্ডে জটিল ইউনিকোড ক্যারেক্টার এড়িয়ে চলুন। মায়া সাধারণ বাসাবাড়ির WPA/WPA2-Personal নেটওয়ার্কে কাজ করে। বিশ্ববিদ্যালয় বা অফিসের যেসব ওয়াই-ফাইতে লগইন পেইজ বা ইউজারনেম দিতে হয় (Enterprise / Captive Portal) সেগুলো মায়ায় সরাসরি কাজ করবে না।",
       },
       {
-        q: "How do I setup Wi-Fi if I don't have the Android app nearby?",
-        a: "Maya has a built-in fallback Access Point mode! Put Maya into Setup mode (hold T2 for 2.5s). Maya broadcasts her own Wi-Fi hotspot named 'MAYA-SETUP'. Connect to it with any smartphone, iPhone, or laptop, enter the password shown on her screen, and open 192.168.4.1 in your browser to configure your Wi-Fi credentials.",
+        q: "কাছে অ্যান্ড্রয়েড ফোন না থাকলে ওয়াই-ফাই সেটআপ করার উপায় কী?",
+        a: "মায়ার নিজস্ব হটস্পট মোড রয়েছে! ডান পা (T2) ২.৫ সেকেন্ড চেপে ধরলে স্ক্রিনে QR ও সেটআপ মোড আসবে। মায়া তখন 'MAYA-SETUP' নামের নিজস্ব ওয়াই-ফাই ছড়াবে। ল্যাপটপ বা আইফোন দিয়ে সেই ওয়াই-ফাইতে যুক্ত হয়ে ব্রাউজারে 192.168.4.1 লিখে এন্টার দিলেই ওয়াই-ফাই দেওয়ার ওয়েব পেজ পাওয়া যাবে।",
       },
       {
-        q: "Can Maya be used completely without any Wi-Fi connection?",
-        a: "Yes, 100%! Maya's animated eyes, 8 emotional moods, petting interactions, Bangla cards, Pomodoro focus timer, stopwatch, and all 7 arcade minigames run entirely on-device without internet. Wi-Fi is only required for live weather updates, NTP time synchronization, and phone notifications.",
+        q: "ওয়াই-ফাই ছাড়াও কি মায়াকে সম্পূর্ণ ব্যবহার করা সম্ভব?",
+        a: "অবশ্যই! মায়ার চোখ, ৮টি মিষ্টি মুড, আদরের ডায়ালগ, পোমোডোরো টাইমার, স্টপওয়াচ এবং ৭টি আর্কেড গেম সম্পূর্ণ অফলাইনে ১০০% কাজ করে। ইন্টারনেট শুধুমাত্র লাইভ আবহাওয়া, নির্ভুল ঘড়ি সিঙ্ক এবং নোটিফিকেশনের জন্য দরকার।",
       },
     ],
   },
   {
-    category: "Mobile App & Bluetooth LE Pairing",
-    badge: "Bluetooth & App",
+    category: "মোবাইল অ্যাপ ও ব্লুটুথ পেয়ারিং সমস্যা",
+    badge: "ব্লুটুথ ও অ্যাপ",
     items: [
       {
-        q: "The MAYA Companion App cannot discover Maya during scanning",
-        a: "1) Ensure Bluetooth and Location services ('Nearby Devices' permission on Android 12+) are turned ON with all permissions granted. 2) Ensure Maya is on the Setup screen (hold T2 for 2.5 seconds). 3) Keep your phone within 1 meter of Maya during discovery.",
+        q: "MAYA Companion অ্যাপে স্ক্যান করলে মায়াকে খুঁজে পাচ্ছে না",
+        a: "১) ফোনের ব্লুটুথ এবং লোকেশন (অ্যান্ড্রয়েড ১২+ এর ক্ষেত্রে Nearby Devices পারমিশন) চালু আছে কিনা দেখে নিন। ২) মায়াকে সেটআপ স্ক্রিনে রাখুন (T2 ২.৫ সেকেন্ড চেপে ধরুন)। ৩) স্ক্যানের সময় ফোনটিকে মায়ার ১ মিটারের মধ্যে রাখুন।",
       },
       {
-        q: "Pairing fails, hangs at 'Connecting', or times out",
-        a: "Open your Android device's system Bluetooth settings. If you previously paired Maya, locate 'MAYA' or 'ESP32' in the paired devices list and tap 'Forget / Unpair'. Then restart the MAYA Companion App, hold T2 on Maya for 2.5s to refresh the QR pairing state, and retry.",
+        q: "পেয়ারিং ফেইল বা 'Connecting' অবস্থায় আটকে যাচ্ছে",
+        a: "ফোনের সিস্টেম ব্লুটুথ সেটিংসে গিয়ে পূর্বে সেভ থাকা 'MAYA' বা 'ESP32' ডিভাইসটি 'Forget / Unpair' করে দিন। তারপর মায়ার T2 ২.৫ সেকেন্ড চেপে কিউআর স্ক্রিন রিফ্রেশ করুন এবং অ্যাপ থেকে পুনরায় পেয়ার করুন।",
       },
       {
-        q: "Wi-Fi details won't send to Maya over Bluetooth",
-        a: "1) Open your phone's Bluetooth settings, find 'MAYA' in the paired devices list and tap 'Forget / Unpair'. 2) Turn Bluetooth off, wait a few seconds, then turn it back on. 3) Open the MAYA Companion App again and resend your Wi-Fi details. This clears a stale Bluetooth bond, which is the most common cause.",
+        q: "ব্লুটুথ দিয়ে মায়াকে ওয়াই-ফাই পাঠানো যাচ্ছে না",
+        a: "১) ফোনের ব্লুটুথ সেটিংসে গিয়ে পেয়ার করা ডিভাইসের তালিকা থেকে 'MAYA' খুঁজে 'Forget / Unpair' করুন। ২) ব্লুটুথ বন্ধ করুন, কয়েক সেকেন্ড অপেক্ষা করে আবার চালু করুন। ৩) MAYA Companion অ্যাপ আবার খুলে ওয়াই-ফাই তথ্য পুনরায় পাঠান। পুরোনো ব্লুটুথ বন্ড মুছে গেলে বেশিরভাগ ক্ষেত্রে সমস্যা মিটে যায়।",
       },
       {
-        q: "Phone notifications are not arriving on Maya's display",
-        a: "1) Ensure the MAYA Companion App has 'Notification Access' enabled in Android Settings > Apps > Special App Access > Notification Access. 2) Ensure Android battery optimization is set to 'Unrestricted' for MAYA Companion so background sync isn't killed. 3) Ensure Bluetooth remains connected between your phone and Maya.",
+        q: "ফোনে মেসেজ বা কল এলেও মায়ার স্ক্রিনে নোটিফিকেশন আসছে না",
+        a: "১) অ্যান্ড্রয়েড সেটিংস > Apps > Special App Access > Notification Access-এ গিয়ে MAYA Companion অ্যাপকে নোটিফিকেশন পড়ার পারমিশন দিন। ২) ফোনের ব্যাটারি অপটিমাইজেশন সেটিংসে অ্যাপটিকে 'Unrestricted' করে দিন যাতে ব্যাকগ্রাউন্ডে সার্ভিস বন্ধ না হয়।",
       },
     ],
   },
   {
-    category: "Time, Weather & Sync Metrics",
-    badge: "Data Sync",
+    category: "ঘড়ি, আবহাওয়া ও ডেটা সিঙ্ক সমস্যা",
+    badge: "ডেটা সিঙ্ক্রোনাইজেশন",
     items: [
       {
-        q: "The clock shows 00:00 or the wrong date/time",
-        a: "Maya gets accurate time from international NTP (Network Time Protocol) servers over the internet. Check Menu > System Info to confirm Wi-Fi status is 'CONNECTED'. By default, Maya synchronizes to UTC+6 (Bangladesh Standard Time). You can configure local timezone offset via the mobile app.",
+        q: "ঘড়িতে ভুল সময় বা 00:00 দেখাচ্ছে",
+        a: "মায়ার সঠিক সময় পেতে ওয়াই-ফাই প্রয়োজন হয়। মেনু থেকে System Info স্ক্রিনে গিয়ে দেখুন Wi-Fi স্ট্যাটাস 'CONNECTED' আছে কিনা। ডিফল্টভাবে মায়া বাংলাদেশ সময় (UTC+6) অনুযায়ী চলে, যা অ্যাপ থেকে পরিবর্তন করা যায়।",
       },
       {
-        q: "Live Weather displays '--' or shows the wrong city",
-        a: "Weather data is retrieved from weather services via the internet. Open the MAYA Companion App, navigate to Settings, enter your correct city name (e.g., 'Dhaka', 'Chittagong'), and save. Maya updates weather within 60 seconds.",
+        q: "আবহাওয়ার জায়গায় '--' দেখাচ্ছে বা ভুল শহরের তাপমাত্রা আসছে",
+        a: "MAYA Companion মোবাইল অ্যাপটি খুলে Settings অপশনে যান এবং আপনার শহরের নাম (যেমন: 'Dhaka', 'Chittagong') লিখে সেভ করুন। মায়া পরবর্তী ৬০ সেকেন্ডের মধ্যে আবহাওয়া আপডেট করে নেবে।",
       },
       {
-        q: "Pomodoro focus stats did not sync with the app",
-        a: "Maya logs focus statistics locally and pushes telemetry whenever Bluetooth or MQTT connection is active. Ensure your phone is in range or Maya is connected to Wi-Fi to sync daily study minutes.",
+        q: "পোমোডোরোর ফোকাস টাইম মোবাইল অ্যাপে সিঙ্ক হচ্ছে না",
+        a: "মায়া ফোকাস মিনিটগুলো মেমোরিতে জমা রাখে। ফোন মায়ার ব্লুটুথ রেঞ্জে এলে বা মায়া ওয়াই-ফাইতে থাকলে স্বয়ংক্রিয়ভাবে প্রতিদিনের ফোকাস সময় অ্যাপের ড্যাশবোর্ডে সিঙ্ক হয়ে যায়।",
       },
     ],
   },
   {
-    category: "Firmware Flashing & MAYA Studio",
-    badge: "PC Software",
+    category: "ফার্মওয়্যার ও পিসি সফটওয়্যার সমস্যা",
+    badge: "পিসি ও ফ্ল্যাশিং",
     items: [
       {
-        q: "MAYA Studio for Windows does not detect Maya's COM port",
-        a: "1) Ensure you are using a 4-wire USB-C data cable (some cables only contain power wires for charging phones). 2) In Windows Device Manager, look under 'Ports (COM & LPT)'. If you see a yellow exclamation mark, install the ESP32-C3 USB JTAG/CDC or CH340 driver. 3) Try a different USB port on your PC.",
+        q: "MAYA Studio for Windows ওপেন করলে COM পোর্ট খুঁজে পায় না",
+        a: "১) নিশ্চিত করুন যে USB-C কেবলটিতে ৪টি তার রয়েছে অর্থাৎ এটি ডেটা ক্যাবল। ২) উইন্ডোজ ডিভাইস ম্যানেজারে 'Ports (COM & LPT)'-এর নিচে হলুদ চিহ্ন থাকলে ESP32-C3 USB JTAG/CDC বা CH340 ড্রাইভার ইন্সটল করুন। ৩) পিসির অন্য ইউএসবি পোর্টে লাগিয়ে দেখুন।",
       },
       {
-        q: "Firmware flashing fails halfway through or shows a write error",
-        a: "Force ROM bootloader mode: Unplug USB-C, press and hold the physical BOOT button on the rear of Maya, plug the USB-C cable back in, and release the BOOT button after 2 seconds. Now select the COM port in MAYA Studio and click Flash Firmware.",
+        q: "ফার্মওয়্যার ফ্ল্যাশ করার সময় মাঝপথে আটকে যায় বা এরর দেয়",
+        a: "হার্ডওয়্যার রম বুটলোডার মোড সক্রিয় করুন: ইউএসবি ক্যাবল খুলে ফেলুন, মায়ার পেছনের ছোট BOOT বাটনটি চেপে ধরে রেখে ইউএসবি লাগান, ২ সেকেন্ড পর বাটন ছেড়ে দিন। এবার MAYA Studio থেকে COM পোর্ট সিলেক্ট করে Flash Firmware চাপুন।",
       },
       {
-        q: "Will updating firmware erase my Wi-Fi credentials or high scores?",
-        a: "Standard firmware updates flash only the application code partition (0x10000) and preserve the non-volatile storage (NVS) partition where Wi-Fi passwords, high scores, and pairing tokens are stored.",
+        q: "ফার্মওয়্যার আপডেট করলে কি সেভ করা হাই স্কোর বা ওয়াই-ফাই মুছে যাবে?",
+        a: "না! সাধারণ ফার্মওয়্যার আপডেটে শুধু অ্যাপ্লিকেশন পার্টেশন আপডেট হয়। আপনার ওয়াই-ফাই পাসওয়ার্ড, গেমের হাই স্কোর ও ডিভাইসের নাম সম্পূর্ণ অক্ষত থাকে।",
       },
     ],
   },
   {
-    category: "Accessories, Shell & Hardware Care",
-    badge: "Physical Care",
+    category: "বডি, অ্যাক্সেসরিজ ও যত্ন সংক্রান্ত টিপস",
+    badge: "শারীরিক যত্ন",
     items: [
       {
-        q: "An accessory (ears, crown, sprout) feels loose or wobbles",
-        a: "Maya's accessories are precision-engineered to fit friction-fit socket mounts without adhesives. Align the accessory pin with the top socket and push straight down until it seats flush. If 3D printed tolerance feels loose over time, adding a tiny strip of paper tape to the accessory pin provides a snug fit.",
+        q: "অ্যাক্সেসরিজ (কান, ক্রাউন, চারা) কিছুটা ঢিলে মনে হচ্ছে",
+        a: "মায়ার অ্যাক্সেসরিজ কোনো গ্লু ছাড়া নির্ভুল স্ন্যাপ-ফিট প্রযুক্তিতে আটকে থাকে। অ্যাক্সেসরির পিনটি মায়ার মাথার খাঁজে সোজা রেখে আলতো চাপ দিয়ে বসিয়ে দিন। বেশি আলগা মনে হলে অ্যাক্সেসরির পিনের গায়ে সামান্য এক পরত পেপার টেপ জড়িয়ে দিলে খুব শক্তভাবে আটকে থাকে।",
       },
       {
-        q: "The back of Maya feels slightly warm to the touch",
-        a: "Mild warmth around the lower rear housing is completely normal. The ESP32-C3 dual-core processor, Wi-Fi radio, and IPS display backlight draw approximately 0.8W–1.2W during continuous operation.",
+        q: "মায়ার পেছনের অংশ স্পর্শ করলে সামান্য গরম অনুভূত হয়",
+        a: "মায়ার ভেতরে ১৬০ মেগাহার্টজের শক্তিশালী ডুয়াল-কোর প্রসেসর, হাই-স্পিড ওয়াই-ফাই রেডিও এবং আইপিএস ডিসপ্লে ব্যাকলাইট অনবরত কাজ করায় পেছনের অংশ সামান্য উষ্ণ হওয়া সম্পূর্ণ স্বাভাবিক এবং নিরাপদ।",
       },
       {
-        q: "Can I leave Maya plugged in 24/7 on my desk?",
-        a: "Yes! Maya was specifically engineered as an always-on desktop companion. She features thermal throttled power management and interactive sleep mode to minimize display wear when not in active use.",
+        q: "মায়াকে কি সারাদিন ডেস্কে প্লাগ ইন করে রাখা নিরাপদ?",
+        a: "হ্যাঁ, সম্পূর্ণ নিরাপদ! মায়াকে ডেস্কে সার্বক্ষণিক অন রাখার উপযোগী করেই ডিজাইন করা হয়েছে। ডিসপ্লের আয়ু বাড়াতে অব্যবহৃত অবস্থায় ডুয়াল টাচ দিয়ে স্লিপ মোড ব্যবহার করতে পারেন।",
       },
     ],
   },
@@ -360,11 +361,11 @@ function Section({ children }: { children: React.ReactNode }) {
 
 const P = "mt-4 max-w-2xl leading-relaxed text-black/75 font-mono text-xs";
 
-export default function DocsPage() {
+export default function DocsPageBn() {
   return (
-    <>
+    <LangProvider lang="bn">
       <div className="print:hidden">
-        <HtmlLang lang="en" />
+        <HtmlLang lang="bn" />
         <Nav home={false} />
       </div>
 
@@ -373,22 +374,22 @@ export default function DocsPage() {
           <div>
             <div className="flex items-center gap-2 mb-2 font-mono text-xs text-[#0071e3]">
               <span className="h-2 w-2 rounded-full bg-[#0071e3]" />
-              <span>Official Technical Manual & Software Suite · Firmware v1.5</span>
+              <span>অফিসিয়াল টেকনিক্যাল ম্যানুয়াল ও অ্যাপস · ফার্মওয়্যার v১.৫</span>
             </div>
             <h1 className="mt-2 text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-[#1d1d1f]">
-              Getting to know <span className="text-[#0071e3]">Maya</span>
+              মায়াকে <span className="text-[#0071e3]">জানুন</span>
             </h1>
             <p className="mt-4 max-w-xl text-base sm:text-lg text-black/70 font-mono text-xs leading-relaxed">
-              Comprehensive handbook covering hardware setup, BLE pairing, capacitive foot touch gestures, 8 moods, 10 UI screens, 7 arcade games, and full diagnostic troubleshooting.
+              বক্স খোলা থেকে শুরু করে অ্যাপ দিয়ে পেয়ারিং, দুই পায়ের স্পর্শ কন্ট্রোল, ৮টি রোবোটিক মুড, ১০টি স্ক্রিন, ৭টি গেম এবং বিস্তারিত সমস্যা সমাধানের নির্দেশিকা।
             </p>
           </div>
 
           <div className="flex items-center gap-3">
             <Link
-              href="/bn/docs"
+              href="/en/docs"
               className="rounded-full border border-black/20 bg-white px-4 py-2 font-mono text-xs font-bold text-[#1d1d1f] transition hover:bg-[#e8e8ed]"
             >
-              বাংলা গাইড পড়ুন →
+              Read in English →
             </Link>
             <PrintButton />
           </div>
@@ -398,9 +399,9 @@ export default function DocsPage() {
       <div className="mx-auto grid max-w-6xl gap-12 px-4 py-14 sm:px-8 lg:grid-cols-[14rem_1fr]">
         <aside className="print:hidden">
           <nav className="sticky top-24 hidden lg:block" aria-label="On this page">
-            <div className="font-mono text-xs font-bold text-black/40">Documentation Index</div>
+            <div className="font-mono text-xs font-bold text-black/40">গাইড সূচিপত্র</div>
             <ol className="mt-4 space-y-2 text-sm">
-              {TOC.map(([id, label]) => (
+              {TOC_BN.map(([id, label]) => (
                 <li key={id}>
                   <a href={`#${id}`} className="font-mono text-xs text-black/70 transition-colors hover:text-[#0071e3]">
                     {label}
@@ -409,18 +410,6 @@ export default function DocsPage() {
               ))}
             </ol>
           </nav>
-          <details className="rounded-2xl border border-black/10 p-4 lg:hidden">
-            <summary className="cursor-pointer text-sm font-semibold font-mono">Table of Contents</summary>
-            <ol className="mt-3 grid grid-cols-2 gap-2 text-xs font-mono">
-              {TOC.map(([id, label]) => (
-                <li key={id}>
-                  <a href={`#${id}`} className="text-black/70 hover:text-[#0071e3]">
-                    {label}
-                  </a>
-                </li>
-              ))}
-            </ol>
-          </details>
         </aside>
 
         <article className="min-w-0">
@@ -432,14 +421,14 @@ export default function DocsPage() {
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-black/10 pb-4 mb-6">
                   <div>
                     <span className="font-mono text-xs font-bold text-[#0071e3]">
-                      Software Ecosystem
+                      সফটওয়্যার ইকোসিস্টেম
                     </span>
                     <h2 className="text-2xl font-bold tracking-tight text-[#1d1d1f] mt-1">
-                      Download Official Companion Apps
+                      Maya অফিশিয়াল অ্যাপ ও টুলস
                     </h2>
                   </div>
                   <span className="self-start rounded-full bg-[#1d1d1f] px-3 py-1 font-mono text-[11px] font-bold text-white">
-                    v1.5.2 Latest Suite
+                    v1.5.2 LATEST SUITE
                   </span>
                 </div>
 
@@ -448,12 +437,12 @@ export default function DocsPage() {
                   <div className="flex flex-col justify-between rounded-2xl border border-black/10 bg-[#ffffff] p-6">
                     <div>
                       <div className="flex items-center gap-2 mb-2">
-                        <span className="font-mono text-[10px] font-bold text-black/50">Mobile Companion</span>
+                        <span className="font-mono text-[10px] font-bold text-black/50">মোবাইল কম্প্যানিয়ন</span>
                         <span className="font-mono text-[10px] font-bold text-[#0071e3]">Android 8.0+</span>
                       </div>
                       <h3 className="font-bold text-xl text-[#1d1d1f]">MAYA Companion for Android</h3>
                       <p className="font-mono text-xs text-black/70 mt-2 leading-relaxed">
-                        Instant Bluetooth LE scanning and pairing, 2.4 GHz Wi-Fi provisioning, realtime notification relay (WhatsApp, SMS, calls), mood customization, and focus analytics.
+                        মোবাইল থেকে ব্লুটুথ দিয়ে অটোমেটিক পেয়ারিং, দ্রুত ওয়াই-ফাই সেটআপ, ফোনের নোটিফিকেশন মায়ায় রিলে করা, মুড ওভাররাইড এবং ফোকাস স্টাডি অ্যানালিটিক্স।
                       </p>
                     </div>
                     <div className="mt-6">
@@ -462,7 +451,7 @@ export default function DocsPage() {
                         download
                         className="flex items-center justify-center gap-2 rounded-full bg-[#1d1d1f] px-6 py-3 font-mono text-xs font-bold text-white shadow-sm transition hover:bg-[#0071e3] hover:text-black"
                       >
-                        <span>↓ Download APK Package</span>
+                        <span>↓ ডাউনলোড APK প্যাকেজ</span>
                         <span className="text-[10px] opacity-70">33.5 MB</span>
                       </a>
                     </div>
@@ -472,12 +461,12 @@ export default function DocsPage() {
                   <div className="flex flex-col justify-between rounded-2xl border border-black/10 bg-[#ffffff] p-6">
                     <div>
                       <div className="flex items-center gap-2 mb-2">
-                        <span className="font-mono text-[10px] font-bold text-black/50">Desktop Diagnostic Suite</span>
+                        <span className="font-mono text-[10px] font-bold text-black/50">ডেস্কটপ ফ্ল্যাশার ও টুল</span>
                         <span className="font-mono text-[10px] font-bold text-[#0071e3]">Windows 10 / 11</span>
                       </div>
                       <h3 className="font-bold text-xl text-[#1d1d1f]">MAYA Studio for Windows</h3>
                       <p className="font-mono text-xs text-black/70 mt-2 leading-relaxed">
-                        High-speed USB flashing utility (921,600 baud), serial console diagnostic monitor, NVS configuration inspector, and custom eye expression testing.
+                        হাই-স্পিড USB ফার্মওয়্যার আপডেট (৯২১,৬০০ বডরেট), ডায়াগনস্টিক সিরিয়াল কনসোল মনিটর, মেমোরি ইন্সপেক্টর এবং কাস্টম চোখ টেস্টিং টুল।
                       </p>
                     </div>
                     <div className="mt-6">
@@ -485,7 +474,7 @@ export default function DocsPage() {
                         href="#firmware"
                         className="flex items-center justify-center gap-2 rounded-full border border-black/20 bg-white px-6 py-3 font-mono text-xs font-bold text-[#1d1d1f] shadow-sm transition hover:bg-[#e8e8ed]"
                       >
-                        <span>USB Web / Desktop Flasher →</span>
+                        <span>ফার্মওয়্যার আপডেট গাইড দেখুন →</span>
                       </a>
                     </div>
                   </div>
@@ -496,27 +485,27 @@ export default function DocsPage() {
 
           {/* Section: Quick Start */}
           <Section>
-            <H2 id="start" n={1}>Quick Start Guide</H2>
+            <H2 id="start" n={1}>শুরু করা ও সেটআপ</H2>
             <p className={P}>
-              Maya is ready to run right out of the box with zero complex assembly. Follow these four foundational steps:
+              মায়াকে বক্স থেকে বের করে কোনো জটিল স্ক্রু বা অ্যাসেম্বলি ছাড়াই সরাসরি ব্যবহার করা যায়। নিচের ৪টি ধাপ অনুসরণ করুন:
             </p>
             <ol className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {[
                 [
-                  "1. Power Connection",
-                  "Connect the included USB-C cable to any regulated 5V / 1A+ charger. Maya has no internal battery and is engineered as an always-on desktop companion.",
+                  "১. পাওয়ার সংযোগ",
+                  "বক্সে থাকা USB-C কেবলটি যেকোনো ৫ ভোল্ট / ১ অ্যাম্পিয়ার বা তার বেশি ক্ষমতার অ্যাডাপ্টারে লাগান। মায়ার কোনো ব্যাটারি নেই, সবসময় প্লাগেই চলে।",
                 ],
                 [
-                  "2. Sensor Auto-Calibration",
-                  "Keep your hands off her body for the first 3 seconds after plugging in. Her dual capacitive sensors calibrate their baseline capacitance during boot.",
+                  "২. সেন্সর অটো-ক্যালিব্রেশন",
+                  "পাওয়ার পাওয়ার পর প্রথম ৩ সেকেন্ড মায়াকে স্পর্শ করবেন না। এ সময় তার দুই পায়ের টাচ সেন্সর চারপাশের পরিবেশ অনুযায়ী ব্যালান্স হয়ে নেয়।",
                 ],
                 [
-                  "3. Interactive Greeting",
-                  "Maya waves hello on her 240x240 circular IPS screen, opens her living eyes, and begins glancing around your workspace.",
+                  "৩. আনন্দময় অভ্যর্থনা",
+                  "মায়া তার গোল আইপিএস স্ক্রিনে হাত নেড়ে হাই বলবে এবং চোখ খুলে আপনার ঘরের চারদিকে তাকাতে শুরু করবে।",
                 ],
                 [
-                  "4. Mobile BLE Pairing",
-                  "Open the MAYA Companion App, tap 'Pair New Maya', scan the on-screen QR code or let BLE auto-discover her, and configure your 2.4 GHz Wi-Fi.",
+                  "৪. ব্লুটুথ ও ওয়াই-ফাই পেয়ার",
+                  "MAYA Companion অ্যাপ অন করে 'Pair New Maya' চাপুন। ব্লুটুথে মায়াকে সিলেক্ট করে আপনার বাসার ২.৪ GHz ওয়াই-ফাই দিয়ে দিন।",
                 ],
               ].map(([t, d], i) => (
                 <li key={t} className="rounded-2xl border border-black/10 bg-[#f5f5f7] p-5 flex flex-col justify-between">
@@ -531,28 +520,28 @@ export default function DocsPage() {
               ))}
             </ol>
             <div className="mt-6 rounded-2xl border border-[#0071e3]/30 bg-[#0071e3]/5 p-5 font-mono text-xs text-black/80">
-              <span className="font-bold text-[#0071e3]">Offline Freedom Note:</span> Wi-Fi is completely optional! Maya's living eyes, 8 emotional moods, petting responses, Pomodoro timer, stopwatch, and 7 arcade minigames work 100% offline. Connecting to Wi-Fi adds real-time internet weather, automatic NTP clock synchronization, and mobile notification relay.
+              <span className="font-bold text-[#0071e3]">অফলাইন ব্যবহারের স্বাধীনতা:</span> মায়ার জন্য ওয়াই-ফাই কোনো বাধ্যতামূলক শর্ত নয়! ওয়াই-ফাই ছাড়াও মায়ার চোখ, ৮টি মুড, স্পর্শে আদর, পোমোডোরো টাইমার, স্টপওয়াচ ও ৭টি আর্কেড গেম ১০০% কাজ করে। ওয়াই-ফাই যুক্ত হলে সে রিয়েলটাইম আবহাওয়া, নির্ভুল ঘড়ি সিঙ্ক ও মোবাইল নোটিফিকেশন পায়।
             </div>
           </Section>
 
           {/* Section: Touch Controls */}
           <Section>
-            <H2 id="controls" n={2}>Touch Controls & Gestures</H2>
+            <H2 id="controls" n={2}>টাচ কন্ট্রোল ও জেসচার</H2>
             <p className={P}>
-              Maya features two ultra-responsive capacitive touch sensors hidden inside her feet. <b className="text-[#1d1d1f]">T1 is located on her left foot</b> and <b className="text-[#1d1d1f]">T2 is on her right foot</b>. A gentle finger touch is all that is needed.
+              মায়ার দুই পায়ের ভেতরে উচ্চ সংবেদনশীল ক্যাপাসিটিভ টাচ সেন্সর রয়েছে। <b className="text-[#1d1d1f]">বাম পায়ে T1</b> এবং <b className="text-[#1d1d1f]">ডান পায়ে T2</b> অবস্থিত। আলতো ছোঁয়াই যথেষ্ট, জোরে চাপ দেওয়ার প্রয়োজন নেই।
             </p>
             <div className="mt-6 overflow-hidden rounded-2xl border border-black/10">
               <table className="w-full text-left text-sm">
                 <thead className="bg-[#f5f5f7] text-xs font-semibold font-mono text-black/60">
                   <tr>
-                    <th className="p-3 sm:p-4">Input Action</th>
-                    <th className="p-3 sm:p-4">Tag</th>
-                    <th className="p-3 sm:p-4">On Living Face</th>
-                    <th className="p-3 sm:p-4">In Screens & Games</th>
+                    <th className="p-3 sm:p-4">টাচ বা জেসচার</th>
+                    <th className="p-3 sm:p-4">ট্যাগ</th>
+                    <th className="p-3 sm:p-4">মুখের জীবন্ত পর্দায়</th>
+                    <th className="p-3 sm:p-4">স্ক্রিন ও মিনি গেমে</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-black/10 font-mono text-xs bg-[#ffffff]">
-                  {CONTROLS.map((c) => (
+                  {CONTROLS_BN.map((c) => (
                     <tr key={c.action} className="hover:bg-black/5 transition-colors">
                       <td className="p-3 sm:p-4 font-bold text-[#1d1d1f]">{c.action}</td>
                       <td className="p-3 sm:p-4">
@@ -569,15 +558,15 @@ export default function DocsPage() {
             </div>
             <div className="mt-4 grid gap-3 sm:grid-cols-2 font-mono text-xs">
               <div className="rounded-xl border border-black/10 bg-[#f5f5f7] p-4">
-                <span className="font-bold text-[#1d1d1f]">Dual-Touch Sleep Engine (T1 + T2):</span>
+                <span className="font-bold text-[#1d1d1f]">ডুয়াল-টাচ স্লিপ ইঞ্জিন (T1 + T2):</span>
                 <p className="mt-1 text-black/70 leading-relaxed">
-                  Hold both feet simultaneously for 1.8 seconds. A circular progress ring fills up. When complete, Maya enters interactive sleep with peaceful breathing, glowing Zzz, and twinkling stars. Repeat to wake her up!
+                  দুটো পায়ে একসাথে ১.৮ সেকেন্ড স্পর্শ করে ধরে রাখলে মাঝখানে একটি রিং পূর্ণ হবে। রিং পূর্ণ হলেই মায়া শান্তির ঘুমে চলে যায় এবং চোখে মিটিমিটি তারা ও Zzz ভাসে। একইভাবে আবার স্পর্শ করলে সে জেগে ওঠে!
                 </p>
               </div>
               <div className="rounded-xl border border-black/10 bg-[#f5f5f7] p-4">
-                <span className="font-bold text-[#1d1d1f]">Instant Setup Shortcut (T2 Hold):</span>
+                <span className="font-bold text-[#1d1d1f]">ইনস্ট্যান্ট পেয়ারিং শর্টকাট (T2 চেপে ধরা):</span>
                 <p className="mt-1 text-black/70 leading-relaxed">
-                  Hold T2 (right foot) for 2.5 seconds from anywhere to immediately pull up the Bluetooth LE Claim and Wi-Fi QR Code screen.
+                  যেকোনো অবস্থা থেকে ডান পা (T2) ২.৫ সেকেন্ড চেপে ধরলেই সাথে সাথে ব্লুটুথ ক্লেম ও Wi-Fi QR কোড স্ক্রিন খুলে যাবে।
                 </p>
               </div>
             </div>
@@ -585,9 +574,9 @@ export default function DocsPage() {
 
           {/* Section: Moods */}
           <Section>
-            <H2 id="moods" n={3}>Moods & Living Personality</H2>
+            <H2 id="moods" n={3}>মুড ও জীবন্ত ব্যক্তিত্ব</H2>
             <p className={P}>
-              Maya is powered by an autonomous procedural eye engine with realistic saccades, pupil dilations, blinks, and eight dynamic emotional states:
+              মায়াতে রয়েছে অটোমেটিক রোবোটিক আই ইঞ্জিন যা বাস্তব প্রাণীর মতো চোখের মণি নড়াচড়া করায়, পলক ফেলে এবং ৮টি স্বতন্ত্র আবেগে সাড়া দেয়:
             </p>
             <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
               {MOODS.map((m) => (
@@ -595,8 +584,8 @@ export default function DocsPage() {
                   <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-white shadow-inner">
                     <MayaFace mood={m.id} className="h-12 w-12" />
                   </div>
-                  <div className="mt-3 font-bold text-sm text-[#1d1d1f] capitalize">{m.label}</div>
-                  <div className="mt-0.5 font-mono text-[11px] text-[#0071e3] font-semibold">{m.bn}</div>
+                  <div className="mt-3 font-bold text-sm text-[#1d1d1f]">{m.bn}</div>
+                  <div className="mt-0.5 font-mono text-[11px] text-[#0071e3] font-semibold">{m.label}</div>
                   <div className="mt-1 font-mono text-[10px] text-black/60 italic whitespace-pre-line leading-tight">
                     &ldquo;{m.line}&rdquo;
                   </div>
@@ -606,24 +595,24 @@ export default function DocsPage() {
 
             <div className="mt-6 space-y-3 font-mono text-xs">
               <div className="rounded-2xl border border-black/10 bg-[#f5f5f7] p-5">
-                <div className="font-bold text-sm text-[#1d1d1f] mb-2">Special Personality Behaviors</div>
+                <div className="font-bold text-sm text-[#1d1d1f] mb-2">বিশেষ আচরণগত বৈশিষ্ট্য</div>
                 <ul className="list-disc space-y-1 pl-5 text-black/70">
-                  <li><b>Autonomous Expressions:</b> While idling, Maya cycles between 10 spontaneous facial expressions every 4.5 to 8.5 seconds (Happy, Curious, Winks, Laugh, Shy, Surprised, etc.).</li>
-                  <li><b>Long Idle &ldquo;Mon Kharap&rdquo; (Lonely Mode):</b> If left untouched for 75 seconds, Maya gets lonely, blushes shyly, and displays a heartwarming Bangla dialogue card requesting your attention.</li>
-                  <li><b>Bangla Dialogue Cards:</b> Every 3rd affectionate pet on T1 triggers a humorous and loving Bangla dialogue message on screen.</li>
+                  <li><b>স্বয়ংক্রিয় ভাববিনিময়:</b> ডেস্কে চুপচাপ বসে থাকলেও প্রতি ৪.৫ থেকে ৮.৫ সেকেন্ড পর পর মায়া আপন মনে ১০ ধরনের মিষ্টি অভিব্যক্তি দেয় (হাসি, কৌতূহল, চোখ টেপা, লাজুক মুখ ইত্যাদি)।</li>
+                  <li><b>মন খারাপ (নিঃসঙ্গ মোড):</b> ৭৫ সেকেন্ড মায়াকে কোনো স্পর্শ না করলে সে লাজুক চোখে তাকায় এবং তাকে একটু সময় দিতে সুন্দর বাংলা ডায়ালগ কার্ড দেখায়।</li>
+                  <li><b>বাংলা সংলাপ কার্ড:</b> প্রতি ৩ বার আলতো আদরে মায়া মজার মজার মিষ্টি বাংলা কার্ড নিয়ে আপনার সাথে কথা বলে।</li>
                 </ul>
               </div>
             </div>
           </Section>
 
-          {/* Section: Menu & Screens */}
+          {/* Section: Menu */}
           <Section>
-            <H2 id="menu" n={4}>Carousel Menu & 10 UI Screens</H2>
+            <H2 id="menu" n={4}>ক্যারোসেল মেনু ও ১০টি স্ক্রিন</H2>
             <p className={P}>
-              Tap <b className="text-[#1d1d1f]">T2 (right foot)</b> to reveal the glowing 3D carousel menu. Each subsequent tap rotates to the next application card. Tap <b className="text-[#1d1d1f]">T1 (left foot)</b> to enter that screen. Inside any screen, hold T1 for 1 second to return.
+              ডান পায়ে <b className="text-[#1d1d1f]">T2</b> স্পর্শ করলেই থ্রিডি নিয়ন মেনু ক্যারোসেল খুলে যায়। প্রতিটি পরবর্তী ট্যাপে পরের ফিচার আসে এবং বাম পায়ে <b className="text-[#1d1d1f]">T1</b> স্পর্শে সেই স্ক্রিন ওপেন হয়। যেকোনো স্ক্রিন থেকে বের হতে T1 ১ সেকেন্ড চেপে রাখুন।
             </p>
             <div className="mt-6 grid gap-4 sm:grid-cols-2">
-              {MENU_DETAILS.map((m) => (
+              {MENU_DETAILS_BN.map((m) => (
                 <div key={m.title} className="rounded-2xl border border-black/10 bg-[#f5f5f7] p-5 font-mono text-xs">
                   <div className="flex items-center justify-between">
                     <span className="font-bold text-sm text-[#1d1d1f]">{m.title}</span>
@@ -639,12 +628,12 @@ export default function DocsPage() {
 
           {/* Section: Games */}
           <Section>
-            <H2 id="games" n={5}>Arcade Games Suite</H2>
+            <H2 id="games" n={5}>আর্কেড গেমস নির্দেশিকা</H2>
             <p className={P}>
-              Launch <b className="text-[#1d1d1f]">Mini games</b> from the carousel menu. Cycle through games with T2 and launch with T1. All games run at a fluid 60 FPS and are played using T1. High scores are permanently saved in Maya&rsquo;s onboard flash memory.
+              মেনু থেকে <b className="text-[#1d1d1f]">Mini games</b> ওপেন করুন। T2 দিয়ে গেম বেছে নিন এবং T1 দিয়ে শুরু করুন। প্রতিটি গেম মসৃণ ৬০ FPS স্পিডে চলে এবং বাম পায়ের T1 দিয়ে খেলা যায়। আপনার করা প্রতিটি হাই স্কোর মায়ার মেমোরিতে আজীবন সেভ থাকে।
             </p>
             <div className="mt-6 grid gap-4 sm:grid-cols-2">
-              {GAME_DETAILS.map((g) => (
+              {GAME_DETAILS_BN.map((g) => (
                 <div key={g.id} className="flex flex-col justify-between rounded-2xl border border-black/10 bg-[#f5f5f7] p-5 font-mono text-xs">
                   <div>
                     <div className="flex items-center justify-between">
@@ -656,7 +645,7 @@ export default function DocsPage() {
                     <p className="mt-2 text-black/70 leading-relaxed">{g.desc}</p>
                   </div>
                   <div className="mt-4 flex items-center justify-between border-t border-black/10 pt-3">
-                    <span className="text-[11px] text-black/50">Control:</span>
+                    <span className="text-[11px] text-black/50">কন্ট্রোল:</span>
                     <span className="rounded bg-[#1d1d1f] px-2.5 py-1 text-[11px] font-bold text-white">
                       {g.controls}
                     </span>
@@ -665,69 +654,73 @@ export default function DocsPage() {
               ))}
             </div>
             <p className="mt-4 font-mono text-xs text-black/60">
-              <b>Tip:</b> In any game, hold T1 or T2 for 1.0 second to exit back to the arcade menu.
+              <b>টিপস:</b> যেকোনো গেমে থাকা অবস্থায় T1 বা T2 ১ সেকেন্ড চেপে ধরলেই গেম থেকে বের হয়ে মেনুতে ফেরা যায়।
             </p>
           </Section>
 
           {/* Section: Pairing & Wi-Fi */}
           <Section>
-            <H2 id="pairing" n={6}>BLE Pairing & Wi-Fi Setup</H2>
+            <H2 id="pairing" n={6}>ব্লুটুথ ও ওয়াই-ফাই সেটআপ</H2>
             <p className={P}>
-              Maya supports two simple configuration methods. Follow either path to get your companion online:
+              মায়াকে ইন্টারনেটে যুক্ত করতে নিচের যেকোনো একটি সহজ পদ্ধতি ব্যবহার করুন:
             </p>
 
             <div className="mt-6 grid gap-6 md:grid-cols-2 font-mono text-xs">
               <div className="rounded-2xl border border-black/10 bg-[#f5f5f7] p-6">
-                <span className="font-bold text-xs text-[#0071e3]">Method A (Recommended)</span>
-                <h3 className="font-bold text-base text-[#1d1d1f] mt-1">Automatic Bluetooth LE Pairing</h3>
+                <span className="font-bold text-xs text-[#0071e3]">পদ্ধতি ১ (সুপারিশকৃত)</span>
+                <h3 className="font-bold text-base text-[#1d1d1f] mt-1">অ্যান্ড্রয়েড অ্যাপ দিয়ে অটো পেয়ারিং</h3>
                 <ol className="mt-3 list-decimal space-y-2 pl-4 text-black/75 leading-relaxed">
-                  <li>Power on Maya and open the MAYA Companion Android App.</li>
-                  <li>Tap <b>Pair New Maya</b>. The app scans for nearby Maya beacons over Bluetooth Low Energy.</li>
-                  <li>Select your device and enter your Wi-Fi credentials when prompted.</li>
-                  <li>Credentials are securely sent via encrypted BLE, and Maya joins your Wi-Fi automatically.</li>
+                  <li>মায়াকে অন করে MAYA Companion অ্যাপটি চালু করুন।</li>
+                  <li><b>Pair New Maya</b> বাটনে চাপ দিন। অ্যাপটি ব্লুটুথে মায়াকে স্বয়ংক্রিয়ভাবে খুঁজে নেবে।</li>
+                  <li>মায়াকে সিলেক্ট করে আপনার ওয়াই-ফাই পাসওয়ার্ড দিয়ে দিন।</li>
+                  <li>এনক্রিপ্টেড ব্লুটুথের মাধ্যমে পাসওয়ার্ড পৌঁছে যাবে এবং মায়া সফলভাবে কানেক্ট হয়ে যাবে।</li>
                 </ol>
               </div>
 
               <div className="rounded-2xl border border-black/10 bg-[#f5f5f7] p-6">
-                <span className="font-bold text-xs text-[#0071e3]">Method B (No App Required)</span>
-                <h3 className="font-bold text-base text-[#1d1d1f] mt-1">Standalone Web Access Point</h3>
+                <span className="font-bold text-xs text-[#0071e3]">পদ্ধতি ২ (অ্যাপ ছাড়া)</span>
+                <h3 className="font-bold text-base text-[#1d1d1f] mt-1">মায়ার নিজস্ব ওয়াই-ফাই হটস্পট</h3>
                 <ol className="mt-3 list-decimal space-y-2 pl-4 text-black/75 leading-relaxed">
-                  <li>Hold T2 (right foot) for 2.5 seconds to enter Setup screen.</li>
-                  <li>Maya broadcasts a Wi-Fi hotspot named <code className="rounded bg-black/10 px-1 font-bold text-[#0071e3]">MAYA-SETUP</code>.</li>
-                  <li>Connect to this hotspot from your phone or laptop. The password is displayed on Maya&rsquo;s screen.</li>
-                  <li>Open browser at <code className="font-bold text-[#1d1d1f]">http://192.168.4.1</code> and submit your Wi-Fi credentials.</li>
+                  <li>ডান পা (T2) ২.৫ সেকেন্ড চেপে ধরে সেটআপ মোডে যান।</li>
+                  <li>মায়ার স্ক্রিনে পাসওয়ার্ডসহ <code className="rounded bg-black/10 px-1 font-bold text-[#0071e3]">MAYA-SETUP</code> হটস্পট ভেসে উঠবে।</li>
+                  <li>ফোন বা ল্যাপটপের ওয়াই-ফাই দিয়ে এতে যুক্ত হোন।</li>
+                  <li>ব্রাউজারে <code className="font-bold text-[#1d1d1f]">http://192.168.4.1</code> লিখে আপনার বাসার ওয়াই-ফাই সেভ করে দিন।</li>
                 </ol>
               </div>
             </div>
 
             <div className="mt-4 rounded-xl border border-black/10 bg-[#ffffff] p-4 font-mono text-xs text-black/70">
-              <b>Wi-Fi Specifications:</b> 2.4 GHz only (802.11 b/g/n, HT20, WPA/WPA2-PSK). 5 GHz Wi-Fi and enterprise networks requiring username/password authentication are not supported.
+              <b>নেটওয়ার্ক স্পেক:</b> মায়ার জন্য ২.৪ GHz ওয়াই-ফাই নেটওয়ার্ক প্রযোজ্য (802.11 b/g/n, WPA/WPA2-PSK)। ৫ GHz কেবল বা প্রাতিষ্ঠানিক ক্যাপটিভ পোর্টাল সরাসরি সাপোর্টেড নয়।
+            </div>
+
+            <div className="mt-4 rounded-xl border border-[#0071e3]/25 bg-[#f0f6ff] p-4 font-mono text-xs text-black/75 leading-relaxed">
+              <b className="text-[#0071e3]">ব্লুটুথে ওয়াই-ফাই পাঠানো যাচ্ছে না?</b> ফোনের ব্লুটুথ সেটিংসে গিয়ে MAYA-কে <b>Forget / Unpair</b> করুন, ব্লুটুথ <b>একবার বন্ধ করে আবার চালু</b> করুন, তারপর অ্যাপ থেকে আবার ওয়াই-ফাই পাঠান।
             </div>
           </Section>
 
           {/* Section: Accessories */}
           <Section>
-            <H2 id="accessories" n={7}>Accessories & Modular Snaps</H2>
+            <H2 id="accessories" n={7}>মডুলার অ্যাক্সেসরিজ</H2>
             <p className={P}>
-              Maya is fully modular. Her bunny ears, panda ears, royal crown, sprout, DJ headphones, and mini backpack snap in smoothly with snug friction mounts:
+              মায়া সম্পূর্ণ মডুলার। বানি কান, পান্ডা কান, রাজকীয় ক্রাউন, কচি চারা, ডিজে হেডফোন ও পিঠের ব্যাকপ্যাক কোনো গ্লু বা নাটবল্টু ছাড়াই খুব সহজে লাগানো ও বদলানো যায়:
             </p>
             <div className="mt-5 grid gap-4 sm:grid-cols-3 font-mono text-xs">
               <div className="rounded-2xl border border-black/10 bg-[#f5f5f7] p-4">
-                <div className="font-bold text-sm text-[#1d1d1f]">1. Installing</div>
+                <div className="font-bold text-sm text-[#1d1d1f]">১. নতুন লুক পরাতে</div>
                 <p className="mt-1 text-black/70 leading-relaxed">
-                  Align the accessory base pin with the socket on Maya&rsquo;s head (or rear socket for the backpack) and push straight down until flush.
+                  অ্যাক্সেসরির পিনটি মায়ার মাথার বা পিঠের খাঁজের সাথে সোজা রেখে নিচের দিকে আলতো চাপ দিয়ে বসিয়ে দিন।
                 </p>
               </div>
               <div className="rounded-2xl border border-black/10 bg-[#f5f5f7] p-4">
-                <div className="font-bold text-sm text-[#1d1d1f]">2. Swapping</div>
+                <div className="font-bold text-sm text-[#1d1d1f]">২. বদলাতে বা খুলতে</div>
                 <p className="mt-1 text-black/70 leading-relaxed">
-                  Grip the accessory firmly and pull straight upward. Avoid twisting side-to-side to protect the 3D-printed alignment pins.
+                  অ্যাক্সেসরিটি ধরে সোজা ওপরের দিকে আলতো টান দিন। ডানে-বামে মোচড় না দিয়ে সোজা টানলে পিন ভালো থাকে।
                 </p>
               </div>
               <div className="rounded-2xl border border-black/10 bg-[#f5f5f7] p-4">
-                <div className="font-bold text-sm text-[#1d1d1f]">3. Collector Keychain</div>
+                <div className="font-bold text-sm text-[#1d1d1f]">৩. মিনি কি-চেইন</div>
                 <p className="mt-1 text-black/70 leading-relaxed">
-                  Your box includes a miniature 25 mm Maya keychain. Keep away from small children under 3 years old due to small parts.
+                  বক্সে একটি ২৫ মিমি কিউট মায়া কি-চেইন উপহার দেওয়া হয়েছে। ছোট পার্টস হওয়ায় ৩ বছরের ছোট বাচ্চাদের নাগালের বাইরে রাখুন।
                 </p>
               </div>
             </div>
@@ -735,53 +728,53 @@ export default function DocsPage() {
 
           {/* Section: Firmware */}
           <Section>
-            <H2 id="firmware" n={8}>Firmware Updates</H2>
+            <H2 id="firmware" n={8}>ফার্মওয়্যার আপডেট</H2>
             <p className={P}>
-              Maya can be flashed and upgraded using our desktop software or USB web updater:
+              উইন্ডোজ পিসির MAYA Studio সফটওয়্যার বা ওয়েব ফ্ল্যাশারের মাধ্যমে সহজেই নতুন ফার্মওয়্যার ইন্সটল করা যায়:
             </p>
             <ol className="mt-5 max-w-2xl list-decimal space-y-2 pl-5 font-mono text-xs text-black/70">
-              <li>Connect Maya to your computer using a verified 4-wire USB-C data cable.</li>
-              <li>Launch <b>MAYA Studio for Windows</b>.</li>
-              <li>Select your device&rsquo;s serial COM port (detected as USB-JTAG/CDC or CH340).</li>
-              <li>Click <b>Flash Firmware</b>. The tool uploads the latest binary at 921,600 baud.</li>
-              <li>Do not disconnect Maya while the flashing progress bar is running. Once complete, Maya reboots automatically.</li>
+              <li>৪-তারের ইউএসবি ডেটা কেবল দিয়ে মায়াকে পিসিতে লাগান।</li>
+              <li><b>MAYA Studio for Windows</b> সফটওয়্যারটি চালু করুন।</li>
+              <li>ডিভাইসের COM পোর্ট সিলেক্ট করুন (USB-JTAG/CDC বা CH340)।</li>
+              <li><b>Flash Firmware</b> বাটনে ক্লিক করুন। নতুন ফার্মওয়্যার ৯২১,৬০০ বডরেটে ফ্ল্যাশ হয়ে যাবে।</li>
+              <li>ফ্ল্যাশিং চলাকালীন কেবল খুলবেন না। কাজ শেষ হলে মায়া নিজে থেকেই রিস্টার্ট নেবে।</li>
             </ol>
           </Section>
 
           {/* Section: Reset */}
           <Section>
-            <H2 id="reset" n={9}>Factory Reset Procedure</H2>
+            <H2 id="reset" n={9}>ফ্যাক্টরি রিসেট পদ্ধতি</H2>
             <p className={P}>
-              A factory reset completely wipes stored Wi-Fi credentials, Bluetooth bonds, custom robot names, and game high scores, returning Maya to out-of-the-box factory state:
+              কাউকে উপহার দেওয়ার আগে বা সব ডেটা পরিষ্কার করতে ফ্যাক্টরি রিসেট ব্যবহার করুন। এটি ওয়াই-ফাই পাসওয়ার্ড, পেয়ারিং এবং হাই স্কোর মুছে নতুনের মতো ফ্রেশ করে দেয়:
             </p>
             <ol className="mt-5 max-w-2xl list-decimal space-y-2 pl-5 font-mono text-xs text-black/70">
-              <li>Tap T2 (right foot) to open the menu and step to <b>Reset device</b>.</li>
-              <li>Tap T1 (left foot) to open the reset confirmation view.</li>
+              <li>ডান পা (T2) চেপে মেনু থেকে <b>Reset device</b> অপশনে যান।</li>
+              <li>বাম পা (T1) দিয়ে কনফার্মেশন স্ক্রিন ওপেন করুন।</li>
               <li>
-                <b className="text-[#1d1d1f]">Hold T1 continuously for 1.5 seconds</b>. A numeric percentage counter counts from 0% to 100% while the glowing ring sweeps closed.
+                <b className="text-[#1d1d1f]">T1 টানা ১.৫ সেকেন্ড চেপে ধরে রাখুন</b>। স্ক্রিনে ০% থেকে ১০০% পর্যন্ত একটি কাউন্টডাউন রিং ভরবে।
               </li>
-              <li>Release once 100% is reached. Maya clears her flash memory partitions and reboots into clean setup mode.</li>
+              <li>১০০% পূর্ণ হলে ছেড়ে দিন। মায়া পুরো ফ্ল্যাশ মেমোরি ক্লিয়ার করে নতুন সেটআপ মোডে ফিরে যাবে।</li>
             </ol>
             <p className="mt-3 font-mono text-xs text-black/60">
-              <b>Cancel:</b> Releasing T1 before 1.5 seconds or tapping T2 instantly cancels the reset and returns to the menu.
+              <b>ক্যানসেল:</b> রিংটি ১০০% হওয়ার আগে আঙুল সরালে বা T2 চাপলে রিসেট বাতিল হয়ে মেনুতে ফিরে যাবে।
             </p>
           </Section>
 
           {/* Section: Care */}
           <Section>
-            <H2 id="care" n={10}>Care & Maintenance</H2>
+            <H2 id="care" n={10}>যত্ন ও সতর্কতা</H2>
             <ul className="mt-5 max-w-2xl list-disc space-y-2 pl-5 font-mono text-xs text-black/70">
-              <li><b>Power Standard:</b> Always use a regulated 5V USB power supply (1A to 2.4A). Never connect high-voltage non-standard adapters.</li>
-              <li><b>Heat Sensitivity:</b> Maya&rsquo;s chassis is crafted from high-precision matte PLA. Keep her away from direct summer sunlight, radiators, or hot parked cars. PLA begins softening above 50 °C (122 °F).</li>
-              <li><b>Display Cleaning:</b> Wipe the circular glass display with a clean, dry microfiber cloth. Avoid spraying water or chemical solvents directly onto the device.</li>
-              <li><b>Chassis Care:</b> Dust the body with a soft dry nylon brush. Never submerge in water or place in damp environments like bathrooms.</li>
-              <li><b>Child Safety:</b> Not suitable for unsupervised children under 3 years due to small accessories and keychain.</li>
+              <li><b>সঠিক বিদ্যুৎ সরবরাহ:</b> শুধুমাত্র ভালো ৫ ভোল্ট USB পাওয়ার সাপ্লাই ব্যবহার করুন (১A থেকে ২.৪A)।</li>
+              <li><b>তাপমাত্রা থেকে সুরক্ষা:</b> মায়ার বডি সূক্ষ্ম ম্যাট PLA প্লাস্টিকে তৈরি। কড়া রোদে, গাড়ির ভেতর বা হিটারের কাছে রাখবেন না; ৫০° সেলসিয়াসের বেশি গরমে PLA নরম হতে শুরু করে।</li>
+              <li><b>ডিসপ্লে পরিষ্কার:</b> শুকনো নরম মাইক্রোফাইবার কাপড় দিয়ে স্ক্রিন মুছবেন। সরাসরি পানি বা রাসায়নিক স্প্রে করবেন না।</li>
+              <li><b>বডির যত্ন:</b> নরম শুকনো ব্রাশ দিয়ে ধুলাবালি পরিষ্কার করুন। কখনোই পানিতে ভেজাবেন না।</li>
+              <li><b>ছোট বাচ্চাদের সুরক্ষা:</b> অ্যাক্সেসরিজ ও কি-চেইন ছোট হওয়ায় ৩ বছরের কম বয়সী শিশুদের নাগালের বাইরে রাখুন।</li>
             </ul>
           </Section>
 
           {/* Section: Specs */}
           <Section>
-            <H2 id="specs" n={11}>Technical Specifications</H2>
+            <H2 id="specs" n={11}>হার্ডওয়্যার স্পেসিফিকেশন</H2>
             <dl className="mt-6 divide-y divide-black/10 border-y border-black/10 font-mono text-xs">
               {SPECS.map(([k, v]) => (
                 <div key={k} className="grid gap-1 py-3 sm:grid-cols-[12rem_1fr]">
@@ -794,13 +787,13 @@ export default function DocsPage() {
 
           {/* Section: Troubleshooting */}
           <Section>
-            <H2 id="help" n={12}>Comprehensive Troubleshooting & Diagnostics</H2>
+            <H2 id="help" n={12}>সমস্যা সমাধান ও জরুরি প্রশ্নোত্তর</H2>
             <p className={P}>
-              Encountering an issue? Check our detailed troubleshooting guide organized by category below:
+              কোনো কারিগরি সমস্যা বা প্রশ্নের মুখোমুখি হলে নিচের ক্যাটাগরিগুলো থেকে সমাধান দেখে নিন:
             </p>
 
             <div className="mt-8 space-y-8">
-              {TROUBLESHOOTING_CATEGORIES.map((cat) => (
+              {TROUBLESHOOTING_BN.map((cat) => (
                 <div key={cat.category} className="space-y-3">
                   <div className="flex items-center gap-2 border-b border-black/10 pb-2">
                     <span className="font-mono text-xs font-bold text-[#0071e3]">
@@ -830,8 +823,8 @@ export default function DocsPage() {
 
             <div className="mt-12 flex flex-col items-start justify-between gap-4 rounded-3xl bg-[#1d1d1f] p-7 text-white sm:flex-row sm:items-center">
               <div>
-                <div className="text-lg font-bold">Still need technical assistance?</div>
-                <div className="text-xs font-mono text-white/70">Our engineering and hardware support team responds within 24 hours.</div>
+                <div className="text-lg font-bold">আরও কোনো কারিগরি সাহায্য প্রয়োজন?</div>
+                <div className="text-xs font-mono text-white/70">আমাদের ইঞ্জিনিয়ারিং সাপোর্ট টিম ২৪ ঘণ্টার মধ্যে সহায়তা প্রদান করে।</div>
               </div>
               <a
                 href="mailto:contact@xentoryx.com"
@@ -843,7 +836,7 @@ export default function DocsPage() {
 
             <p className="mt-8 font-mono text-xs text-black/50 print:hidden">
               <Link href="/" className="text-[#0071e3] font-bold hover:underline">
-                ← Back to Home
+                ← মূল পেজে ফিরে যান
               </Link>
             </p>
           </Section>
@@ -851,6 +844,6 @@ export default function DocsPage() {
       </div>
 
       <Footer />
-    </>
+    </LangProvider>
   );
 }
