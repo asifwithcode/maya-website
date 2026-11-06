@@ -127,7 +127,7 @@ export const DEFAULT_COPY: SiteCopy = {
     brandName: "Xentoryx Labs",
     taglineEn: "Designed and engineered with passion in Bangladesh.",
     taglineBn: "বাংলাদেশে ভালোবাসায় ডিজাইন ও তৈরি।",
-    email: "contact@xentoryxlabs.site",
+    email: "xentoryxlabs@gmail.com",
     phone: "", // set in the web admin; hidden until then
     address: "Dhaka, Bangladesh",
     copyright: "© 2026 Xentoryx Labs. All rights reserved.",
