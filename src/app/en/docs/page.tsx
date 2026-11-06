@@ -662,7 +662,7 @@ export default function DocsPage() {
                 <span className="font-bold text-xs text-[#0071e3]">In the app</span>
                 <h3 className="font-bold text-base text-[#1d1d1f] mt-1">Pair and send your Wi-Fi</h3>
                 <ol className="mt-3 list-decimal space-y-2 pl-4 text-black/75 leading-relaxed">
-                  <li>Install the app from <a href="/en/app" className="text-[#0071e3] underline">maya.xentoryxlabs.site/app</a> and sign in.</li>
+                  <li>Install the app from <a href="/en/app" className="text-[#0071e3] underline">themaya.site/app</a> and sign in.</li>
                   <li>On the dashboard tap <b>Pair a Maya</b>. Allow Bluetooth, Location and Nearby devices when asked.</li>
                   <li>Under <b>Discovered Maya Devices</b> tap your Maya, or tap <b>Scan Maya QR Code</b> and scan the QR on her screen.</li>
                   <li>Accept the Bluetooth <b>pairing request</b> on your phone.</li>

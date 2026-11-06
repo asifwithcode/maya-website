@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 
-const BASE = "https://maya.xentoryxlabs.site";
+const BASE = "https://themaya.site";
 
 // Each page in Bangla (default, plain path) and English (/en), linked to each other.
 const PAGES: { bn: string; en: string; priority: number }[] = [

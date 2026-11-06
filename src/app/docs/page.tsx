@@ -266,7 +266,7 @@ const TROUBLESHOOTING_BN = [
     badge: "ব্লুটুথ ও অ্যাপ",
     items: [
       {
-        q: "Just Just Maya অ্যাপে স্ক্যান করলে মায়াকে খুঁজে পাচ্ছে না",
+        q: "Just Maya অ্যাপে স্ক্যান করলে মায়াকে খুঁজে পাচ্ছে না",
         a: "১) ফোনের ব্লুটুথ এবং লোকেশন (অ্যান্ড্রয়েড ১২+ এর ক্ষেত্রে Nearby Devices পারমিশন) চালু আছে কিনা দেখে নিন। ২) মায়ার পেয়ারিং স্ক্রিন খুলুন: T2 চেপে মেনু খুলুন, T2 চাপতে চাপতে Setup-এ যান, তারপর T1 চাপুন (ব্লুটুথ ও ওয়াই-ফাই সেটআপ অংশ দেখুন)। ৩) স্ক্যানের সময় ফোনটিকে মায়ার ১ মিটারের মধ্যে রাখুন।",
       },
       {
@@ -275,11 +275,11 @@ const TROUBLESHOOTING_BN = [
       },
       {
         q: "ব্লুটুথ দিয়ে মায়াকে ওয়াই-ফাই পাঠানো যাচ্ছে না",
-        a: "১) ফোনের ব্লুটুথ সেটিংসে গিয়ে পেয়ার করা ডিভাইসের তালিকা থেকে 'MAYA' খুঁজে 'Forget / Unpair' করুন। ২) ব্লুটুথ বন্ধ করুন, কয়েক সেকেন্ড অপেক্ষা করে আবার চালু করুন। ৩) Just Just Maya অ্যাপ আবার খুলে ওয়াই-ফাই তথ্য পুনরায় পাঠান। পুরোনো ব্লুটুথ বন্ড মুছে গেলে বেশিরভাগ ক্ষেত্রে সমস্যা মিটে যায়।",
+        a: "১) ফোনের ব্লুটুথ সেটিংসে গিয়ে পেয়ার করা ডিভাইসের তালিকা থেকে 'MAYA' খুঁজে 'Forget / Unpair' করুন। ২) ব্লুটুথ বন্ধ করুন, কয়েক সেকেন্ড অপেক্ষা করে আবার চালু করুন। ৩) Just Maya অ্যাপ আবার খুলে ওয়াই-ফাই তথ্য পুনরায় পাঠান। পুরোনো ব্লুটুথ বন্ড মুছে গেলে বেশিরভাগ ক্ষেত্রে সমস্যা মিটে যায়।",
       },
       {
         q: "ফোনে মেসেজ বা কল এলেও মায়ার স্ক্রিনে নোটিফিকেশন আসছে না",
-        a: "১) অ্যান্ড্রয়েড সেটিংস > Apps > Special App Access > Notification Access-এ গিয়ে Just Just Maya অ্যাপকে নোটিফিকেশন পড়ার পারমিশন দিন। ২) ফোনের ব্যাটারি অপটিমাইজেশন সেটিংসে অ্যাপটিকে 'Unrestricted' করে দিন যাতে ব্যাকগ্রাউন্ডে সার্ভিস বন্ধ না হয়।",
+        a: "১) অ্যান্ড্রয়েড সেটিংস > Apps > Special App Access > Notification Access-এ গিয়ে Just Maya অ্যাপকে নোটিফিকেশন পড়ার পারমিশন দিন। ২) ফোনের ব্যাটারি অপটিমাইজেশন সেটিংসে অ্যাপটিকে 'Unrestricted' করে দিন যাতে ব্যাকগ্রাউন্ডে সার্ভিস বন্ধ না হয়।",
       },
     ],
   },
@@ -474,7 +474,7 @@ export default function DocsPageBn() {
                 ],
                 [
                   "৪. ব্লুটুথ ও ওয়াই-ফাই পেয়ার",
-                  "Just Just Maya অ্যাপ খুলে 'Pair a Maya' চাপুন। তালিকা থেকে মায়াকে বাছুন (বা তার Setup স্ক্রিনের QR স্ক্যান করুন), তারপর বাসার ২.৪ GHz ওয়াই-ফাই পাঠিয়ে দিন।",
+                  "Just Maya অ্যাপ খুলে 'Pair a Maya' চাপুন। তালিকা থেকে মায়াকে বাছুন (বা তার Setup স্ক্রিনের QR স্ক্যান করুন), তারপর বাসার ২.৪ GHz ওয়াই-ফাই পাঠিয়ে দিন।",
                 ],
               ].map(([t, d], i) => (
                 <li key={t} className="rounded-2xl border border-black/10 bg-[#f5f5f7] p-5 flex flex-col justify-between">
@@ -650,7 +650,7 @@ export default function DocsPageBn() {
                 <span className="font-bold text-xs text-[#0071e3]">অ্যাপে</span>
                 <h3 className="font-bold text-base text-[#1d1d1f] mt-1">পেয়ার করে ওয়াই-ফাই পাঠান</h3>
                 <ol className="mt-3 list-decimal space-y-2 pl-4 text-black/75 leading-relaxed">
-                  <li><a href="/app" className="text-[#0071e3] underline">maya.xentoryxlabs.site/app</a> থেকে অ্যাপ ইন্সটল করে সাইন ইন করুন।</li>
+                  <li><a href="/app" className="text-[#0071e3] underline">themaya.site/app</a> থেকে অ্যাপ ইন্সটল করে সাইন ইন করুন।</li>
                   <li>ড্যাশবোর্ডে <b>Pair a Maya</b> চাপুন। Bluetooth, Location আর Nearby devices-এর অনুমতি চাইলে দিন।</li>
                   <li><b>Discovered Maya Devices</b> তালিকা থেকে আপনার মায়ায় চাপুন, অথবা <b>Scan Maya QR Code</b> চেপে মায়ার স্ক্রিনের QR স্ক্যান করুন।</li>
                   <li>ফোনে আসা ব্লুটুথ <b>pairing request</b>-এ রাজি হন।</li>

@@ -6,7 +6,7 @@ const DESCRIPTION =
   "An ultra-tactile desk companion robot with a round living face, 8 moods, 11 screens, 7 games, and Bangla dialogue. Designed by Xentoryx.";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://maya.xentoryxlabs.site"),
+  metadataBase: new URL("https://themaya.site"),
   title: "MAYA — The Living Desk Robot | Xentoryx",
   description: DESCRIPTION,
   openGraph: {
