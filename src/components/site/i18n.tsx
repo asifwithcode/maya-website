@@ -34,7 +34,7 @@ const en = {
       ["Little notes, in your language.", "Now and then she shows a card in Bangla: a good-morning, a nudge to drink water, a grumble."],
       ["Touch her feet. She notices.", "Two capacitive touch pads on her left and right feet. A tap makes her happy, a poke too many makes her grumpy."],
       ["A focus buddy.", "Pomodoro on a glowing arc: 25 minutes of work, 5 of rest, and a gentle reminder to stand up."],
-      ["Set up in a minute.", "The Maya app finds her over Bluetooth and hands over your Wi-Fi. Weather, time and notifications follow."],
+      ["Set up in a minute.", "The Just Maya app finds her over Bluetooth and hands over your Wi-Fi. Weather, time and notifications follow."],
       ["Only yours.", "Each Maya has its own key. Pairing is encrypted end to end and only the owner's phone can claim her."],
     ] as [string, string][],
   },
@@ -74,7 +74,7 @@ const en = {
     startKicker: "Getting started", startTitle: "Three steps.", guideBefore: "Everything else is in the", guideLink: "user guide",
     steps: [
       ["Plug in", "USB-C into any 5 V charger. Maya wakes up and says hi."],
-      ["Pair", "The Maya app finds her over Bluetooth and sends your Wi-Fi securely."],
+      ["Pair", "The Just Maya app finds her over Bluetooth and sends your Wi-Fi securely."],
       ["Make her yours", "Pick your city, set notifications, and she's part of your desk."],
     ] as [string, string][],
     rows: null as [string, string][] | null, // English comes from data.ts
@@ -124,7 +124,7 @@ const bn: Dict = {
       ["ছোট্ট চিরকুট, আপনার ভাষায়।", "মাঝে মাঝে সে বাংলায় একটা কার্ড দেখায়: শুভ সকাল, পানি খাওয়ার কথা মনে করানো, কিংবা একটু অভিমান।"],
       ["পায়ে ছুঁলেই সে টের পায়।", "দুটো ক্যাপাসিটিভ টাচ প্যাড—বাঁ পা আর ডান পায়ে। আলতো স্পর্শে সে খুশি হয়, বেশি খোঁচালে রেগে যায়।"],
       ["মনোযোগের সঙ্গী।", "উজ্জ্বল বৃত্তে পোমোডোরো: ২৫ মিনিট কাজ, ৫ মিনিট বিরতি, আর উঠে দাঁড়ানোর আলতো তাগাদা।"],
-      ["এক মিনিটেই সেটআপ।", "Maya অ্যাপ ব্লুটুথে ওকে খুঁজে নিয়ে আপনার Wi-Fi দিয়ে দেয়। তারপর আবহাওয়া, সময় আর নোটিফিকেশন।"],
+      ["এক মিনিটেই সেটআপ।", "Just Maya অ্যাপ ব্লুটুথে ওকে খুঁজে নিয়ে আপনার Wi-Fi দিয়ে দেয়। তারপর আবহাওয়া, সময় আর নোটিফিকেশন।"],
       ["শুধু আপনার।", "প্রতিটা মায়ার নিজের চাবি আছে। পেয়ারিং পুরোটা এনক্রিপ্টেড, আর শুধু মালিকের ফোনই ওকে নিজের করতে পারে।"],
     ],
   },
@@ -183,7 +183,7 @@ const bn: Dict = {
     startKicker: "শুরু করা", startTitle: "তিনটা ধাপ।", guideBefore: "বাকি সব আছে", guideLink: "ইউজার গাইডে",
     steps: [
       ["প্লাগ লাগান", "যেকোনো ৫V চার্জারে USB-C লাগান। মায়া জেগে উঠে হাই বলবে।"],
-      ["পেয়ার করুন", "Maya অ্যাপ ব্লুটুথে ওকে খুঁজে নিরাপদে আপনার Wi-Fi পাঠিয়ে দেয়।"],
+      ["পেয়ার করুন", "Just Maya অ্যাপ ব্লুটুথে ওকে খুঁজে নিরাপদে আপনার Wi-Fi পাঠিয়ে দেয়।"],
       ["নিজের করে নিন", "শহর বেছে নিন, নোটিফিকেশন ঠিক করুন, ব্যস, সে আপনার টেবিলের সঙ্গী।"],
     ],
     rows: [

@@ -34,7 +34,7 @@ export default function AppDownload() {
             </svg>
           </div>
           <h2 className="mt-6 text-[32px] font-semibold tracking-tight text-[#1d1d1f] sm:text-[48px]">
-            {isBn ? "Maya অ্যাপ।" : "The Maya app."}
+            {isBn ? "Just Maya অ্যাপ।" : "The Just Maya app."}
           </h2>
           <p className="mx-auto mt-4 max-w-[560px] text-[19px] leading-relaxed text-[#6e6e73]">
             {isBn
