@@ -42,6 +42,29 @@ export default function MayaCanvas({ look, progress, className }: Props) {
     const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 50);
     camera.position.set(0, 0.36, 6.4);
 
+    // ---------- framing
+    // Fitted to the real model once it loads, so the tallest accessory (bunny ears, sprout,
+    // crown) and the feet always stay inside the canvas. Until then: the old fixed framing.
+    const STAGE_Y = 0.22; // stage.position.y at rest
+    const GROUND_Y = -0.895;
+    let fitCenterY = 0.45;
+    let fitHalfH = 1.7; // half the height that must be visible
+    let fitRadius = 1.0; // how far the model reaches sideways while it turns
+    const fitDistance = (aspect: number) => {
+      const tanHalf = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
+      // the model's front comes up to fitRadius closer to the camera than its centre
+      return Math.max(fitHalfH / tanHalf, fitRadius / (tanHalf * aspect)) + fitRadius * 0.5;
+    };
+    const fitTo = (root: THREE.Object3D) => {
+      // root is not on the stage yet and every accessory is still full size and in place
+      const box = new THREE.Box3().setFromObject(root, true);
+      const top = box.max.y + STAGE_Y + 0.025 /* idle float */ + 0.16 /* hop on a look change */;
+      const bottom = Math.min(box.min.y + STAGE_Y, GROUND_Y) - 0.06; /* contact shadow */
+      fitCenterY = (top + bottom) / 2;
+      fitHalfH = ((top - bottom) / 2) * 1.04;
+      fitRadius = Math.max(Math.abs(box.min.x), box.max.x, Math.abs(box.min.z), box.max.z) * 1.05;
+    };
+
     const key = new THREE.DirectionalLight(0xffffff, 2.3);
     key.position.set(1.4, 5.2, 3.2);
     key.castShadow = true;
@@ -102,6 +125,8 @@ export default function MayaCanvas({ look, progress, className }: Props) {
     loadMaya(eyeCanvas).then((m) => {
       if (disposed) return m.dispose();
       maya = m;
+      fitTo(m.root);
+      resize();
       stage.add(m.root);
       show(pending, false);
       if (!reduce) gsap.from(m.root.scale, { x: 0.86, y: 0.86, z: 0.86, duration: 1.4, ease: "expo.out" });
@@ -150,8 +175,7 @@ export default function MayaCanvas({ look, progress, className }: Props) {
       renderer.domElement.style.width = "100%";
       renderer.domElement.style.height = "100%";
       camera.aspect = w / h;
-      // keep Maya the same size on tall phones
-      camera.position.z = w / h < 0.8 ? 6.4 / Math.max(0.55, (w / h) * 1.15) : 6.4;
+      camera.position.z = fitDistance(w / h);
       camera.updateProjectionMatrix();
     };
     const ro = new ResizeObserver(resize);
@@ -199,8 +223,8 @@ export default function MayaCanvas({ look, progress, className }: Props) {
       yaw += (yawTarget - yaw) * (reduce ? 1 : 0.05);
       stage.rotation.y = -0.18 + pointer.x * 0.12 + yaw + p * Math.PI * 2;
       stage.position.y = 0.22 + (reduce ? 0 : Math.sin(t * 1.4) * 0.025);
-      camera.position.y = 0.42 - p * 0.15;
-      camera.lookAt(0, 0.45 - p * 0.1, 0);
+      camera.position.y = fitCenterY - 0.03 - p * 0.15;
+      camera.lookAt(0, fitCenterY - p * 0.1, 0);
       renderer.render(scene, camera);
     };
     tick();
