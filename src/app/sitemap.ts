@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 
 const BASE = "https://themaya.site";
+const PHOTOS = ["plain", "crown", "sprout", "panda", "bunny", "headphones", "backpack"].map((n) => `${BASE}/images/hero/maya-${n}.jpg`);
 
 // Each page in Bangla (default, plain path) and English (/en), linked to each other.
 const PAGES: { bn: string; en: string; priority: number }[] = [
@@ -13,10 +14,11 @@ const PAGES: { bn: string; en: string; priority: number }[] = [
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return PAGES.flatMap(({ bn, en, priority }) => {
-    const languages = { bn: `${BASE}${bn}`, en: `${BASE}${en}` };
+    const languages = { bn: `${BASE}${bn}`, en: `${BASE}${en}`, "x-default": `${BASE}${bn}` };
+    const common = { lastModified: new Date(), changeFrequency: "weekly" as const, alternates: { languages } };
     return [
-      { url: `${BASE}${bn}`, priority, alternates: { languages } },
-      { url: `${BASE}${en}`, priority, alternates: { languages } },
+      { url: `${BASE}${bn}`, priority, ...common, ...(bn === "/" ? { images: PHOTOS } : {}) },
+      { url: `${BASE}${en}`, priority: Math.max(0.1, priority - 0.1), ...common, ...(en === "/en" ? { images: PHOTOS } : {}) },
     ];
   });
 }

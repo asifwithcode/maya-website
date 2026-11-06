@@ -8,7 +8,15 @@ export const metadata: Metadata = {
   title: "মায়া — জীবন্ত মুখের এক ছোট্ট ডেস্ক রোবট",
   description:
     "মায়া একটা নরম ডেস্ক রোবট: গোল জীবন্ত মুখ, আটটা মুড, এগারোটা স্ক্রিন, সাতটা গেম আর বাংলা চিরকুট। সাতটা এডিশন, প্লাগ-ইন অ্যাক্সেসরি আর প্রতিটা বাক্সে একটা মিনি কি-চেইন।",
-  alternates: { canonical: "/", languages: { bn: "/", en: "/en" } },
+  alternates: { canonical: "/", languages: { bn: "/", en: "/en", "x-default": "/" } },
+  openGraph: {
+    url: "/",
+    locale: "bn_BD",
+    alternateLocale: ["en_US"],
+    title: "মায়া — জীবন্ত মুখের এক ছোট্ট ডেস্ক রোবট",
+    description: "গোল জীবন্ত মুখ, আটটা মুড, এগারোটা স্ক্রিন, সাতটা গেম আর বাংলা চিরকুট। ক্যাশ অন ডেলিভারি।",
+    images: [{ url: "/images/og-maya.jpg", width: 1200, height: 630, alt: "মায়া ডেস্ক রোবট" }],
+  },
 };
 
 export default function HomeBn() {

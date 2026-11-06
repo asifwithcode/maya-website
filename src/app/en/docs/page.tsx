@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   title: "Maya User Guide, Software & Comprehensive Troubleshooting | Xentoryx",
   description:
     "Complete technical guide for Maya desktop companion: unboxing, BLE pairing, dual capacitive touch controls, 8 moods, 10 menu screens, 7 arcade games, firmware updates, and comprehensive troubleshooting tips.",
-  alternates: { canonical: "/en/docs", languages: { bn: "/docs", en: "/en/docs" } },
+  alternates: { canonical: "/en/docs", languages: { bn: "/docs", en: "/en/docs", "x-default": "/docs" } },
 };
 
 const TOC = [

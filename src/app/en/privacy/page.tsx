@@ -5,7 +5,7 @@ import { PRIVACY } from "@/components/site/legal";
 export const metadata: Metadata = {
   title: "Privacy Policy · Maya",
   description: "How Xentoryx Labs handles your information when you order Maya or use the robot and app.",
-  alternates: { canonical: "/en/privacy", languages: { bn: "/privacy", en: "/en/privacy" } },
+  alternates: { canonical: "/en/privacy", languages: { bn: "/privacy", en: "/en/privacy", "x-default": "/privacy" } },
 };
 
 export default function Page() {

@@ -5,7 +5,7 @@ import { TERMS } from "@/components/site/legal";
 export const metadata: Metadata = {
   title: "Terms of Use · Maya",
   description: "The terms for ordering Maya and using the robot and the Just Maya app.",
-  alternates: { canonical: "/en/terms", languages: { bn: "/terms", en: "/en/terms" } },
+  alternates: { canonical: "/en/terms", languages: { bn: "/terms", en: "/en/terms", "x-default": "/terms" } },
 };
 
 export default function Page() {

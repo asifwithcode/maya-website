@@ -5,7 +5,7 @@ import { TERMS } from "@/components/site/legal";
 export const metadata: Metadata = {
   title: "ব্যবহারের শর্তাবলি · মায়া",
   description: "মায়া অর্ডার আর রোবট ও Just Maya অ্যাপ ব্যবহারের শর্ত।",
-  alternates: { canonical: "/terms", languages: { bn: "/terms", en: "/en/terms" } },
+  alternates: { canonical: "/terms", languages: { bn: "/terms", en: "/en/terms", "x-default": "/terms" } },
 };
 
 export default function Page() {

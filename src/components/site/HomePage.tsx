@@ -12,6 +12,7 @@ import SmoothScroll from "./SmoothScroll";
 import AutoReveal from "./AutoReveal";
 import { LangProvider, type Lang } from "./i18n";
 import HtmlLang from "./HtmlLang";
+import StructuredData from "./StructuredData";
 import { ContentProvider } from "./content";
 import { getSiteContent } from "@/db/content";
 
@@ -22,6 +23,7 @@ export default async function HomePage({ lang }: { lang: Lang }) {
     <LangProvider lang={lang}>
       <ContentProvider content={content}>
       <HtmlLang lang={lang} />
+      <StructuredData lang={lang} content={content} />
       <div lang={lang}>
         <SmoothScroll />
         <AutoReveal />

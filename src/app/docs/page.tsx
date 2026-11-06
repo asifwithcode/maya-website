@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   title: "মায়া ইউজার গাইড, সফটওয়্যার ও পূর্ণাঙ্গ সমস্যা সমাধান | Xentoryx",
   description:
     "মায়া ডেস্কটপ কম্প্যানিয়নের সম্পূর্ণ টেকনিক্যাল গাইড: আনবক্সিং, ব্লুটুথ পেয়ারিং, দুই পায়ের ক্যাপাসিটিভ টাচ কন্ট্রোল, ৮টি মুড, ১০টি মেনু স্ক্রিন, ৭টি আর্কেড গেম এবং বিস্তারিত সমস্যা সমাধানের টিপস।",
-  alternates: { canonical: "/docs", languages: { bn: "/docs", en: "/en/docs" } },
+  alternates: { canonical: "/docs", languages: { bn: "/docs", en: "/en/docs", "x-default": "/docs" } },
 };
 
 const TOC_BN = [
