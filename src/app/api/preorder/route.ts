@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { hasDatabase } from "@/db";
 import { placeOrder, ShopError } from "@/lib/shop";
 
@@ -38,6 +39,10 @@ export async function POST(request: NextRequest) {
 
   try {
     const order = await placeOrder({ name, email, phone, address, location, variant, qty, lang });
+    try {
+      revalidatePath("/"); // structured data shows stock
+      revalidatePath("/en");
+    } catch {}
     return NextResponse.json({ ok: true, id: order.id, total: order.total });
   } catch (err) {
     if (err instanceof ShopError && err.code === "out_of_stock") {

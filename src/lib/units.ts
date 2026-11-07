@@ -121,14 +121,27 @@ export async function unitAdd(unitId: string, variant: string, note: string | un
   });
 }
 
-export async function unitRemove(unitId: string) {
+/** Takes an in-stock unit out of stock. sold: true records it as sold outside the website (walk-in). */
+export async function unitRemove(unitId: string, opts: { sold?: boolean; note?: string } = {}) {
   if (!validUnitId(unitId)) throw new UnitError("bad_input");
+  const outStatus = opts.sold ? "sold" : "removed";
+  const noteSet = opts.note !== undefined ? { note: opts.note.trim().slice(0, 300) } : {};
   return db().transaction(async (tx) => {
     const now = new Date();
     const [cur] = await tx.select().from(units).where(eq(units.unitId, unitId)).for("update");
-    if (!cur || cur.status === "removed") return { changed: false, unit: cur ?? null, stock: cur ? await stockOf(tx, cur.variant) : null };
-    if (cur.status !== "in_stock") throw new UnitError("unit_busy", `Unit is ${cur.status} on order #${cur.orderId ?? "?"}.`);
-    const [unit] = await tx.update(units).set({ status: "removed", orderId: null, updatedAt: now }).where(eq(units.unitId, unitId)).returning();
+    if (!cur) return { changed: false, unit: null, stock: null };
+    // already out of stock the same way (removed, or sold offline): nothing to do
+    if (cur.status === outStatus && cur.orderId === null) return { changed: false, unit: cur, stock: await stockOf(tx, cur.variant) };
+    if (cur.status === "removed" && outStatus === "sold") {
+      const [unit] = await tx.update(units).set({ status: "sold", updatedAt: now, ...noteSet }).where(eq(units.unitId, unitId)).returning();
+      return { changed: true, unit, stock: await stockOf(tx, cur.variant) };
+    }
+    if (cur.status !== "in_stock") throw new UnitError("unit_busy", `Unit is ${cur.status}${cur.orderId ? ` on order #${cur.orderId}` : ""}.`);
+    const [unit] = await tx
+      .update(units)
+      .set({ status: outStatus, orderId: null, updatedAt: now, ...noteSet })
+      .where(eq(units.unitId, unitId))
+      .returning();
     await bumpStock(tx, cur.variant, -1, now);
     return { changed: true, unit, stock: await stockOf(tx, cur.variant) };
   });
@@ -172,11 +185,13 @@ export async function listUnits(f: { variant?: string; status?: string; orderId?
     f.status ? eq(units.status, f.status) : undefined,
     f.orderId ? eq(units.orderId, f.orderId) : undefined,
   ].filter(Boolean);
-  return db()
-    .select()
+  const rows = await db()
+    .select({ unit: units, orderStatus: preorders.status })
     .from(units)
+    .leftJoin(preorders, eq(preorders.id, units.orderId))
     .where(where.length ? and(...where) : undefined)
     .orderBy(asc(units.variant), asc(units.addedAt));
+  return rows.map((r) => ({ ...r.unit, orderStatus: r.unit.orderId ? r.orderStatus : null }));
 }
 
 /** units per order id, for the order list. */
@@ -204,11 +219,13 @@ export async function unitCounts(): Promise<Record<string, { in_stock: number; r
   return out;
 }
 
-export const toApiUnit = (u: Unit) => ({
+export const toApiUnit = (u: Unit & { orderStatus?: string | null }) => ({
   unitId: u.unitId,
   variant: u.variant,
   status: u.status,
   orderId: u.orderId,
+  orderRef: u.orderId ? `MAYA-${String(u.orderId).padStart(4, "0")}` : null,
+  orderStatus: u.orderStatus ?? null,
   note: u.note,
   addedAt: new Date(u.addedAt).toISOString(),
   updatedAt: new Date(u.updatedAt).toISOString(),

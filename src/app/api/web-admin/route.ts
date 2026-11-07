@@ -235,6 +235,7 @@ export async function POST(request: NextRequest) {
           if (body.historyNote !== undefined) patch.historyNote = String(body.historyNote ?? "");
         }
         const order = await orderOut(await updateOrder(id, patch));
+        if (patch.status !== undefined) refreshPaths(); // stock may have changed
         return NextResponse.json({ ok: true, order, message: `Order #${id} updated.` });
       }
 
@@ -332,7 +333,7 @@ export async function POST(request: NextRequest) {
           const { items } = await getCatalog();
           res = await unitAdd(unitId, String(body.variant ?? "").trim(), body.note === undefined ? undefined : String(body.note), items.map((i) => i.variant));
         } else if (action === "unit_remove") {
-          res = await unitRemove(unitId);
+          res = await unitRemove(unitId, { sold: body.sold === true, note: body.note === undefined ? undefined : String(body.note) });
         } else {
           const orderId = Number(body.orderId);
           if (!Number.isInteger(orderId) || orderId <= 0) return bad("Missing orderId.");
@@ -346,6 +347,7 @@ export async function POST(request: NextRequest) {
         const id = Number(body.id);
         if (!Number.isInteger(id) || id <= 0) return bad("Missing id.");
         const res = await deleteOrders({ ids: [id], restock: body.restock !== false });
+        refreshPaths();
         return NextResponse.json({ ok: true, ...res, message: `Order #${id} deleted.` });
       }
 
@@ -358,6 +360,7 @@ export async function POST(request: NextRequest) {
           );
         }
         const res = await deleteOrders({ restock: body.restock !== false });
+        refreshPaths();
         return NextResponse.json({ ok: true, ...res, message: `${res.deleted} orders deleted.` });
       }
 

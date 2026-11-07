@@ -16,15 +16,19 @@ import HtmlLang from "./HtmlLang";
 import StructuredData from "./StructuredData";
 import { ContentProvider } from "./content";
 import { getSiteContent } from "@/db/content";
+import { hasDatabase } from "@/db";
+import { getStockMap } from "@/lib/shop";
 
 /** The landing page, rendered at / (English) and /bn (Bangla). */
 export default async function HomePage({ lang }: { lang: Lang }) {
   const content = await getSiteContent();
+  // live stock for the structured data; undefined (= in stock) if the database is unreachable
+  const stock = hasDatabase() ? await getStockMap().catch(() => undefined) : undefined;
   return (
     <LangProvider lang={lang}>
       <ContentProvider content={content}>
       <HtmlLang lang={lang} />
-      <StructuredData lang={lang} content={content} />
+      <StructuredData lang={lang} content={content} stock={stock} />
       <div lang={lang}>
         <SmoothScroll />
         <AutoReveal />
