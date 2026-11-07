@@ -313,7 +313,12 @@ export async function POST(request: NextRequest) {
 
       case "delete_all_orders": {
         // Irreversible: the caller must send the word DELETE as confirmation.
-        if (body.confirm !== "DELETE") return bad('Send confirm: "DELETE" to delete every order.');
+        if (body.confirm !== "DELETE") {
+          return NextResponse.json(
+            { ok: false, error: "bad_input", message: 'Send confirm: "DELETE" to delete every order.' },
+            { status: 400 },
+          );
+        }
         const res = await deleteOrders({ restock: body.restock !== false });
         return NextResponse.json({ ok: true, ...res, message: `${res.deleted} orders deleted.` });
       }
