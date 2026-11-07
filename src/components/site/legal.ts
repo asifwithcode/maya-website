@@ -16,13 +16,13 @@ export const PRIVACY: Record<"en" | "bn", LegalDoc> = {
   en: {
     title: "Privacy Policy",
     intro:
-      "This policy explains what information Xentoryx Labs collects when you order Maya on this website, use the Just Maya app, or use a Maya robot, and what we do with it.",
+      "This policy explains what information Xentoryx Labs collects when you order Maya on this website, use the Maya app, or use a Maya robot, and what we do with it.",
     updated: "Last updated: 6 November 2026",
     sections: [
       {
         heading: "Who we are",
         body: [
-          "Maya, this website (themaya.site), the Just Maya app and their servers are run by Xentoryx Labs, Bangladesh.",
+          "Maya, this website (themaya.site), the Maya app and their servers are run by Xentoryx Labs, Bangladesh.",
         ],
       },
       {
@@ -95,13 +95,13 @@ export const PRIVACY: Record<"en" | "bn", LegalDoc> = {
   bn: {
     title: "প্রাইভেসি পলিসি",
     intro:
-      "এই ওয়েবসাইটে মায়া অর্ডার করলে, Just Maya অ্যাপ ব্যবহার করলে বা মায়া রোবট চালালে Xentoryx Labs কী তথ্য নেয় আর তা দিয়ে কী করে, সেটা এখানে লেখা আছে।",
+      "এই ওয়েবসাইটে মায়া অর্ডার করলে, Maya অ্যাপ ব্যবহার করলে বা মায়া রোবট চালালে Xentoryx Labs কী তথ্য নেয় আর তা দিয়ে কী করে, সেটা এখানে লেখা আছে।",
     updated: "সর্বশেষ হালনাগাদ: ৬ নভেম্বর ২০২৬",
     sections: [
       {
         heading: "আমরা কারা",
         body: [
-          "মায়া, এই ওয়েবসাইট (themaya.site), Just Maya অ্যাপ আর এদের সার্ভার চালায় Xentoryx Labs, বাংলাদেশ।",
+          "মায়া, এই ওয়েবসাইট (themaya.site), Maya অ্যাপ আর এদের সার্ভার চালায় Xentoryx Labs, বাংলাদেশ।",
         ],
       },
       {
@@ -175,7 +175,7 @@ export const TERMS: Record<"en" | "bn", LegalDoc> = {
   en: {
     title: "Terms of Use",
     intro:
-      "These terms apply when you order Maya on this website or use a Maya robot and the Just Maya app. By ordering or using them, you agree to these terms.",
+      "These terms apply when you order Maya on this website or use a Maya robot and the Maya app. By ordering or using them, you agree to these terms.",
     updated: "Last updated: 6 November 2026",
     sections: [
       {
@@ -239,7 +239,7 @@ export const TERMS: Record<"en" | "bn", LegalDoc> = {
   bn: {
     title: "ব্যবহারের শর্তাবলি",
     intro:
-      "এই ওয়েবসাইট থেকে মায়া অর্ডার করলে বা মায়া রোবট আর Just Maya অ্যাপ ব্যবহার করলে এই শর্তগুলো প্রযোজ্য। অর্ডার বা ব্যবহার করা মানে আপনি এগুলোতে রাজি।",
+      "এই ওয়েবসাইট থেকে মায়া অর্ডার করলে বা মায়া রোবট আর Maya অ্যাপ ব্যবহার করলে এই শর্তগুলো প্রযোজ্য। অর্ডার বা ব্যবহার করা মানে আপনি এগুলোতে রাজি।",
     updated: "সর্বশেষ হালনাগাদ: ৬ নভেম্বর ২০২৬",
     sections: [
       {

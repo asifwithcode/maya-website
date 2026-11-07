@@ -253,7 +253,7 @@ const TROUBLESHOOTING_CATEGORIES = [
       },
       {
         q: "Can I set up Wi-Fi without the app?",
-        a: "No. Maya gets your Wi-Fi only from the Just Maya Android app, over Bluetooth. If you don't have an Android phone, borrow one for the setup: once Maya is online she works without it.",
+        a: "No. Maya gets your Wi-Fi only from the Maya Android app, over Bluetooth. If you don't have an Android phone, borrow one for the setup: once Maya is online she works without it.",
       },
       {
         q: "Can Maya be used completely without any Wi-Fi connection?",
@@ -266,20 +266,20 @@ const TROUBLESHOOTING_CATEGORIES = [
     badge: "Bluetooth & App",
     items: [
       {
-        q: "The Just Maya App cannot discover Maya during scanning",
+        q: "The Maya App cannot discover Maya during scanning",
         a: "1) Ensure Bluetooth and Location services ('Nearby Devices' permission on Android 12+) are turned ON with all permissions granted. 2) Open Maya's pairing screen: tap T2 to open the menu, tap T2 until Setup, then tap T1 (see BLE Pairing & Wi-Fi Setup). 3) Keep your phone within 1 meter of Maya during discovery.",
       },
       {
         q: "Pairing fails, hangs at 'Connecting', or times out",
-        a: "Open your Android device's system Bluetooth settings. If you previously paired Maya, locate 'MAYA' or 'ESP32' in the paired devices list and tap 'Forget / Unpair'. Then restart the Just Maya App, open Setup on Maya again from the menu, and retry.",
+        a: "Open your Android device's system Bluetooth settings. If you previously paired Maya, locate 'MAYA' or 'ESP32' in the paired devices list and tap 'Forget / Unpair'. Then restart the Maya App, open Setup on Maya again from the menu, and retry.",
       },
       {
         q: "Wi-Fi details won't send to Maya over Bluetooth",
-        a: "1) Open your phone's Bluetooth settings, find 'MAYA' in the paired devices list and tap 'Forget / Unpair'. 2) Turn Bluetooth off, wait a few seconds, then turn it back on. 3) Open the Just Maya App again and resend your Wi-Fi details. This clears a stale Bluetooth bond, which is the most common cause.",
+        a: "1) Open your phone's Bluetooth settings, find 'MAYA' in the paired devices list and tap 'Forget / Unpair'. 2) Turn Bluetooth off, wait a few seconds, then turn it back on. 3) Open the Maya App again and resend your Wi-Fi details. This clears a stale Bluetooth bond, which is the most common cause.",
       },
       {
         q: "Phone notifications are not arriving on Maya's display",
-        a: "1) Ensure the Just Maya App has 'Notification Access' enabled in Android Settings > Apps > Special App Access > Notification Access. 2) Ensure Android battery optimization is set to 'Unrestricted' for Just Maya so background sync isn't killed. 3) Ensure Bluetooth remains connected between your phone and Maya.",
+        a: "1) Ensure the Maya App has 'Notification Access' enabled in Android Settings > Apps > Special App Access > Notification Access. 2) Ensure Android battery optimization is set to 'Unrestricted' for Maya so background sync isn't killed. 3) Ensure Bluetooth remains connected between your phone and Maya.",
       },
     ],
   },
@@ -293,7 +293,7 @@ const TROUBLESHOOTING_CATEGORIES = [
       },
       {
         q: "Live Weather displays '--' or shows the wrong city",
-        a: "Weather data is retrieved from weather services via the internet. Open the Just Maya App, navigate to Settings, enter your correct city name (e.g., 'Dhaka', 'Chittagong'), and save. Maya updates weather within 60 seconds.",
+        a: "Weather data is retrieved from weather services via the internet. Open the Maya App, navigate to Settings, enter your correct city name (e.g., 'Dhaka', 'Chittagong'), and save. Maya updates weather within 60 seconds.",
       },
       {
         q: "Pomodoro focus stats did not sync with the app",
@@ -431,7 +431,7 @@ export default function DocsPage() {
                     </h2>
                   </div>
                   <span className="self-start rounded-full bg-[#1d1d1f] px-3 py-1 font-mono text-[11px] font-bold text-white">
-                    v1.0.0
+                    v{APP_RELEASE.version}
                   </span>
                 </div>
 
@@ -443,7 +443,7 @@ export default function DocsPage() {
                         <span className="font-mono text-[10px] font-bold text-black/50">Mobile Companion</span>
                         <span className="font-mono text-[10px] font-bold text-[#0071e3]">Android 7.0+</span>
                       </div>
-                      <h3 className="font-bold text-xl text-[#1d1d1f]">Just Maya for Android</h3>
+                      <h3 className="font-bold text-xl text-[#1d1d1f]">Maya for Android</h3>
                       <p className="font-mono text-xs text-black/70 mt-2 leading-relaxed">
                         Instant Bluetooth LE scanning and pairing, 2.4 GHz Wi-Fi provisioning, realtime notification relay (WhatsApp, SMS, calls), mood customization, and focus analytics.
                       </p>
@@ -486,7 +486,7 @@ export default function DocsPage() {
                 ],
                 [
                   "4. Mobile BLE Pairing",
-                  "Open the Just Maya app, tap 'Pair a Maya', pick your Maya from the list (or scan the QR on her Setup screen) and send her your 2.4 GHz Wi-Fi.",
+                  "Open the Maya app, tap 'Pair a Maya', pick your Maya from the list (or scan the QR on her Setup screen) and send her your 2.4 GHz Wi-Fi.",
                 ],
               ].map(([t, d], i) => (
                 <li key={t} className="rounded-2xl border border-black/10 bg-[#f5f5f7] p-5 flex flex-col justify-between">
@@ -643,7 +643,7 @@ export default function DocsPage() {
           <Section>
             <H2 id="pairing" n={6}>BLE Pairing & Wi-Fi Setup</H2>
             <p className={P}>
-              Maya gets your Wi-Fi from the Just Maya Android app over Bluetooth. This is the only way to set her up, and it takes about a minute.
+              Maya gets your Wi-Fi from the Maya Android app over Bluetooth. This is the only way to set her up, and it takes about a minute.
             </p>
 
             <div className="mt-6 grid gap-6 md:grid-cols-2 font-mono text-xs">

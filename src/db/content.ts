@@ -86,7 +86,7 @@ export const DEFAULT_COPY: SiteCopy = {
         titleEn: "One-minute instant pairing.",
         titleBn: "এক মিনিটেই সেটআপ।",
         descEn: "Maya companion app detects her over Bluetooth LE and securely provisions Wi-Fi credentials in seconds.",
-        descBn: "Just Maya অ্যাপ ব্লুটুথে ওকে খুঁজে নিয়ে আপনার Wi-Fi দিয়ে দেয়। তারপর আবহাওয়া, সময় আর নোটিফিকেশন।",
+        descBn: "Maya অ্যাপ ব্লুটুথে ওকে খুঁজে নিয়ে আপনার Wi-Fi দিয়ে দেয়। তারপর আবহাওয়া, সময় আর নোটিফিকেশন।",
       },
       {
         fig: "FIG 06",

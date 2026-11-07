@@ -12,7 +12,7 @@ const EMAIL = "xentoryxlabs@gmail.com";
 const TEXT = {
   bn: {
     eyebrow: "Xentoryx Labs · মায়া",
-    title: "Just Maya অ্যাপ",
+    title: "Maya অ্যাপ",
     intro: "মায়াকে Wi‑Fi-তে যুক্ত করা, মুড আর স্ক্রিন বদলানো, ফোকাস সেশন চালানো আর ফোনের নোটিফিকেশন মায়ার স্ক্রিনে দেখানোর অ্যাপ।",
     download: "অ্যান্ড্রয়েডের জন্য ডাউনলোড",
     meta: `ভার্সন ${APP_RELEASE.version} · Android ${APP_RELEASE.minAndroid} বা নতুন · ${APP_RELEASE.sizeMb} MB`,
@@ -30,7 +30,7 @@ const TEXT = {
   },
   en: {
     eyebrow: "Xentoryx Labs · Maya",
-    title: "The Just Maya app",
+    title: "The Maya app",
     intro: "Connect Maya to Wi‑Fi, change her mood and screen, run focus sessions and show your phone’s notifications on her screen.",
     download: "Download for Android",
     meta: `Version ${APP_RELEASE.version} · Android ${APP_RELEASE.minAndroid} or newer · ${APP_RELEASE.sizeMb} MB`,
