@@ -1,12 +1,23 @@
 import { NextRequest, NextResponse } from "next/server";
 import { timingSafeEqual } from "crypto";
-import { asc, desc, eq } from "drizzle-orm";
+import { asc, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { db, hasDatabase } from "@/db";
-import { editions, preorders, settings, type Pricing } from "@/db/schema";
+import { editions, settings, type Pricing } from "@/db/schema";
 import { DEFAULT_COPY, getSiteContent } from "@/db/content";
 import type { SiteCopy } from "@/components/site/content";
-import { parsePreorderNote } from "@/lib/orders";
+import { ORDER_STATUSES } from "@/db/statuses";
+import {
+  getStockItems,
+  listOrders,
+  placeOrder,
+  salesSummary,
+  setStock,
+  ShopError,
+  toApiOrder,
+  updateOrder,
+  type FulfillmentPatch,
+} from "@/lib/shop";
 
 export const dynamic = "force-dynamic";
 
@@ -26,6 +37,7 @@ function adminAllowed(request: NextRequest): boolean {
   return process.env.NODE_ENV !== "production";
 }
 
+const bad = (error: string) => NextResponse.json({ ok: false, error }, { status: 400 });
 const forbidden = () => NextResponse.json({ ok: false, error: "Not available." }, { status: 404 });
 
 const BN_FALLBACK: Record<string, [string, string, string]> = {
@@ -55,42 +67,46 @@ const refreshPaths = () => {
 };
 
 
-// GET /api/web-admin - Sync all database state to MAYA Studio
+// GET /api/web-admin - full sync; ?view=orders[&since=ISO] and ?view=stock are the light polls
 export async function GET(request: NextRequest) {
   if (!adminAllowed(request)) return forbidden();
+  const view = request.nextUrl.searchParams.get("view");
+  if (view === "orders" || view === "stock") {
+    if (!hasDatabase()) return NextResponse.json({ ok: false, error: "Database not connected." }, { status: 503 });
+    try {
+      if (view === "stock") {
+        return NextResponse.json({ ok: true, items: await getStockItems() }, { headers: { "Cache-Control": "no-store" } });
+      }
+      const sinceRaw = request.nextUrl.searchParams.get("since");
+      const since = sinceRaw && !Number.isNaN(Date.parse(sinceRaw)) ? new Date(sinceRaw) : undefined;
+      const serverTime = new Date().toISOString();
+      const { rows, newCount, sinceCount } = await listOrders({ since });
+      const orders = rows.map(toApiOrder);
+      return NextResponse.json(
+        { ok: true, serverTime, newCount, sinceCount, orders, summary: salesSummary(orders), statuses: ORDER_STATUSES },
+        { headers: { "Cache-Control": "no-store" } },
+      );
+    } catch (err) {
+      console.error(`GET /api/web-admin?view=${view} failed:`, err);
+      return NextResponse.json({ ok: false, error: "Could not load admin data." }, { status: 500 });
+    }
+  }
   try {
     const site = await getSiteContent();
 
     let orderList: unknown[] = [];
     let editionsList: unknown[] = [];
+    let stockList: unknown[] = [];
 
     if (hasDatabase()) {
       try {
-        const [ordersRows, allEditions] = await Promise.all([
-          db().select().from(preorders).orderBy(desc(preorders.createdAt)),
+        const [{ rows }, allEditions, stockItems] = await Promise.all([
+          listOrders(),
           db().select().from(editions).orderBy(asc(editions.sortOrder), asc(editions.id)),
+          getStockItems(),
         ]);
-
-        orderList = ordersRows.map((r) => {
-          const { phone, address, location, adminNote } = parsePreorderNote(r.note);
-          const isDhaka = !location || location.toLowerCase().includes("dhaka") || (address ?? "").toLowerCase().includes("dhaka");
-          return {
-            id: r.id,
-            name: sanitizeText(r.name, "Customer"),
-            email: sanitizeText(r.email, ""),
-            phone: phone ?? "",
-            variant: sanitizeText(r.variant, "Classic"),
-            qty: r.qty ?? 1,
-            lang: r.lang ?? "en",
-            status: r.status ?? "new",
-            note: sanitizeText(adminNote || (r.note ?? ""), ""),
-            address: sanitizeText(address ?? "", ""),
-            location: sanitizeText(location ?? (isDhaka ? "dhaka" : "outside"), isDhaka ? "dhaka" : "outside"),
-            date: r.createdAt ? new Date(r.createdAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }) : "Recent",
-            createdAt: r.createdAt ? new Date(r.createdAt).toISOString() : "",
-            isDhaka,
-          };
-        });
+        orderList = rows.map(toApiOrder);
+        stockList = stockItems;
 
         editionsList = allEditions.map((e) => {
           const fb = BN_FALLBACK[e.slug] || ["এডিশন", "অ্যাকসেসরি", "চোখ"];
@@ -121,6 +137,7 @@ export async function GET(request: NextRequest) {
       {
         ok: true,
         preorders: orderList,
+        stock: stockList,
         editions: editionsList.length
           ? editionsList
           : site.editions.map((e, idx) => ({
@@ -170,7 +187,7 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST /api/web-admin - Receive and commit updates from MAYA Studio
+// POST /api/web-admin - admin actions (orders, stock, prices, editions, copy)
 export async function POST(request: NextRequest) {
   if (!adminAllowed(request)) return forbidden();
   try {
@@ -182,39 +199,30 @@ export async function POST(request: NextRequest) {
     }
 
     switch (action) {
-      case "set_status": {
+      case "set_status":
+      case "set_note":
+      case "set_fulfillment": {
         const id = Number(body.id);
-        const status = String(body.status ?? "").toLowerCase();
-        if (!id || !status) {
-          return NextResponse.json({ ok: false, error: "Missing id or status." }, { status: 400 });
+        if (!Number.isInteger(id) || id <= 0) return bad("Missing id.");
+        const patch: FulfillmentPatch = {};
+        if (action !== "set_note" && body.status !== undefined) patch.status = String(body.status);
+        if (action === "set_status" && patch.status === undefined) return bad("Missing status.");
+        if (action !== "set_status" && body.note !== undefined) patch.note = String(body.note ?? "");
+        if (action === "set_fulfillment") {
+          if (body.courier !== undefined) patch.courier = String(body.courier ?? "");
+          if (body.trackingNo !== undefined) patch.trackingNo = String(body.trackingNo ?? "");
+          if (body.paid !== undefined) patch.paid = Number(body.paid);
+          if (body.historyNote !== undefined) patch.historyNote = String(body.historyNote ?? "");
         }
-        await db().update(preorders).set({ status }).where(eq(preorders.id, id));
-        refreshPaths();
-        return NextResponse.json({ ok: true, message: `Order #${id} status updated to ${status}.` });
+        const order = toApiOrder(await updateOrder(id, patch));
+        return NextResponse.json({ ok: true, order, message: `Order #${id} updated.` });
       }
 
-      case "set_note": {
-        const id = Number(body.id);
-        if (!id) {
-          return NextResponse.json({ ok: false, error: "Missing id." }, { status: 400 });
-        }
-        const newAdminNote = String(body.note ?? "").trim().slice(0, 1000);
-
-        const existing = await db().select().from(preorders).where(eq(preorders.id, id)).limit(1);
-        const currentNote = existing[0]?.note ?? "";
-        const { phone, address, location } = parsePreorderNote(currentNote);
-
-        const parts = [
-          phone ? `Phone: ${phone}` : "",
-          address ? `Address: ${address}` : "",
-          location ? `Location: ${location}` : "",
-          newAdminNote ? newAdminNote : "",
-        ].filter(Boolean);
-
-        const combined = parts.join(" | ");
-        await db().update(preorders).set({ note: combined }).where(eq(preorders.id, id));
+      case "set_stock": {
+        const variant = String(body.variant ?? "").trim();
+        const item = await setStock(variant, Number(body.qty));
         refreshPaths();
-        return NextResponse.json({ ok: true, message: `Internal notes saved for order #${id}.` });
+        return NextResponse.json({ ok: true, item: { variant: item.variant, qty: item.qty }, message: `Stock for ${variant} set to ${item.qty}.` });
       }
 
       case "save_pricing": {
@@ -224,8 +232,8 @@ export async function POST(request: NextRequest) {
           accessory: Number(body.accessory) || 390,
           mini: Number(body.mini) || 490,
           delivery: {
-            dhaka: Number(body.deliveryDhaka) ?? 70,
-            outside: Number(body.deliveryOutside) ?? 130,
+            dhaka: Number.isFinite(Number(body.deliveryDhaka)) && body.deliveryDhaka !== "" ? Number(body.deliveryDhaka) : 70,
+            outside: Number.isFinite(Number(body.deliveryOutside)) && body.deliveryOutside !== "" ? Number(body.deliveryOutside) : 130,
           },
         };
         await db()
@@ -296,48 +304,33 @@ export async function POST(request: NextRequest) {
       }
 
       case "create_preorder": {
-        const name = String(body.name ?? "").trim();
-        const email = String(body.email ?? "").trim();
-        const phone = String(body.phone ?? "").trim();
-        const address = String(body.address ?? "").trim();
-        const location = String(body.location ?? "dhaka").trim();
-        const variant = String(body.variant ?? "Classic").trim();
-        const qty = Number(body.qty) || 1;
-        const lang = String(body.lang ?? "en").trim();
-
-        if (!name || !email) {
-          return NextResponse.json({ ok: false, error: "Name and email are required." }, { status: 400 });
-        }
-
-        const noteParts = [
-          phone ? `Phone: ${phone}` : "",
-          address ? `Address: ${address}` : "",
-          location ? `Location: ${location}` : "",
-          "Added from MAYA Studio",
-        ].filter(Boolean).join(" | ");
-
-        const [created] = await db()
-          .insert(preorders)
-          .values({
-            name,
-            email,
-            variant,
-            qty,
-            lang,
-            status: "new",
-            note: noteParts,
-          })
-          .returning({ id: preorders.id });
-
-        refreshPaths();
-        return NextResponse.json({ ok: true, id: created?.id, message: `Reservation created #${created?.id}.` });
+        const name = String(body.name ?? "").trim().slice(0, 120);
+        const email = String(body.email ?? "").trim().slice(0, 200);
+        if (!name) return bad("Name is required.");
+        const order = await placeOrder({
+          name,
+          email,
+          phone: String(body.phone ?? "").trim().slice(0, 50),
+          address: String(body.address ?? "").trim().slice(0, 300),
+          location: body.location === "outside" ? "outside" : "dhaka",
+          variant: String(body.variant ?? "").trim(),
+          qty: Math.min(50, Math.max(1, Math.trunc(Number(body.qty)) || 1)),
+          lang: body.lang === "en" ? "en" : "bn",
+          note: String(body.note ?? "").trim().slice(0, 1000),
+          source: "Added by admin",
+        });
+        return NextResponse.json({ ok: true, id: order.id, order: toApiOrder(order), message: `Order #${order.id} created.` });
       }
 
       default:
         return NextResponse.json({ ok: false, error: `Unknown action: ${action}` }, { status: 400 });
     }
   } catch (error) {
+    if (error instanceof ShopError) {
+      const status = error.code === "out_of_stock" ? 409 : error.code === "not_found" ? 404 : 400;
+      return NextResponse.json({ ok: false, error: error.code, message: error.message }, { status });
+    }
     console.error("POST /api/web-admin failed:", error);
-    return NextResponse.json({ ok: false, error: String(error) }, { status: 500 });
+    return NextResponse.json({ ok: false, error: "Server error." }, { status: 500 });
   }
 }

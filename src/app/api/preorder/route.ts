@@ -1,20 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { addPreorder, countPreorders } from "@/lib/store";
-import { getSiteContent } from "@/db/content";
+import { hasDatabase } from "@/db";
+import { placeOrder, ShopError } from "@/lib/shop";
 
 export const dynamic = "force-dynamic";
 
-const FIXED_VARIANTS = ["Collector's Set", "Classic", "Surprise me"];
-
-export async function GET() {
-  try {
-    const count = await countPreorders();
-    return NextResponse.json({ count });
-  } catch {
-    return NextResponse.json({ count: null });
-  }
-}
-
+/** Places a cash-on-delivery order. Price and stock are checked on the server. */
 export async function POST(request: NextRequest) {
   let body: Record<string, unknown>;
   try {
@@ -27,45 +17,36 @@ export async function POST(request: NextRequest) {
   const email = String(body.email ?? "").trim().slice(0, 200);
   const phone = String(body.phone ?? "").trim().slice(0, 50);
   const address = String(body.address ?? "").trim().slice(0, 300);
-  const location = String(body.location ?? "").trim().slice(0, 40);
-  const variant = String(body.variant ?? "").trim();
+  const location = body.location === "outside" ? "outside" : "dhaka";
+  const variant = String(body.variant ?? "").trim().slice(0, 60);
   const qty = Math.min(10, Math.max(1, Math.trunc(Number(body.qty)) || 1));
-  const lang = body.lang === "bn" ? "bn" : "en";
+  const lang = body.lang === "en" ? "en" : "bn";
 
-  if (!name || !email || !phone) {
-    return NextResponse.json({ error: "Name, phone and email are required." }, { status: 400 });
+  if (!name || !email || !phone || !address) {
+    return NextResponse.json({ error: "Name, phone, email and address are required." }, { status: 400 });
   }
   // Cash on delivery needs a phone we can call: 7-15 digits, + - spaces allowed.
-  const digits = phone.replace(/[\s()+-]/g, "");
-  if (!/^\d{7,15}$/.test(digits)) {
+  if (!/^\d{7,15}$/.test(phone.replace(/[\s()+-]/g, ""))) {
     return NextResponse.json({ error: "That phone number doesn't look right." }, { status: 400 });
   }
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return NextResponse.json({ error: "That email doesn't look right." }, { status: 400 });
   }
-
-  const { editions } = await getSiteContent();
-  const validVariants = [...editions.map((e) => e.variant), ...FIXED_VARIANTS];
-  if (!validVariants.includes(variant)) {
-    return NextResponse.json({ error: "Pick a valid edition." }, { status: 400 });
+  if (!hasDatabase()) {
+    return NextResponse.json({ error: "Could not save right now. Please try again." }, { status: 503 });
   }
 
   try {
-    const count = await addPreorder({
-      name,
-      email,
-      phone,
-      address,
-      location,
-      variant,
-      qty,
-      lang,
-      submittedAt: new Date().toISOString(),
-    });
-
-    return NextResponse.json({ ok: true, count });
+    const order = await placeOrder({ name, email, phone, address, location, variant, qty, lang });
+    return NextResponse.json({ ok: true, id: order.id, total: order.total });
   } catch (err) {
-    console.error("preorder insert failed", err);
+    if (err instanceof ShopError && err.code === "out_of_stock") {
+      return NextResponse.json({ error: "out_of_stock", message: "Not enough stock for this edition." }, { status: 409 });
+    }
+    if (err instanceof ShopError && err.code === "invalid_variant") {
+      return NextResponse.json({ error: "Pick a valid edition." }, { status: 400 });
+    }
+    console.error("order insert failed", err);
     return NextResponse.json({ error: "Could not save right now. Please try again." }, { status: 503 });
   }
 }
