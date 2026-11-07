@@ -87,6 +87,7 @@ export async function GET(request: NextRequest) {
         const q = request.nextUrl.searchParams;
         const orderId = Number(q.get("orderId"));
         const items = await listUnits({
+          unitId: q.get("unitId") ?? undefined,
           variant: q.get("variant") ?? undefined,
           status: q.get("status") ?? undefined,
           orderId: Number.isInteger(orderId) && orderId > 0 ? orderId : undefined,

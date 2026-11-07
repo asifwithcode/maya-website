@@ -179,8 +179,9 @@ export async function unitAssign(unitId: string, orderId: number) {
   });
 }
 
-export async function listUnits(f: { variant?: string; status?: string; orderId?: number } = {}) {
+export async function listUnits(f: { unitId?: string; variant?: string; status?: string; orderId?: number } = {}) {
   const where = [
+    f.unitId ? eq(units.unitId, f.unitId) : undefined,
     f.variant ? eq(units.variant, f.variant) : undefined,
     f.status ? eq(units.status, f.status) : undefined,
     f.orderId ? eq(units.orderId, f.orderId) : undefined,
