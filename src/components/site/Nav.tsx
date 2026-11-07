@@ -68,6 +68,12 @@ export default function Nav({ home = true }: { home?: boolean }) {
           >
             {t.nav.guide}
           </Link>
+          <Link
+            href={pathFor(lang, "track")}
+            className="text-[12px] text-[#1d1d1f]/80 transition-colors hover:text-[#1d1d1f]"
+          >
+            {isBn ? "অর্ডার ট্র্যাক" : "Track order"}
+          </Link>
         </nav>
 
         <div className="flex items-center gap-3">
@@ -116,9 +122,12 @@ export default function Nav({ home = true }: { home?: boolean }) {
             ))}
             <Link
               href={pathFor(lang, "docs")}
-              className="py-3 text-[22px] font-semibold tracking-tight text-[#1d1d1f]"
+              className="border-b border-black/[0.06] py-3 text-[22px] font-semibold tracking-tight text-[#1d1d1f]"
             >
               {t.nav.guide}
+            </Link>
+            <Link href={pathFor(lang, "track")} className="py-3 text-[22px] font-semibold tracking-tight text-[#1d1d1f]">
+              {isBn ? "অর্ডার ট্র্যাক" : "Track order"}
             </Link>
           </div>
         </div>

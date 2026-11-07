@@ -25,6 +25,7 @@ export type Order = {
   total: number;
   paid: number;
   history: HistoryEntry[];
+  units?: string[];
 };
 export type Summary = {
   orders: number;
@@ -36,7 +37,15 @@ export type Summary = {
   byStatus: Record<string, number>;
   byVariant: Record<string, { orders: number; units: number; revenue: number }>;
 };
-export type StockItem = { variant: string; name: string; nameBn: string; price: number; qty: number; active: boolean };
+export type StockItem = {
+  variant: string;
+  name: string;
+  nameBn: string;
+  price: number;
+  qty: number;
+  active: boolean;
+  units?: { in_stock: number; reserved: number; sold: number };
+};
 export type Edition = {
   id: number;
   slug: string;

@@ -486,6 +486,12 @@ function OrderDetail({
         <dd>
           {order.variant} × {order.qty} · {taka(order.unitPrice)} করে
         </dd>
+        {order.units && order.units.length > 0 && (
+          <>
+            <dt className="text-[#6e6e73]">ইউনিট</dt>
+            <dd className="font-mono text-[13px]">{order.units.join(", ")}</dd>
+          </>
+        )}
         <dt className="text-[#6e6e73]">ডেলিভারি</dt>
         <dd>{taka(order.delivery)}</dd>
         <dt className="font-medium">মোট (COD)</dt>
@@ -629,7 +635,7 @@ function StockPanel({ items, summary, token, onSaved }: { items: StockItem[]; su
         ))}
       </ul>
       <p className="border-t border-[#f0f0f2] px-4 py-3 text-[12px] text-[#86868b]">
-        অর্ডার দিলে স্টক কমে; বাতিল বা ফেরত হলে আবার যোগ হয়। এখানে হাতে থাকা ইউনিটের সংখ্যা দিন।
+        অর্ডার দিলে স্টক কমে; বাতিল বা ফেরত হলে আবার যোগ হয়। Maya Studio-তে বানানো ইউনিট স্টকে যোগ করলে এখানেও নিজে থেকে বাড়ে। হাতে গোনা সংখ্যা ঠিক করতে এখানে লিখুন।
       </p>
     </div>
   );
@@ -661,6 +667,11 @@ function StockRow({ item, sold, token, onSaved }: { item: StockItem; sold: numbe
         <span className="block text-[12px] text-[#86868b]">
           {item.name} · {item.variant}
         </span>
+        {item.units && item.units.in_stock + item.units.reserved + item.units.sold > 0 && (
+          <span className="block text-[12px] text-[#6e6e73]">
+            ইউনিট: {item.units.in_stock} স্টকে · {item.units.reserved} রিজার্ভ · {item.units.sold} বিক্রি
+          </span>
+        )}
         {err && <span className="block text-[12px] text-[#d70015]">{err}</span>}
       </span>
       <span className="text-right text-[14px] tabular-nums max-sm:hidden">{taka(item.price)}</span>

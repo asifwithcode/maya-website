@@ -32,6 +32,7 @@ export default function Footer() {
       links: [
         [t.nav.editions, `${home}/#editions`],
         [t.nav.order, `${home}/#order`],
+        [isBn ? "অর্ডার ট্র্যাক করুন" : "Track your order", pathFor(lang, "track")],
       ],
     },
     {

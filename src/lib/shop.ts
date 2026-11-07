@@ -5,6 +5,7 @@ import { preorders, stock, type OrderHistoryEntry, type Preorder } from "@/db/sc
 import { getSiteContent } from "@/db/content";
 import { COMBO } from "@/components/site/data";
 import { normalizeStatus, RELEASES_STOCK, type OrderStatus } from "@/db/statuses";
+import { detachUnitsOf, releaseUnitsOf, reserveUnitsFor, setOrderUnitsStatus, unitCounts } from "./units";
 
 /** The bilingual name of the combo; editions take theirs from the database. */
 const COMBO_NAME = { en: "Complete Collection", bn: "কমপ্লিট কালেকশন" };
@@ -50,8 +51,16 @@ export async function getStockMap(): Promise<Record<string, number>> {
 
 /** Stock per variant with name and price, for the admin. */
 export async function getStockItems() {
-  const [{ items }, map] = await Promise.all([getCatalog(), getStockMap()]);
-  return items.map((i) => ({ variant: i.variant, name: i.name.en, nameBn: i.name.bn, price: i.price, qty: map[i.variant] ?? 0, active: i.active }));
+  const [{ items }, map, counts] = await Promise.all([getCatalog(), getStockMap(), unitCounts()]);
+  return items.map((i) => ({
+    variant: i.variant,
+    name: i.name.en,
+    nameBn: i.name.bn,
+    price: i.price,
+    qty: map[i.variant] ?? 0,
+    active: i.active,
+    units: counts[i.variant] ?? { in_stock: 0, reserved: 0, sold: 0 },
+  }));
 }
 
 export type PublicStock = { variant: string; state: "in" | "low" | "out"; left?: number };
@@ -130,6 +139,7 @@ export async function placeOrder(o: NewOrder): Promise<Preorder> {
         updatedAt: now,
       })
       .returning();
+    await reserveUnitsFor(tx, row.id, o.variant, o.qty, now);
     return row;
   });
 }
@@ -176,6 +186,7 @@ export async function updateOrder(id: number, p: FulfillmentPatch): Promise<Preo
           .update(stock)
           .set({ qty: sql`${stock.qty} + ${cur.qty}`, updatedAt: now })
           .where(eq(stock.variant, cur.variant));
+        await releaseUnitsOf(tx, [cur.id], now);
         set.stockHeld = false;
       } else if (!release && !cur.stockHeld) {
         const taken = await tx
@@ -184,8 +195,11 @@ export async function updateOrder(id: number, p: FulfillmentPatch): Promise<Preo
           .where(and(eq(stock.variant, cur.variant), gte(stock.qty, cur.qty)))
           .returning({ qty: stock.qty });
         if (!taken.length) throw new ShopError("out_of_stock");
+        await reserveUnitsFor(tx, cur.id, cur.variant, cur.qty, now);
         set.stockHeld = true;
       }
+      if (next === "delivered") await setOrderUnitsStatus(tx, cur.id, "sold", now);
+      else if (cur.status === "delivered" && !release) await setOrderUnitsStatus(tx, cur.id, "reserved", now);
       set.status = next;
       const entry: OrderHistoryEntry = { status: next, at: now.toISOString() };
       const hn = p.historyNote?.trim();
@@ -223,6 +237,10 @@ export async function deleteOrders(opts: { ids?: number[]; restock: boolean }) {
           .where(eq(stock.variant, variant));
       }
     }
+    const now2 = new Date();
+    const held = rows.filter((r) => r.stockHeld).map((r) => r.id);
+    if (opts.restock) await releaseUnitsOf(tx, held, now2);
+    else await detachUnitsOf(tx, held, now2);
     if (all) await tx.execute(sql`TRUNCATE TABLE ${preorders} RESTART IDENTITY`);
     else await tx.delete(preorders).where(inArray(preorders.id, rows.map((r) => r.id)));
     return { deleted: rows.length, restocked };
@@ -246,7 +264,7 @@ export async function getOrder(id: number) {
 }
 
 /** The order as the admin API sends it. */
-export function toApiOrder(r: Preorder) {
+export function toApiOrder(r: Preorder, unitIds: string[] = []) {
   const isDhaka = r.location !== "outside";
   return {
     id: r.id,
@@ -271,6 +289,7 @@ export function toApiOrder(r: Preorder) {
     total: r.total,
     paid: r.paid,
     history: r.history ?? [],
+    units: unitIds,
   };
 }
 export type ApiOrder = ReturnType<typeof toApiOrder>;

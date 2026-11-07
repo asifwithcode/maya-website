@@ -9,6 +9,7 @@ import type { SiteCopy } from "@/components/site/content";
 import { ORDER_STATUSES } from "@/db/statuses";
 import {
   deleteOrders,
+  getCatalog,
   getStockItems,
   listOrders,
   placeOrder,
@@ -19,6 +20,13 @@ import {
   updateOrder,
   type FulfillmentPatch,
 } from "@/lib/shop";
+import { listUnits, toApiUnit, unitAdd, unitAssign, UnitError, unitRemove, unitsByOrder } from "@/lib/units";
+
+/** The order with the ids of the units it holds. */
+async function orderOut(o: Parameters<typeof toApiOrder>[0]) {
+  const us = await listUnits({ orderId: o.id });
+  return toApiOrder(o, us.filter((u) => u.status !== "removed").map((u) => u.unitId));
+}
 
 export const dynamic = "force-dynamic";
 
@@ -72,17 +80,27 @@ const refreshPaths = () => {
 export async function GET(request: NextRequest) {
   if (!adminAllowed(request)) return forbidden();
   const view = request.nextUrl.searchParams.get("view");
-  if (view === "orders" || view === "stock") {
+  if (view === "orders" || view === "stock" || view === "units") {
     if (!hasDatabase()) return NextResponse.json({ ok: false, error: "Database not connected." }, { status: 503 });
     try {
+      if (view === "units") {
+        const q = request.nextUrl.searchParams;
+        const orderId = Number(q.get("orderId"));
+        const items = await listUnits({
+          variant: q.get("variant") ?? undefined,
+          status: q.get("status") ?? undefined,
+          orderId: Number.isInteger(orderId) && orderId > 0 ? orderId : undefined,
+        });
+        return NextResponse.json({ ok: true, items: items.map(toApiUnit) }, { headers: { "Cache-Control": "no-store" } });
+      }
       if (view === "stock") {
         return NextResponse.json({ ok: true, items: await getStockItems() }, { headers: { "Cache-Control": "no-store" } });
       }
       const sinceRaw = request.nextUrl.searchParams.get("since");
       const since = sinceRaw && !Number.isNaN(Date.parse(sinceRaw)) ? new Date(sinceRaw) : undefined;
       const serverTime = new Date().toISOString();
-      const { rows, newCount, sinceCount } = await listOrders({ since });
-      const orders = rows.map(toApiOrder);
+      const [{ rows, newCount, sinceCount }, byOrder] = await Promise.all([listOrders({ since }), unitsByOrder()]);
+      const orders = rows.map((r) => toApiOrder(r, byOrder[r.id]));
       return NextResponse.json(
         { ok: true, serverTime, newCount, sinceCount, orders, summary: salesSummary(orders), statuses: ORDER_STATUSES },
         { headers: { "Cache-Control": "no-store" } },
@@ -101,12 +119,13 @@ export async function GET(request: NextRequest) {
 
     if (hasDatabase()) {
       try {
-        const [{ rows }, allEditions, stockItems] = await Promise.all([
+        const [{ rows }, allEditions, stockItems, byOrder] = await Promise.all([
           listOrders(),
           db().select().from(editions).orderBy(asc(editions.sortOrder), asc(editions.id)),
           getStockItems(),
+          unitsByOrder(),
         ]);
-        orderList = rows.map(toApiOrder);
+        orderList = rows.map((r) => toApiOrder(r, byOrder[r.id]));
         stockList = stockItems;
 
         editionsList = allEditions.map((e) => {
@@ -215,7 +234,7 @@ export async function POST(request: NextRequest) {
           if (body.paid !== undefined) patch.paid = Number(body.paid);
           if (body.historyNote !== undefined) patch.historyNote = String(body.historyNote ?? "");
         }
-        const order = toApiOrder(await updateOrder(id, patch));
+        const order = await orderOut(await updateOrder(id, patch));
         return NextResponse.json({ ok: true, order, message: `Order #${id} updated.` });
       }
 
@@ -304,6 +323,25 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ ok: true, message: "Website content published and live." });
       }
 
+      case "unit_add":
+      case "unit_remove":
+      case "unit_assign": {
+        const unitId = String(body.unitId ?? "").trim();
+        let res;
+        if (action === "unit_add") {
+          const { items } = await getCatalog();
+          res = await unitAdd(unitId, String(body.variant ?? "").trim(), body.note === undefined ? undefined : String(body.note), items.map((i) => i.variant));
+        } else if (action === "unit_remove") {
+          res = await unitRemove(unitId);
+        } else {
+          const orderId = Number(body.orderId);
+          if (!Number.isInteger(orderId) || orderId <= 0) return bad("Missing orderId.");
+          res = await unitAssign(unitId, orderId);
+        }
+        if (action !== "unit_assign" && res.changed) refreshPaths();
+        return NextResponse.json({ ok: true, changed: res.changed, unit: res.unit ? toApiUnit(res.unit) : null, stock: res.stock });
+      }
+
       case "delete_order": {
         const id = Number(body.id);
         if (!Number.isInteger(id) || id <= 0) return bad("Missing id.");
@@ -339,13 +377,17 @@ export async function POST(request: NextRequest) {
           note: String(body.note ?? "").trim().slice(0, 1000),
           source: "Added by admin",
         });
-        return NextResponse.json({ ok: true, id: order.id, order: toApiOrder(order), message: `Order #${order.id} created.` });
+        return NextResponse.json({ ok: true, id: order.id, order: await orderOut(order), message: `Order #${order.id} created.` });
       }
 
       default:
         return NextResponse.json({ ok: false, error: `Unknown action: ${action}` }, { status: 400 });
     }
   } catch (error) {
+    if (error instanceof UnitError) {
+      const status = error.code === "unit_busy" ? 409 : error.code === "not_found" ? 404 : 400;
+      return NextResponse.json({ ok: false, error: error.code, message: error.message }, { status });
+    }
     if (error instanceof ShopError) {
       const status = error.code === "out_of_stock" ? 409 : error.code === "not_found" ? 404 : 400;
       return NextResponse.json({ ok: false, error: error.code, message: error.message }, { status });

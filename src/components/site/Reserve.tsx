@@ -1,6 +1,8 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
+import { pathFor } from "./paths";
 import { useCallback, useEffect, useState, type FormEvent } from "react";
 import { COMBO } from "./data";
 import { useContent } from "./content";
@@ -58,6 +60,7 @@ export default function Reserve() {
   const [location, setLocation] = useState<"dhaka" | "outside">("dhaka");
   const [status, setStatus] = useState<"idle" | "loading" | "ok" | "error">("idle");
   const [error, setError] = useState("");
+  const [orderRef, setOrderRef] = useState("");
 
   useEffect(() => {
     const onSelect = (e: Event) => {
@@ -107,6 +110,7 @@ export default function Reserve() {
         throw new Error(isBn ? "দুঃখিত, এই এডিশনের যথেষ্ট স্টক এইমাত্র শেষ হয়ে গেছে।" : "Sorry, there is not enough stock of this edition left.");
       }
       if (!res.ok) throw new Error(lang === "en" && body.error ? body.error : r.error);
+      setOrderRef(body.id ? `MAYA-${String(body.id).padStart(4, "0")}` : "");
       setStatus("ok");
       loadStock();
     } catch (err) {
@@ -132,6 +136,15 @@ export default function Reserve() {
             </div>
             <h3 className="mt-6 text-[32px] font-semibold tracking-tight text-[#1d1d1f]">{r.thanks}</h3>
             <p className="mt-3 text-[17px] leading-relaxed text-[#6e6e73]">{r.thanksText}</p>
+            {orderRef && (
+              <div className="mt-6 rounded-2xl bg-[#f5f5f7] p-4">
+                <p className="text-[13px] text-[#6e6e73]">{isBn ? "আপনার অর্ডার নম্বর" : "Your order number"}</p>
+                <p className="mt-0.5 font-mono text-[22px] font-semibold tracking-wide text-[#1d1d1f]">{orderRef}</p>
+                <Link href={`${pathFor(lang, "track")}?order=${orderRef}`} className="mt-2 inline-block text-[15px] text-[#0071e3]">
+                  {isBn ? "অর্ডার ট্র্যাক করুন →" : "Track your order →"}
+                </Link>
+              </div>
+            )}
           </div>
         ) : (
           <form id="order-form" onSubmit={submit} className="mt-10 grid grid-cols-1 gap-5 lg:grid-cols-[1fr_380px]">

@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { boolean, check, integer, jsonb, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
+import { boolean, check, index, integer, jsonb, pgTable, primaryKey, serial, text, timestamp } from "drizzle-orm/pg-core";
 
 /** Key/value site settings. `pricing` holds every price on the site, in taka. */
 export const settings = pgTable("settings", {
@@ -66,9 +66,41 @@ export const stock = pgTable(
   (t) => [check("stock_qty_nonnegative", sql`${t.qty} >= 0`)],
 );
 
+/**
+ * Built robots, added by the desktop tool after flashing. Each in_stock unit is also counted in
+ * stock.qty; orders reserve units, delivery marks them sold. No foreign key on purpose: orders can be
+ * deleted (TRUNCATE) and the unit history stays.
+ */
+export const UNIT_STATUSES = ["in_stock", "reserved", "sold", "removed"] as const;
+export const units = pgTable(
+  "units",
+  {
+    unitId: text("unit_id").primaryKey(),
+    variant: text("variant").notNull(),
+    status: text("status").notNull().default("in_stock"),
+    orderId: integer("order_id"),
+    note: text("note").notNull().default(""),
+    addedAt: timestamp("added_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("units_variant_status_idx").on(t.variant, t.status), index("units_order_idx").on(t.orderId)],
+);
+
+/** Order-tracking lookups per hashed IP and 10-minute window, against guessing order numbers or phones. */
+export const trackHits = pgTable(
+  "track_hits",
+  {
+    ipHash: text("ip_hash").notNull(),
+    windowStart: timestamp("window_start", { withTimezone: true }).notNull(),
+    hits: integer("hits").notNull().default(0),
+  },
+  (t) => [primaryKey({ columns: [t.ipHash, t.windowStart] })],
+);
+
 export type Edition = typeof editions.$inferSelect;
 export type Preorder = typeof preorders.$inferSelect;
 export type StockRow = typeof stock.$inferSelect;
+export type Unit = typeof units.$inferSelect;
 export type Pricing = {
   maya: number;
   collector: number;
