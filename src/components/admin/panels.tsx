@@ -385,6 +385,76 @@ export function CopyPanel({ site, token, onSaved }: { site: SiteData; token: str
   );
 }
 
+/* ------------------------------------------------------------------ delete all orders */
+
+export function DeleteAllDialog({
+  orders,
+  token,
+  onClose,
+  onDone,
+}: {
+  orders: Order[];
+  token: string;
+  onClose: () => void;
+  onDone: (text: string) => void;
+}) {
+  const [word, setWord] = useState("");
+  const [restock, setRestock] = useState(true);
+  const { busy, msg, run } = useSaver();
+  const holding = orders.filter((o) => o.status !== "cancelled" && o.status !== "returned");
+  const units = holding.reduce((s, o) => s + o.qty, 0);
+
+  async function go(e: FormEvent) {
+    e.preventDefault();
+    let text = "";
+    const ok = await run(async () => {
+      const r = await api<{ deleted: number; restocked: Record<string, number> }>(token, {
+        body: { action: "delete_all_orders", confirm: "DELETE", restock },
+      });
+      const back = Object.values(r.restocked).reduce((a, b) => a + b, 0);
+      text = `${r.deleted}টি অর্ডার মুছে ফেলা হয়েছে${restock ? `, ${back}টি ইউনিট স্টকে ফেরত গেছে` : ""}।`;
+    }, "মুছে ফেলা হয়েছে।");
+    if (ok) onDone(text);
+  }
+
+  return (
+    <div className="fixed inset-0 z-40 flex items-start justify-center overflow-y-auto bg-black/30 p-4 sm:items-center" onClick={onClose}>
+      <form onSubmit={go} onClick={(e) => e.stopPropagation()} className="w-full max-w-[480px] rounded-[24px] bg-white p-6">
+        <h2 className="text-[21px] font-semibold tracking-tight text-[#d70015]">সব অর্ডার মুছে ফেলবেন?</h2>
+        <p className="mt-2 text-[14px] leading-relaxed text-[#424245]">
+          {orders.length}টি অর্ডার, তাদের কুরিয়ার, পেমেন্ট আর ইতিহাস স্থায়ীভাবে মুছে যাবে। এটা আর ফেরানো যাবে না। অর্ডার নম্বর আবার ১ থেকে শুরু হবে।
+        </p>
+        <label className="mt-4 flex items-start gap-2 rounded-xl bg-[#f5f5f7] p-3 text-[14px]">
+          <input type="checkbox" checked={restock} onChange={(e) => setRestock(e.target.checked)} className="mt-1" />
+          <span>
+            চালু অর্ডারের স্টক ফেরত দিন ({holding.length}টি অর্ডার, {units}টি ইউনিট)।
+            <span className="block text-[12px] text-[#6e6e73]">বাতিল আর ফেরত অর্ডারের স্টক আগেই ফেরত গেছে। সত্যিই বিক্রি হওয়া অর্ডার মুছলে টিক তুলে দিন।</span>
+          </span>
+        </label>
+        <label className="mt-4 block">
+          <span className="field-label">নিশ্চিত করতে DELETE লিখুন</span>
+          <input value={word} onChange={(e) => setWord(e.target.value)} className="field font-mono" autoComplete="off" autoFocus />
+        </label>
+        <div className="mt-4 space-y-3">
+          <Msg msg={msg} />
+          <div className="flex gap-3">
+            <button type="button" onClick={onClose} className="flex-1 rounded-full border border-[#d2d2d7] py-2.5 text-[15px]">
+              থাক
+            </button>
+            <button
+              type="submit"
+              disabled={busy || word !== "DELETE" || orders.length === 0}
+              className="flex-1 rounded-full bg-[#d70015] py-2.5 text-[15px] font-medium text-white disabled:opacity-40"
+            >
+              {busy ? "মুছছে…" : "সব মুছে ফেলুন"}
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  );
+}
+
 /* ------------------------------------------------------------------ manual order */
 
 export function NewOrderDialog({

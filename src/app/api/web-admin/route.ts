@@ -8,6 +8,7 @@ import { DEFAULT_COPY, getSiteContent } from "@/db/content";
 import type { SiteCopy } from "@/components/site/content";
 import { ORDER_STATUSES } from "@/db/statuses";
 import {
+  deleteOrders,
   getStockItems,
   listOrders,
   placeOrder,
@@ -301,6 +302,20 @@ export async function POST(request: NextRequest) {
           .onConflictDoUpdate({ target: settings.key, set: { value: copy, updatedAt: new Date() } });
         refreshPaths();
         return NextResponse.json({ ok: true, message: "Website content published and live." });
+      }
+
+      case "delete_order": {
+        const id = Number(body.id);
+        if (!Number.isInteger(id) || id <= 0) return bad("Missing id.");
+        const res = await deleteOrders({ ids: [id], restock: body.restock !== false });
+        return NextResponse.json({ ok: true, ...res, message: `Order #${id} deleted.` });
+      }
+
+      case "delete_all_orders": {
+        // Irreversible: the caller must send the word DELETE as confirmation.
+        if (body.confirm !== "DELETE") return bad('Send confirm: "DELETE" to delete every order.');
+        const res = await deleteOrders({ restock: body.restock !== false });
+        return NextResponse.json({ ok: true, ...res, message: `${res.deleted} orders deleted.` });
       }
 
       case "create_preorder": {

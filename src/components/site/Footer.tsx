@@ -5,6 +5,10 @@ import { useT } from "./i18n";
 import { useContent } from "./content";
 import { pathFor } from "./paths";
 
+/** "Chittagong, Bangladesh" reads as চট্টগ্রাম, বাংলাদেশ on Bangla pages; a full street address stays as typed. */
+const bnAddress = (a: string) =>
+  a.replace(/Chittagong|Chattogram/gi, "চট্টগ্রাম").replace(/Dhaka/gi, "ঢাকা").replace(/Bangladesh/gi, "বাংলাদেশ");
+
 export default function Footer() {
   const { lang, t } = useT();
   const { copy } = useContent();
@@ -46,7 +50,7 @@ export default function Footer() {
       links: [
         ...(comp?.email ? ([[comp.email, `mailto:${comp.email}`]] as [string, string][]) : []),
         ...(comp?.phone ? ([[comp.phone, `tel:${comp.phone.replace(/[^+\d]/g, "")}`]] as [string, string][]) : []),
-        ...(comp?.address ? ([[comp.address, "#"]] as [string, string][]) : []),
+        ...(comp?.address ? ([[isBn ? bnAddress(comp.address) : comp.address, "#"]] as [string, string][]) : []),
       ],
     },
   ];

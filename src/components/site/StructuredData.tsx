@@ -24,7 +24,7 @@ export default function StructuredData({ lang, content }: { lang: Lang; content:
       logo: `${SITE_URL}/icon.png`,
       ...(company?.email ? { email: company.email } : {}),
       ...(company?.phone ? { telephone: company.phone } : {}),
-      ...(company?.address ? { address: { "@type": "PostalAddress", streetAddress: company.address, addressCountry: "BD" } } : {}),
+      ...(company?.address ? { address: { "@type": "PostalAddress", streetAddress: company.address, addressLocality: "Chittagong", addressRegion: "Chattogram", addressCountry: "BD" } } : {}),
     },
     {
       "@type": "WebSite",

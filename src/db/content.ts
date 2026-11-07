@@ -129,7 +129,7 @@ export const DEFAULT_COPY: SiteCopy = {
     taglineBn: "বাংলাদেশে ভালোবাসায় ডিজাইন ও তৈরি।",
     email: "xentoryxlabs@gmail.com",
     phone: "", // set in the web admin; hidden until then
-    address: "Dhaka, Bangladesh",
+    address: "Chittagong, Bangladesh",
     copyright: "© 2026 Xentoryx Labs. All rights reserved.",
   },
 };

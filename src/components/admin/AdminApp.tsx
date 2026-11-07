@@ -19,7 +19,7 @@ import {
   type StockItem,
   type Summary,
 } from "./lib";
-import { CopyPanel, EditionsPanel, NewOrderDialog, OverviewPanel, PricingPanel } from "./panels";
+import { CopyPanel, DeleteAllDialog, EditionsPanel, NewOrderDialog, OverviewPanel, PricingPanel } from "./panels";
 import { printInvoice } from "./invoice";
 
 /* ------------------------------------------------------------------ app */
@@ -117,6 +117,8 @@ function Dashboard({ token, onLogout }: { token: string; onLogout: () => void })
   const [tab, setTab] = useState<Tab>("overview");
   const [site, setSite] = useState<SiteData | null>(null);
   const [adding, setAdding] = useState(false);
+  const [wiping, setWiping] = useState(false);
+  const [notice, setNotice] = useState("");
   const [orders, setOrders] = useState<Order[]>([]);
   const [summary, setSummary] = useState<Summary | null>(null);
   const [stock, setStock] = useState<StockItem[]>([]);
@@ -179,7 +181,7 @@ function Dashboard({ token, onLogout }: { token: string; onLogout: () => void })
   const company = site?.copy.company;
   const sender = {
     name: company?.brandName || "Xentoryx Labs",
-    address: company?.address || "Dhaka, Bangladesh",
+    address: company?.address || "Chittagong, Bangladesh",
     phone: company?.phone || "",
     email: company?.email || "",
   };
@@ -223,6 +225,14 @@ function Dashboard({ token, onLogout }: { token: string; onLogout: () => void })
 
       <main className="mx-auto max-w-[1200px] px-4 py-6">
         {error && <p className="mb-4 rounded-xl bg-[#fff2f2] p-3 text-[14px] text-[#d70015]">{error}</p>}
+        {notice && (
+          <p className="mb-4 flex items-center justify-between rounded-xl bg-[#e7f6ea] p-3 text-[14px] text-[#1d7a33]">
+            {notice}
+            <button onClick={() => setNotice("")} className="px-2 text-[18px] leading-none" aria-label="বন্ধ">
+              ×
+            </button>
+          </p>
+        )}
         {summary && (tab === "overview" || tab === "orders") && <SummaryCards summary={summary} stock={stock} />}
         {tab === "overview" && summary && (
           <OverviewPanel
@@ -237,7 +247,16 @@ function Dashboard({ token, onLogout }: { token: string; onLogout: () => void })
         )}
         {tab === "orders" && (
           <div className="mt-6 grid gap-4 lg:grid-cols-[1fr_440px]">
-            <OrderList orders={orders} selected={selected} onSelect={setSelected} />
+            <div className="min-w-0">
+              <OrderList orders={orders} selected={selected} onSelect={setSelected} />
+              {orders.length > 0 && (
+                <div className="mt-3 flex justify-end">
+                  <button onClick={() => setWiping(true)} className="rounded-full px-3 py-1.5 text-[13px] text-[#d70015] hover:bg-[#fff2f2]">
+                    সব অর্ডার মুছুন…
+                  </button>
+                </div>
+              )}
+            </div>
             {sel ? (
               <OrderDetail
                 key={sel.id}
@@ -246,6 +265,11 @@ function Dashboard({ token, onLogout }: { token: string; onLogout: () => void })
                 itemName={itemName(sel.variant)}
                 sender={sender}
                 onSaved={onOrderSaved}
+                onDeleted={(text) => {
+                  setSelected(null);
+                  setNotice(text);
+                  load();
+                }}
                 onClose={() => setSelected(null)}
               />
             ) : (
@@ -261,6 +285,19 @@ function Dashboard({ token, onLogout }: { token: string; onLogout: () => void })
         {tab === "editions" && site && <EditionsPanel site={site} token={token} onSaved={afterSiteSave} />}
         {tab === "copy" && site && <CopyPanel site={site} token={token} onSaved={afterSiteSave} />}
       </main>
+      {wiping && (
+        <DeleteAllDialog
+          orders={orders}
+          token={token}
+          onClose={() => setWiping(false)}
+          onDone={(text) => {
+            setWiping(false);
+            setSelected(null);
+            setNotice(text);
+            load();
+          }}
+        />
+      )}
       {adding && (
         <NewOrderDialog
           stock={stock}
@@ -369,6 +406,7 @@ function OrderDetail({
   itemName,
   sender,
   onSaved,
+  onDeleted,
   onClose,
 }: {
   order: Order;
@@ -376,6 +414,7 @@ function OrderDetail({
   itemName: string;
   sender: { name: string; address: string; phone: string; email: string };
   onSaved: (o: Order) => void;
+  onDeleted: (text: string) => void;
   onClose: () => void;
 }) {
   const [status, setStatus] = useState<OrderStatus>(order.status);
@@ -551,6 +590,25 @@ function OrderDetail({
           ))}
         </ol>
         <p className="mt-3 text-[12px] text-[#86868b]">শেষ পরিবর্তন {when(order.updatedAt)}</p>
+      </div>
+
+      <div className="mt-5 border-t border-[#f0f0f2] pt-4">
+        <button
+          type="button"
+          onClick={async () => {
+            const holds = order.status !== "cancelled" && order.status !== "returned";
+            if (!window.confirm(`অর্ডার #${order.id} (${order.name}) স্থায়ীভাবে মুছে ফেলবেন?${holds ? ` এর ${order.qty}টি ইউনিট স্টকে ফেরত যাবে।` : ""}`)) return;
+            try {
+              await api(token, { body: { action: "delete_order", id: order.id } });
+              onDeleted(`অর্ডার #${order.id} মুছে ফেলা হয়েছে।`);
+            } catch (err) {
+              setMsg({ ok: false, text: err instanceof Error ? err.message : "মোছা গেল না।" });
+            }
+          }}
+          className="text-[13px] text-[#d70015] hover:underline"
+        >
+          এই অর্ডার মুছুন
+        </button>
       </div>
     </form>
   );

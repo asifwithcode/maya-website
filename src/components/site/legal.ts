@@ -22,7 +22,7 @@ export const PRIVACY: Record<"en" | "bn", LegalDoc> = {
       {
         heading: "Who we are",
         body: [
-          "Maya, this website (themaya.site), the Maya app and their servers are run by Xentoryx Labs, Bangladesh.",
+          "Maya, this website (themaya.site), the Maya app and their servers are run by Xentoryx Labs, Chittagong, Bangladesh.",
         ],
       },
       {
@@ -101,7 +101,7 @@ export const PRIVACY: Record<"en" | "bn", LegalDoc> = {
       {
         heading: "আমরা কারা",
         body: [
-          "মায়া, এই ওয়েবসাইট (themaya.site), Maya অ্যাপ আর এদের সার্ভার চালায় Xentoryx Labs, বাংলাদেশ।",
+          "মায়া, এই ওয়েবসাইট (themaya.site), Maya অ্যাপ আর এদের সার্ভার চালায় Xentoryx Labs, চট্টগ্রাম, বাংলাদেশ।",
         ],
       },
       {

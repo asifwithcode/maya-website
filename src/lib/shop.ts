@@ -1,5 +1,5 @@
 import "server-only";
-import { and, count, desc, eq, gt, gte, sql } from "drizzle-orm";
+import { and, count, desc, eq, gt, gte, inArray, sql } from "drizzle-orm";
 import { db } from "@/db";
 import { preorders, stock, type OrderHistoryEntry, type Preorder } from "@/db/schema";
 import { getSiteContent } from "@/db/content";
@@ -195,6 +195,37 @@ export async function updateOrder(id: number, p: FulfillmentPatch): Promise<Preo
 
     const [row] = await tx.update(preorders).set(set).where(eq(preorders.id, id)).returning();
     return row;
+  });
+}
+
+/**
+ * Deletes orders. Orders still holding stock (not cancelled/returned) put their units back first,
+ * unless restock is false. Deleting every order also restarts the order numbers at 1.
+ */
+export async function deleteOrders(opts: { ids?: number[]; restock: boolean }) {
+  return db().transaction(async (tx) => {
+    const all = !opts.ids;
+    const rows = all
+      ? await tx.select().from(preorders).for("update")
+      : opts.ids!.length
+        ? await tx.select().from(preorders).where(inArray(preorders.id, opts.ids!)).for("update")
+        : [];
+    if (!all && rows.length === 0) throw new ShopError("not_found");
+
+    const restocked: Record<string, number> = {};
+    if (opts.restock) {
+      for (const r of rows) if (r.stockHeld) restocked[r.variant] = (restocked[r.variant] ?? 0) + r.qty;
+      const now = new Date();
+      for (const [variant, n] of Object.entries(restocked)) {
+        await tx
+          .update(stock)
+          .set({ qty: sql`${stock.qty} + ${n}`, updatedAt: now })
+          .where(eq(stock.variant, variant));
+      }
+    }
+    if (all) await tx.execute(sql`TRUNCATE TABLE ${preorders} RESTART IDENTITY`);
+    else await tx.delete(preorders).where(inArray(preorders.id, rows.map((r) => r.id)));
+    return { deleted: rows.length, restocked };
   });
 }
 
