@@ -12,8 +12,8 @@ const heroPhoto = (slug: string) => `${SITE_URL}/images/hero/maya-${slug}.jpg`;
 /**
  * schema.org JSON-LD for the home page: the seller (Organization, in Chittagong), the site and the
  * product as a ProductGroup with one Product + Offer per orderable edition (live price, stock and
- * delivery charge). Only facts the site states: no ratings or reviews, no return policy (the terms
- * have none), no delivery times.
+ * delivery charge, return policy from the terms). Only facts the site states: no ratings or reviews,
+ * no delivery times.
  */
 export default function StructuredData({
   lang,
@@ -52,6 +52,20 @@ export default function StructuredData({
     shippingDestination: { "@type": "DefinedRegion", ...s.region },
   }));
 
+  // Terms → Returns: 7 days from delivery, unopened box, refund or exchange, customer pays the return courier
+  const returnPolicy = {
+    "@type": "MerchantReturnPolicy",
+    applicableCountry: "BD",
+    returnPolicyCountry: "BD",
+    returnPolicyCategory: "https://schema.org/MerchantReturnFiniteReturnWindow",
+    merchantReturnDays: 7,
+    returnMethod: "https://schema.org/ReturnByMail",
+    returnFees: "https://schema.org/ReturnFeesCustomerResponsibility",
+    refundType: ["https://schema.org/FullRefund", "https://schema.org/ExchangeRefund"],
+    itemCondition: "https://schema.org/NewCondition",
+    merchantReturnLink: `${SITE_URL}${isBn ? "" : "/en"}/terms`,
+  };
+
   const availability = (variant: string) => {
     if (!stock) return "https://schema.org/InStock";
     return (stock[variant] ?? 0) > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock";
@@ -67,6 +81,7 @@ export default function StructuredData({
     areaServed: { "@type": "Country", name: "BD" },
     acceptedPaymentMethod: "http://purl.org/goodrelations/v1#COD",
     shippingDetails: shipping,
+    hasMerchantReturnPolicy: returnPolicy,
   });
 
   const groupId = `${SITE_URL}/#product`;

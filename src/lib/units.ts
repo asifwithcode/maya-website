@@ -98,7 +98,8 @@ export async function unitAdd(unitId: string, variant: string, note: string | un
     if (!cur) {
       [unit] = await tx.insert(units).values({ unitId, variant, status: "in_stock", addedAt: now, updatedAt: now, ...noteSet }).returning();
       await bumpStock(tx, variant, 1, now);
-    } else if (cur.status === "removed") {
+    } else if (cur.status === "removed" || (cur.status === "sold" && cur.orderId === null)) {
+      // removed, or sold by hand (no order): back in stock
       [unit] = await tx
         .update(units)
         .set({ variant, status: "in_stock", orderId: null, updatedAt: now, ...noteSet })

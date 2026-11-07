@@ -176,7 +176,7 @@ export const TERMS: Record<"en" | "bn", LegalDoc> = {
     title: "Terms of Use",
     intro:
       "These terms apply when you order Maya on this website or use a Maya robot and the Maya app. By ordering or using them, you agree to these terms.",
-    updated: "Last updated: 6 November 2026",
+    updated: "Last updated: 8 November 2026",
     sections: [
       {
         heading: "What Maya is",
@@ -189,6 +189,14 @@ export const TERMS: Record<"en" | "bn", LegalDoc> = {
         body: [
           "Prices and editions are shown on this website. You pay on delivery or by bKash. Delivery charges depend on your location and are confirmed with you before delivery. We may cancel an order we cannot fulfil; if you have already paid, you get a full refund.",
           `For any problem with an order, contact us at ${EMAIL} or WhatsApp ${PHONE}.`,
+        ],
+      },
+      {
+        heading: "Returns",
+        body: [
+          "You can return a Maya within 7 days of delivery if the box has not been opened. Tell us first by email or WhatsApp, then send the unopened box back by courier.",
+          "The return courier charge is yours to pay. When the unopened box reaches us, you choose: a full refund of the price you paid, or an exchange for another edition (if the new edition costs more, you pay the difference).",
+          "An opened box cannot be returned.",
         ],
       },
       {
@@ -240,7 +248,7 @@ export const TERMS: Record<"en" | "bn", LegalDoc> = {
     title: "ব্যবহারের শর্তাবলি",
     intro:
       "এই ওয়েবসাইট থেকে মায়া অর্ডার করলে বা মায়া রোবট আর Maya অ্যাপ ব্যবহার করলে এই শর্তগুলো প্রযোজ্য। অর্ডার বা ব্যবহার করা মানে আপনি এগুলোতে রাজি।",
-    updated: "সর্বশেষ হালনাগাদ: ৬ নভেম্বর ২০২৬",
+    updated: "সর্বশেষ হালনাগাদ: ৮ নভেম্বর ২০২৬",
     sections: [
       {
         heading: "মায়া কী",
@@ -253,6 +261,14 @@ export const TERMS: Record<"en" | "bn", LegalDoc> = {
         body: [
           "দাম আর এডিশন এই ওয়েবসাইটে দেওয়া আছে। টাকা দেবেন ডেলিভারির সময় বা bKash-এ। ডেলিভারি চার্জ এলাকাভেদে আলাদা, ডেলিভারির আগে আপনাকে জানিয়ে নেওয়া হবে। কোনো অর্ডার পূরণ করতে না পারলে আমরা বাতিল করতে পারি; আগে টাকা দিয়ে থাকলে পুরো টাকা ফেরত পাবেন।",
           `অর্ডার নিয়ে যেকোনো সমস্যায় ${EMAIL} বা WhatsApp ${PHONE}-এ যোগাযোগ করুন।`,
+        ],
+      },
+      {
+        heading: "ফেরত",
+        body: [
+          "ডেলিভারির ৭ দিনের মধ্যে মায়া ফেরত দিতে পারবেন, যদি বাক্স খোলা না হয়ে থাকে। আগে ইমেইল বা WhatsApp-এ আমাদের জানান, তারপর না খোলা বাক্সটা কুরিয়ারে ফেরত পাঠান।",
+          "ফেরত পাঠানোর কুরিয়ার চার্জ আপনাকে দিতে হবে। না খোলা বাক্স আমাদের কাছে পৌঁছালে আপনি বেছে নেবেন: যে দাম দিয়েছিলেন তার পুরো টাকা ফেরত, অথবা অন্য এডিশনের সাথে বদল (নতুন এডিশনের দাম বেশি হলে বাড়তি টাকা দিতে হবে)।",
+          "বাক্স খোলা হয়ে গেলে ফেরত নেওয়া হয় না।",
         ],
       },
       {
