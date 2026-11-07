@@ -2,105 +2,25 @@
 
 import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react";
 import { ORDER_STATUSES, STATUS_LABELS, type OrderStatus } from "@/db/statuses";
-
-/* ------------------------------------------------------------------ types */
-
-type HistoryEntry = { status: string; at: string; note?: string };
-type Order = {
-  id: number;
-  name: string;
-  email: string;
-  phone: string;
-  variant: string;
-  qty: number;
-  lang: string;
-  status: OrderStatus;
-  note: string;
-  address: string;
-  location: "dhaka" | "outside";
-  createdAt: string;
-  updatedAt: string;
-  courier: string;
-  trackingNo: string;
-  unitPrice: number;
-  delivery: number;
-  total: number;
-  paid: number;
-  history: HistoryEntry[];
-};
-type Summary = {
-  orders: number;
-  activeOrders: number;
-  units: number;
-  bookedRevenue: number;
-  deliveredRevenue: number;
-  collected: number;
-  byStatus: Record<string, number>;
-  byVariant: Record<string, { orders: number; units: number; revenue: number }>;
-};
-type StockItem = { variant: string; name: string; nameBn: string; price: number; qty: number; active: boolean };
-
-/* ------------------------------------------------------------------ helpers */
-
-const TOKEN_KEY = "maya_admin_token";
-const COURIERS = ["Steadfast", "Pathao", "RedX", "Sundarban", "Paperfly", "eCourier", "SA Paribahan"];
-const POLL_MS = 60_000;
-
-const taka = (n: number) => "৳" + (n ?? 0).toLocaleString("en-IN");
-const when = (iso: string) =>
-  new Date(iso).toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", timeZone: "Asia/Dhaka" });
-const label = (s: string) => STATUS_LABELS[s as OrderStatus]?.bn ?? s;
-
-const STATUS_TONE: Record<OrderStatus, string> = {
-  new: "bg-[#0071e3] text-white",
-  confirmed: "bg-[#e8f1fd] text-[#0058b0]",
-  packed: "bg-[#f2ecfd] text-[#6b3fc4]",
-  handed_to_courier: "bg-[#fdf3e6] text-[#a35200]",
-  in_transit: "bg-[#fff6d6] text-[#8a6100]",
-  delivered: "bg-[#e7f6ea] text-[#1d7a33]",
-  returned: "bg-[#fdecec] text-[#b3261e]",
-  cancelled: "bg-[#efeff1] text-[#6e6e73]",
-};
-
-function readToken(): string {
-  try {
-    return localStorage.getItem(TOKEN_KEY) ?? sessionStorage.getItem(TOKEN_KEY) ?? "";
-  } catch {
-    return "";
-  }
-}
-function saveToken(t: string, remember: boolean) {
-  try {
-    (remember ? localStorage : sessionStorage).setItem(TOKEN_KEY, t);
-  } catch {
-    /* private mode: the token lives only in memory */
-  }
-}
-function clearToken() {
-  try {
-    localStorage.removeItem(TOKEN_KEY);
-    sessionStorage.removeItem(TOKEN_KEY);
-  } catch {}
-}
-
-class AuthError extends Error {}
-
-async function api<T>(token: string, init?: { view?: string; body?: unknown }): Promise<T> {
-  const url = init?.view ? `/api/web-admin?view=${init.view}` : "/api/web-admin";
-  const res = await fetch(url, {
-    method: init?.body ? "POST" : "GET",
-    cache: "no-store",
-    headers: { Authorization: `Bearer ${token}`, ...(init?.body ? { "Content-Type": "application/json" } : {}) },
-    body: init?.body ? JSON.stringify(init.body) : undefined,
-  });
-  if (res.status === 401 || res.status === 403 || res.status === 404) throw new AuthError();
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok || data.ok === false) {
-    const code = data.error === "out_of_stock" ? "স্টক নেই, এই পরিবর্তন করা গেল না।" : data.message || data.error;
-    throw new Error(code || `Error ${res.status}`);
-  }
-  return data as T;
-}
+import {
+  api,
+  AuthError,
+  clearToken,
+  COURIERS,
+  label,
+  POLL_MS,
+  readToken,
+  saveToken,
+  STATUS_TONE,
+  taka,
+  when,
+  type Order,
+  type SiteData,
+  type StockItem,
+  type Summary,
+} from "./lib";
+import { CopyPanel, EditionsPanel, NewOrderDialog, OverviewPanel, PricingPanel } from "./panels";
+import { printInvoice } from "./invoice";
 
 /* ------------------------------------------------------------------ app */
 
@@ -183,10 +103,20 @@ function Login({ onToken }: { onToken: (t: string) => void }) {
   );
 }
 
-type Tab = "orders" | "stock";
+type Tab = "overview" | "orders" | "stock" | "pricing" | "editions" | "copy";
+const TABS: [Tab, string][] = [
+  ["overview", "ড্যাশবোর্ড"],
+  ["orders", "অর্ডার"],
+  ["stock", "স্টক"],
+  ["pricing", "দাম"],
+  ["editions", "এডিশন"],
+  ["copy", "সাইটের লেখা"],
+];
 
 function Dashboard({ token, onLogout }: { token: string; onLogout: () => void }) {
-  const [tab, setTab] = useState<Tab>("orders");
+  const [tab, setTab] = useState<Tab>("overview");
+  const [site, setSite] = useState<SiteData | null>(null);
+  const [adding, setAdding] = useState(false);
   const [orders, setOrders] = useState<Order[]>([]);
   const [summary, setSummary] = useState<Summary | null>(null);
   const [stock, setStock] = useState<StockItem[]>([]);
@@ -211,6 +141,18 @@ function Dashboard({ token, onLogout }: { token: string; onLogout: () => void })
     }
   }, [token, onLogout]);
 
+  const loadSite = useCallback(async () => {
+    try {
+      setSite(await api<SiteData>(token));
+    } catch (err) {
+      if (err instanceof AuthError) onLogout();
+    }
+  }, [token, onLogout]);
+  useEffect(() => {
+    const t = setTimeout(loadSite, 0);
+    return () => clearTimeout(t);
+  }, [loadSite]);
+
   useEffect(() => {
     const first = setTimeout(load, 0);
     const id = setInterval(load, POLL_MS);
@@ -226,55 +168,113 @@ function Dashboard({ token, onLogout }: { token: string; onLogout: () => void })
   };
 
   const sel = orders.find((o) => o.id === selected) ?? null;
+  const afterSiteSave = () => {
+    loadSite();
+    load(); // prices and names feed stock and new orders
+  };
+  const itemName = (variant: string) => {
+    const s = stock.find((x) => x.variant === variant);
+    return s ? (variant === "Collector's Set" ? s.name : `Maya · ${s.name}`) : `Maya · ${variant}`;
+  };
+  const company = site?.copy.company;
+  const sender = {
+    name: company?.brandName || "Xentoryx Labs",
+    address: company?.address || "Dhaka, Bangladesh",
+    phone: company?.phone || "",
+    email: company?.email || "",
+  };
   const newCount = summary?.byStatus.new ?? 0;
 
   return (
     <Shell>
-      <header className="sticky top-0 z-20 border-b border-[#d2d2d7]/70 bg-white/80 backdrop-blur">
+      <header className="sticky top-0 z-20 overflow-hidden border-b border-[#d2d2d7]/70 bg-white/85 backdrop-blur">
         <div className="mx-auto flex h-14 max-w-[1200px] items-center gap-2 px-4 sm:gap-3">
           <span className="whitespace-nowrap text-[17px] font-semibold">Maya<span className="max-sm:hidden"> Admin</span></span>
-          <nav className="flex gap-1 sm:ml-4">
-            {(["orders", "stock"] as Tab[]).map((t) => (
-              <button
-                key={t}
-                onClick={() => setTab(t)}
-                className={`rounded-full px-3 py-1.5 text-[14px] ${tab === t ? "bg-[#1d1d1f] text-white" : "text-[#424245] hover:bg-[#f5f5f7]"}`}
-              >
-                {t === "orders" ? "অর্ডার" : "স্টক"}
-                {t === "orders" && newCount > 0 && (
-                  <span className="ml-1.5 rounded-full bg-[#0071e3] px-1.5 text-[11px] text-white">{newCount}</span>
-                )}
-              </button>
-            ))}
-          </nav>
-          <span className="ml-auto hidden text-[12px] text-[#86868b] sm:inline">{loadedAt && `আপডেট ${when(loadedAt)}`}</span>
-          <button onClick={load} className="rounded-full px-3 py-1.5 text-[14px] text-[#0071e3] hover:bg-[#f5f5f7]">
+          <span className="ml-auto hidden text-[12px] text-[#86868b] md:inline">{loadedAt && `আপডেট ${when(loadedAt)}`}</span>
+          <button onClick={() => setAdding(true)} className="ml-auto whitespace-nowrap rounded-full bg-[#0071e3] px-3 py-1.5 text-[14px] text-white md:ml-0">
+            + <span className="max-sm:hidden">নতুন </span>অর্ডার
+          </button>
+          <button
+            onClick={() => {
+              load();
+              loadSite();
+            }}
+            className="rounded-full px-2 py-1.5 text-[14px] text-[#0071e3] hover:bg-[#f5f5f7] sm:px-3"
+          >
             রিফ্রেশ
           </button>
-          <button onClick={onLogout} className="rounded-full px-3 py-1.5 text-[14px] text-[#424245] hover:bg-[#f5f5f7]">
+          <button onClick={onLogout} className="rounded-full px-2 py-1.5 text-[14px] text-[#424245] hover:bg-[#f5f5f7] sm:px-3">
             লগআউট
           </button>
         </div>
+        <nav className="mx-auto flex max-w-[1200px] gap-1 overflow-x-auto px-4 pb-2">
+          {TABS.map(([t, name]) => (
+            <button
+              key={t}
+              onClick={() => setTab(t)}
+              className={`whitespace-nowrap rounded-full px-3 py-1.5 text-[14px] ${tab === t ? "bg-[#1d1d1f] text-white" : "text-[#424245] hover:bg-[#f5f5f7]"}`}
+            >
+              {name}
+              {t === "orders" && newCount > 0 && <span className="ml-1.5 rounded-full bg-[#0071e3] px-1.5 text-[11px] text-white">{newCount}</span>}
+            </button>
+          ))}
+        </nav>
       </header>
 
       <main className="mx-auto max-w-[1200px] px-4 py-6">
         {error && <p className="mb-4 rounded-xl bg-[#fff2f2] p-3 text-[14px] text-[#d70015]">{error}</p>}
-        {summary && <SummaryCards summary={summary} stock={stock} />}
-        {tab === "orders" ? (
+        {summary && (tab === "overview" || tab === "orders") && <SummaryCards summary={summary} stock={stock} />}
+        {tab === "overview" && summary && (
+          <OverviewPanel
+            orders={orders}
+            summary={summary}
+            stock={stock}
+            onOpenOrder={(id) => {
+              setSelected(id);
+              setTab("orders");
+            }}
+          />
+        )}
+        {tab === "orders" && (
           <div className="mt-6 grid gap-4 lg:grid-cols-[1fr_440px]">
             <OrderList orders={orders} selected={selected} onSelect={setSelected} />
             {sel ? (
-              <OrderDetail key={sel.id + sel.updatedAt} order={sel} token={token} onSaved={onOrderSaved} onClose={() => setSelected(null)} />
+              <OrderDetail
+                key={sel.id}
+                order={sel}
+                token={token}
+                itemName={itemName(sel.variant)}
+                sender={sender}
+                onSaved={onOrderSaved}
+                onClose={() => setSelected(null)}
+              />
             ) : (
               <div className="hidden h-fit rounded-[20px] bg-white p-8 text-center text-[15px] text-[#86868b] lg:block">
                 বিস্তারিত দেখতে একটা অর্ডার বেছে নিন।
               </div>
             )}
           </div>
-        ) : (
-          <StockPanel items={stock} summary={summary} token={token} onSaved={load} />
         )}
+        {tab === "stock" && <StockPanel items={stock} summary={summary} token={token} onSaved={load} />}
+        {(tab === "pricing" || tab === "editions" || tab === "copy") && !site && <p className="mt-6 text-[15px] text-[#86868b]">লোড হচ্ছে…</p>}
+        {tab === "pricing" && site && <PricingPanel site={site} token={token} onSaved={afterSiteSave} />}
+        {tab === "editions" && site && <EditionsPanel site={site} token={token} onSaved={afterSiteSave} />}
+        {tab === "copy" && site && <CopyPanel site={site} token={token} onSaved={afterSiteSave} />}
       </main>
+      {adding && (
+        <NewOrderDialog
+          stock={stock}
+          site={site}
+          token={token}
+          onClose={() => setAdding(false)}
+          onCreated={(o) => {
+            setAdding(false);
+            setSelected(o.id);
+            setTab("orders");
+            load();
+          }}
+        />
+      )}
     </Shell>
   );
 }
@@ -363,7 +363,21 @@ function OrderList({ orders, selected, onSelect }: { orders: Order[]; selected: 
   );
 }
 
-function OrderDetail({ order, token, onSaved, onClose }: { order: Order; token: string; onSaved: (o: Order) => void; onClose: () => void }) {
+function OrderDetail({
+  order,
+  token,
+  itemName,
+  sender,
+  onSaved,
+  onClose,
+}: {
+  order: Order;
+  token: string;
+  itemName: string;
+  sender: { name: string; address: string; phone: string; email: string };
+  onSaved: (o: Order) => void;
+  onClose: () => void;
+}) {
   const [status, setStatus] = useState<OrderStatus>(order.status);
   const isKnownCourier = !order.courier || COURIERS.includes(order.courier);
   const [courier, setCourier] = useState(isKnownCourier ? order.courier : "__other");
@@ -497,6 +511,30 @@ function OrderDetail({ order, token, onSaved, onClose }: { order: Order; token: 
         <button type="submit" disabled={busy} className="btn-primary w-full py-3 text-[16px] disabled:opacity-50">
           {busy ? "সেভ হচ্ছে…" : "সেভ"}
         </button>
+      </div>
+
+      <div className="mt-5 border-t border-[#f0f0f2] pt-4">
+        <p className="text-[13px] font-medium text-[#6e6e73]">ইনভয়েস ও লেবেল</p>
+        <p className="mt-0.5 text-[12px] text-[#86868b]">নতুন ট্যাবে খুলে প্রিন্ট হবে (PDF হিসেবেও সেভ করা যায়)। আগে সেভ করে নিন, যাতে কুরিয়ার আর ট্র্যাকিং ওঠে।</p>
+        <div className="mt-2 flex flex-wrap gap-2">
+          {(
+            [
+              ["a4", "A4 ইনভয়েস"],
+              ["label", "বক্স লেবেল 100×150"],
+            ] as const
+          ).map(([k, t]) => (
+            <button
+              key={k}
+              type="button"
+              onClick={() => {
+                if (!printInvoice(k, order, itemName, sender)) setMsg({ ok: false, text: "পপআপ ব্লক হয়েছে; এই সাইটের জন্য পপআপ চালু করুন।" });
+              }}
+              className="rounded-full border border-[#d2d2d7] px-3 py-1.5 text-[13px] hover:border-[#86868b]"
+            >
+              {t}
+            </button>
+          ))}
+        </div>
       </div>
 
       <div className="mt-5 border-t border-[#f0f0f2] pt-4">
