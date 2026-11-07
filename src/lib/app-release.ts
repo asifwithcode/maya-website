@@ -3,8 +3,8 @@
 // The app is called "Maya" (it was "Just Maya" up to 1.0.0).
 export const APP_RELEASE = {
   name: "Maya",
-  version: "1.0.1",
-  file: "/downloads/Maya-1.0.1.apk",
+  version: "1.0.2",
+  file: "/downloads/Maya-1.0.2.apk",
   sizeMb: 28,
   minAndroid: "7.0",
 } as const;
