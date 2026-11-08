@@ -148,6 +148,23 @@ export async function unitRemove(unitId: string, opts: { sold?: boolean; note?: 
   });
 }
 
+/**
+ * Deletes a unit row for good (the robot was deleted in the desktop tool), whatever its status.
+ * in_stock: stock −1. reserved/sold on an order: the order and its stock deduction stay as they are,
+ * it just no longer lists this unit. Unknown id: nothing to do.
+ */
+export async function unitDelete(unitId: string) {
+  if (!validUnitId(unitId)) throw new UnitError("bad_input");
+  return db().transaction(async (tx) => {
+    const now = new Date();
+    const [cur] = await tx.select().from(units).where(eq(units.unitId, unitId)).for("update");
+    if (!cur) return { changed: false, unit: null, stock: null };
+    await tx.delete(units).where(eq(units.unitId, unitId));
+    if (cur.status === "in_stock") await bumpStock(tx, cur.variant, -1, now);
+    return { changed: true, unit: cur, stock: await stockOf(tx, cur.variant) };
+  });
+}
+
 /** Puts a specific unit on an order. If the order already holds enough units, the latest auto-reserved one goes back. */
 export async function unitAssign(unitId: string, orderId: number) {
   if (!validUnitId(unitId)) throw new UnitError("bad_input");

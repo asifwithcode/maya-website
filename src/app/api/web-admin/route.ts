@@ -20,7 +20,7 @@ import {
   updateOrder,
   type FulfillmentPatch,
 } from "@/lib/shop";
-import { listUnits, toApiUnit, unitAdd, unitAssign, UnitError, unitRemove, unitsByOrder } from "@/lib/units";
+import { listUnits, toApiUnit, unitAdd, unitAssign, unitDelete, UnitError, unitRemove, unitsByOrder } from "@/lib/units";
 
 /** The order with the ids of the units it holds. */
 async function orderOut(o: Parameters<typeof toApiOrder>[0]) {
@@ -323,6 +323,12 @@ export async function POST(request: NextRequest) {
           .onConflictDoUpdate({ target: settings.key, set: { value: copy, updatedAt: new Date() } });
         refreshPaths();
         return NextResponse.json({ ok: true, message: "Website content published and live." });
+      }
+
+      case "unit_delete": {
+        const res = await unitDelete(String(body.unitId ?? "").trim());
+        if (res.changed) refreshPaths();
+        return NextResponse.json({ ok: true, changed: res.changed, unit: res.unit ? toApiUnit(res.unit) : null, stock: res.stock });
       }
 
       case "unit_add":
