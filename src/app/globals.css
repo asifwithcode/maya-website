@@ -98,6 +98,36 @@ body {
     @apply mb-1.5 block text-[14px] font-medium text-[#1d1d1f];
   }
 
+  /* ---------- Admin (/admin): commerce-console look ---------- */
+  .adm {
+    @apply min-h-screen bg-[#f1f2f4] text-[13.5px] leading-[1.45] text-[#202223] antialiased;
+    font-family: "Inter", "Hind Siliguri", system-ui, sans-serif;
+  }
+  .adm-card {
+    @apply rounded-xl border border-[#e1e3e5] bg-white shadow-[0_1px_0_rgba(26,26,26,0.07)];
+  }
+  .adm-label {
+    @apply mb-1 block text-[12.5px] font-medium text-[#303030];
+  }
+  .adm-input {
+    @apply w-full rounded-lg border border-[#c9cccf] bg-white px-3 py-[7px] text-[13.5px] text-[#202223] placeholder:text-[#8c9196] transition focus:border-[#2c6ecb] focus:outline-none focus:ring-2 focus:ring-[#2c6ecb]/25 disabled:bg-[#f6f6f7];
+  }
+  .adm-btn {
+    @apply inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-lg border border-[#c9cccf] bg-white px-3 py-[6px] text-[13px] font-medium text-[#202223] shadow-[0_1px_0_rgba(0,0,0,0.05)] transition hover:bg-[#f6f6f7] active:bg-[#f1f2f4] disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .adm-btn-primary {
+    @apply inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-lg border border-[#1a1a1a] bg-[#303030] px-3 py-[6px] text-[13px] font-medium text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.18)] transition hover:bg-[#1a1a1a] disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .adm-btn-danger {
+    @apply inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-lg border border-[#b42318] bg-[#d92d20] px-3 py-[6px] text-[13px] font-medium text-white transition hover:bg-[#b42318] disabled:cursor-not-allowed disabled:opacity-40;
+  }
+  .adm-th {
+    @apply whitespace-nowrap border-b border-[#e1e3e5] bg-[#f7f7f8] px-3 py-2 text-left text-[12px] font-medium text-[#616161];
+  }
+  .adm-td {
+    @apply border-b border-[#ebebeb] px-3 py-2.5 align-middle;
+  }
+
   /* legacy form classes still referenced elsewhere */
   .field-input,
   .field-input-light {
