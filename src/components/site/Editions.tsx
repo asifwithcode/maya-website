@@ -50,7 +50,7 @@ export default function Editions() {
               </div>
               <h3 className="mt-6 text-[24px] font-semibold tracking-tight text-[#1d1d1f]">{e.name[lang]}</h3>
               <p className="mt-1 text-[14px] text-[#6e6e73]">
-                {e.accessory[lang]} · {e.eyes[lang]} · {e9.mini}
+                {e.accessory[lang]} · {e.eyes[lang]}
               </p>
               <p className="mt-4 text-[17px] text-[#1d1d1f]">{taka(e.price ?? PRICING.maya)}</p>
               <div className="mt-5">

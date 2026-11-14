@@ -552,9 +552,6 @@ export function PricingPage({ site, token, onSaved }: { site: SiteData; token: s
             <Field label="আলাদা এক্সেসরি" hint="সাইটে দেখানো দাম">
               {input("accessory")}
             </Field>
-            <Field label="আলাদা মিনি কি-চেইন" hint="সাইটে দেখানো দাম">
-              {input("mini")}
-            </Field>
           </div>
         </Card>
         <Card title="শিপিং জোন ও চার্জ" sub="অর্ডারের সময় কাস্টমার জোন বাছেন; চার্জ অর্ডারের মোটে যোগ হয়।">

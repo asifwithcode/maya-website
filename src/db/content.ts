@@ -119,7 +119,6 @@ export const DEFAULT_COPY: SiteCopy = {
     box: [
       { en: "Maya Robot Companion Unit", bn: "মায়া রোবট কমপ্যানিয়ন ইউনিট" },
       { en: "Modular Snap-On Edition Accessory", bn: "মডুলার স্ন্যাপ-অন এডিশন এক্সেসরি" },
-      { en: "Matching Miniature Pocket Keychain", bn: "ম্যাচিং মিনি পকেট কি-চেইন" },
       { en: "High-Grade Braided USB-C Power Cable", bn: "হাই-গ্রেড ব্রেইডেড USB-C ক্যাবল" },
     ],
   },

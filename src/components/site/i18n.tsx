@@ -46,8 +46,8 @@ const en = {
   },
   editions: {
     kicker: "Season One · Launch price", title: "Seven boxes.", titleSoft: "One Maya.",
-    text: "Every edition is the same Maya with its own accessory, eyes and mini keychain. Order today, pay cash on delivery.",
-    reserve: "Order now", mini: "mini keychain",
+    text: "Every edition is the same Maya with its own accessory and eyes. Order today, pay cash on delivery.",
+    reserve: "Order now",
     items: {
       bunny: ["Bunny Edition", "Bunny ears", "Curious eyes"],
       panda: ["Panda Edition", "Panda ears", "Big round eyes"],
@@ -61,11 +61,10 @@ const en = {
       kicker: "The combo", name: "Complete Collection", best: "Best value",
       text: "One Maya, every look. Swap accessories whenever you like.",
       save: "You save", button: "Order the collection",
-      features: ["Maya, fully assembled", "All 6 accessories", "All 6 mini keychains", "Free mini keychains included"],
+      features: ["Maya, fully assembled", "All 6 accessories", "USB-C cable", "Quick start booklet"],
     },
     extras: [
       ["Extra accessory", "Fits every Maya"],
-      ["Extra mini keychain", "25 mm, any of the six"],
       ["Delivery", "Inside Dhaka / rest of Bangladesh"],
     ] as [string, string][],
   },
@@ -155,8 +154,8 @@ const bn: Dict = {
   },
   editions: {
     kicker: "প্রথম সিজন · লঞ্চ মূল্য", title: "সাতটা বাক্স।", titleSoft: "একটাই মায়া।",
-    text: "প্রতিটা এডিশনে একই মায়া, শুধু আলাদা অ্যাক্সেসরি, চোখ আর মিনি কি-চেইন। আজই অর্ডার করুন, টাকা দিন ডেলিভারির সময়।",
-    reserve: "অর্ডার করুন", mini: "মিনি কি-চেইন",
+    text: "প্রতিটা এডিশনে একই মায়া, শুধু আলাদা অ্যাক্সেসরি আর চোখ। আজই অর্ডার করুন, টাকা দিন ডেলিভারির সময়।",
+    reserve: "অর্ডার করুন",
     items: {
       bunny: ["বানি এডিশন", "খরগোশের কান", "কৌতূহলী চোখ"],
       panda: ["পান্ডা এডিশন", "পান্ডার কান", "বড় গোল চোখ"],
@@ -170,11 +169,10 @@ const bn: Dict = {
       kicker: "কম্বো", name: "কমপ্লিট কালেকশন", best: "সেরা দামে",
       text: "একটা মায়া, সব সাজ। যখন খুশি অ্যাক্সেসরি বদলান।",
       save: "আপনি বাঁচাচ্ছেন", button: "কালেকশন অর্ডার করুন",
-      features: ["পুরো জোড়া লাগানো মায়া", "৬টা অ্যাক্সেসরি", "৬টা মিনি কি-চেইন", "সব মিনি কি-চেইন সাথে"],
+      features: ["পুরো জোড়া লাগানো মায়া", "৬টা অ্যাক্সেসরি", "USB-C কেবল", "কুইক স্টার্ট বুকলেট"],
     },
     extras: [
       ["বাড়তি অ্যাক্সেসরি", "সব মায়ায় লাগে"],
-      ["বাড়তি মিনি কি-চেইন", "২৫ মি.মি., ছয়টার যেকোনোটা"],
       ["ডেলিভারি", "ঢাকার ভেতরে / ঢাকার বাইরে"],
     ],
   },
@@ -198,7 +196,7 @@ const bn: Dict = {
       ["পাওয়ার", "USB-C তে ৫V, সবসময় চালু"],
       ["বডি", "নরম টেক্সচারের 3D প্রিন্টেড PLA, প্লাগ-ইন অ্যাক্সেসরি"],
     ],
-    box: ["মায়া, পুরো জোড়া লাগানো", "আপনার পছন্দের অ্যাক্সেসরি", "২৫ মি.মি. মিনি মায়া কি-চেইন", "USB-C কেবল", "কুইক স্টার্ট কার্ড"],
+    box: ["মায়া, পুরো জোড়া লাগানো", "আপনার পছন্দের অ্যাক্সেসরি", "USB-C কেবল", "কুইক স্টার্ট কার্ড"],
   },
   reserve: {
     title: "আপনার মায়া অর্ডার করুন।",

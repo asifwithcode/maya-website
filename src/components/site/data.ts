@@ -129,13 +129,12 @@ export const SPECS: [string, string][] = [
 export const IN_THE_BOX = [
   "Maya, fully assembled",
   "Your chosen accessory",
-  "A 25 mm mini Maya keychain",
   "USB-C cable",
   "Quick start card",
 ];
 
 // Prices in BDT. Suggested launch prices, based on a build cost of about
-// ৳2,000–2,700 per Maya (print, electronics, box, keychain). Change them here.
+// ৳2,000–2,700 per Maya (print, electronics, box). Change them here.
 export const PRICING = {
   maya: 3490,
   collector: 4490,
@@ -160,4 +159,4 @@ export const EDITIONS = [
 export const COMBO = { name: "Complete Collection", variant: "Collector's Set" } as const;
 
 // accessories beyond the one included in a single edition
-export const SEPARATELY = PRICING.maya + (EDITIONS.length - 1) * (PRICING.accessory + PRICING.mini);
+export const SEPARATELY = PRICING.maya + (EDITIONS.length - 1) * PRICING.accessory;

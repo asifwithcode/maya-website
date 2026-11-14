@@ -701,9 +701,9 @@ export default function DocsPage() {
                 </p>
               </div>
               <div className="rounded-2xl border border-black/10 bg-[#f5f5f7] p-4">
-                <div className="font-bold text-sm text-[#1d1d1f]">3. Collector Keychain</div>
+                <div className="font-bold text-sm text-[#1d1d1f]">3. Small parts</div>
                 <p className="mt-1 text-black/70 leading-relaxed">
-                  Your box includes a miniature 25 mm Maya keychain. Keep away from small children under 3 years old due to small parts.
+                  The accessories are small. Keep them away from children under 3 years old.
                 </p>
               </div>
             </div>
@@ -752,7 +752,7 @@ export default function DocsPage() {
               <li><b>Heat Sensitivity:</b> Maya&rsquo;s chassis is crafted from high-precision matte PLA. Keep her away from direct summer sunlight, radiators, or hot parked cars. PLA begins softening above 50 °C (122 °F).</li>
               <li><b>Display Cleaning:</b> Wipe the circular glass display with a clean, dry microfiber cloth. Avoid spraying water or chemical solvents directly onto the device.</li>
               <li><b>Chassis Care:</b> Dust the body with a soft dry nylon brush. Never submerge in water or place in damp environments like bathrooms.</li>
-              <li><b>Child Safety:</b> Not suitable for unsupervised children under 3 years due to small accessories and keychain.</li>
+              <li><b>Child Safety:</b> Not suitable for unsupervised children under 3 years due to small accessories.</li>
             </ul>
           </Section>
 

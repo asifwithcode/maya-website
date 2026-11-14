@@ -91,8 +91,8 @@ export default function StructuredData({
       "@id": `${SITE_URL}/#edition-${e.slug}`,
       name: isBn ? `মায়া ${e.name.bn}` : `Maya ${e.name.en}`,
       description: isBn
-        ? `${e.accessory.bn} আর ${e.eyes.bn} সহ মায়া ডেস্ক রোবট, সাথে মিলিয়ে মিনি কি-চেইন।`
-        : `Maya desk robot with ${e.accessory.en.toLowerCase()} and ${e.eyes.en.toLowerCase()}, plus a matching mini keychain.`,
+        ? `${e.accessory.bn} আর ${e.eyes.bn} সহ মায়া ডেস্ক রোবট।`
+        : `Maya desk robot with ${e.accessory.en.toLowerCase()} and ${e.eyes.en.toLowerCase()}.`,
       image: heroPhoto(e.slug),
       sku: `MAYA-${e.variant.toUpperCase()}`,
       color: isBn ? e.name.bn : e.name.en,
@@ -105,8 +105,8 @@ export default function StructuredData({
       "@id": `${SITE_URL}/#edition-collection`,
       name: isBn ? "মায়া কমপ্লিট কালেকশন" : "Maya Complete Collection",
       description: isBn
-        ? "একটা মায়া, ছয়টা এক্সেসরি আর ছয়টা মিনি কি-চেইন।"
-        : "One Maya with all six accessories and all six mini keychains.",
+        ? "একটা মায়া আর ছয়টা এক্সেসরি।"
+        : "One Maya with all six accessories.",
       image: heroPhoto("plain"),
       sku: "MAYA-COLLECTION",
       color: isBn ? "কমপ্লিট কালেকশন" : "Complete Collection",

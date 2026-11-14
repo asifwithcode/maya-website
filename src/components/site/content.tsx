@@ -102,5 +102,5 @@ export function useContent() {
   return c ?? defaultContent;
 }
 
-/** What buying every accessory and mini separately would cost. */
-export const separately = (p: Pricing, editionCount: number) => p.maya + (editionCount - 1) * (p.accessory + p.mini);
+/** What buying every accessory separately would cost. */
+export const separately = (p: Pricing, editionCount: number) => p.maya + (editionCount - 1) * p.accessory;

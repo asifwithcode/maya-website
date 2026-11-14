@@ -57,8 +57,8 @@ const FONTS =
 /** What is in the box, for the invoice line. */
 function contents(o: Order) {
   return /collector/i.test(o.variant)
-    ? "Maya robot (assembled), all 6 snap-on accessories, all 6 mini keychains, USB-C cable"
-    : "Maya robot (assembled), snap-on accessory, matching mini keychain, USB-C cable";
+    ? "Maya robot (assembled), all 6 snap-on accessories, USB-C cable"
+    : "Maya robot (assembled), snap-on accessory, USB-C cable";
 }
 
 function a4(o: Order, itemName: string, from: Sender, logo: string): string {
