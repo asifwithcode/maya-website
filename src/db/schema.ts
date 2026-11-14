@@ -28,7 +28,8 @@ export const editions = pgTable("editions", {
 
 export { ORDER_STATUSES, PREORDER_STATUSES } from "./statuses";
 
-export type OrderHistoryEntry = { status: string; at: string; note?: string };
+/** A status change, or (edit: true) a change of the order's details; changes lists "field: old → new". */
+export type OrderHistoryEntry = { status: string; at: string; note?: string; edit?: boolean; by?: string; changes?: string[] };
 
 /** Orders (the table keeps its old name). Stock is taken when an order is placed. */
 export const preorders = pgTable("preorders", {

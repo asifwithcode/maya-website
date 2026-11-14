@@ -360,6 +360,8 @@ function Console({ token, onLogout }: { token: string; onLogout: () => void }) {
           token={token}
           itemName={itemName(sel.variant)}
           sender={sender}
+          stock={stock}
+          fees={{ dhaka: site?.pricing.deliveryDhaka ?? 0, outside: site?.pricing.deliveryOutside ?? 0 }}
           onSaved={onOrderSaved}
           onDeleted={(text) => {
             setSelected(null);

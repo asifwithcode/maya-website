@@ -3,7 +3,7 @@ import type { Pricing, SiteCopy } from "@/components/site/content";
 
 export type { Pricing, SiteCopy };
 
-export type HistoryEntry = { status: string; at: string; note?: string };
+export type HistoryEntry = { status: string; at: string; note?: string; edit?: boolean; by?: string; changes?: string[] };
 export type Order = {
   id: number;
   name: string;
@@ -116,6 +116,7 @@ const ERROR_TEXT: Record<string, string> = {
   not_found: "অর্ডারটা পাওয়া যায়নি।",
   bad_status: "স্ট্যাটাস সঠিক নয়।",
   invalid_variant: "এই এডিশন অর্ডার করা যায় না।",
+  order_locked: "অর্ডারটি ডেলিভারড বা ফেরত; পণ্য বা দাম বদলাতে নিশ্চিতকরণ টিক দিন।",
 };
 
 export async function api<T>(token: string, init?: { view?: string; body?: unknown }): Promise<T> {

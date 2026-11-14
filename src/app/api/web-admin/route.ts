@@ -9,7 +9,9 @@ import type { SiteCopy } from "@/components/site/content";
 import { ORDER_STATUSES } from "@/db/statuses";
 import {
   deleteOrders,
+  editOrder,
   getCatalog,
+  type OrderEdit,
   getStockItems,
   listOrders,
   placeOrder,
@@ -325,6 +327,21 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ ok: true, message: "Website content published and live." });
       }
 
+      case "update_order": {
+        const id = Number(body.id);
+        if (!Number.isInteger(id) || id <= 0) return bad("Missing id.");
+        const e: OrderEdit = {};
+        for (const k of ["name", "phone", "email", "address", "note"] as const) if (body[k] !== undefined) e[k] = String(body[k] ?? "");
+        if (body.location !== undefined) e.location = body.location === "outside" ? "outside" : body.location === "dhaka" ? "dhaka" : (String(body.location) as "dhaka");
+        if (body.lang !== undefined) e.lang = String(body.lang) as "bn";
+        if (body.variant !== undefined) e.variant = String(body.variant);
+        for (const k of ["qty", "unitPrice", "delivery", "paid"] as const) if (body[k] !== undefined && body[k] !== null && body[k] !== "") e[k] = Number(body[k]);
+        const by = typeof body.by === "string" && body.by.trim() ? body.by.trim() : "admin";
+        const order = await orderOut(await editOrder(id, e, { force: body.force === true, by }));
+        refreshPaths(); // stock may have moved
+        return NextResponse.json({ ok: true, order, message: `Order #${id} updated.` });
+      }
+
       case "unit_delete": {
         const res = await unitDelete(String(body.unitId ?? "").trim());
         if (res.changed) refreshPaths();
@@ -399,7 +416,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ ok: false, error: error.code, message: error.message }, { status });
     }
     if (error instanceof ShopError) {
-      const status = error.code === "out_of_stock" ? 409 : error.code === "not_found" ? 404 : 400;
+      const status = error.code === "out_of_stock" || error.code === "order_locked" ? 409 : error.code === "not_found" ? 404 : 400;
       return NextResponse.json({ ok: false, error: error.code, message: error.message }, { status });
     }
     console.error("POST /api/web-admin failed:", error);

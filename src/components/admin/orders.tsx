@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { ORDER_STATUSES, STATUS_LABELS, type OrderStatus } from "@/db/statuses";
-import { api, COURIERS, taka, when, type Order } from "./lib";
+import { api, COURIERS, taka, when, type Order, type StockItem } from "./lib";
 import { printInvoice, orderRef, type Sender } from "./invoice";
 import { Card, digits, Empty, Field, Icon, MsgBanner, PageHeader, PaymentBadge, StatusBadge, Thumb, type Msg } from "./ui";
 
@@ -182,6 +182,8 @@ export function OrderDrawer({
   token,
   itemName,
   sender,
+  stock,
+  fees,
   onSaved,
   onDeleted,
   onClose,
@@ -190,6 +192,8 @@ export function OrderDrawer({
   token: string;
   itemName: string;
   sender: Sender;
+  stock: StockItem[];
+  fees: { dhaka: number; outside: number };
   onSaved: (o: Order) => void;
   onDeleted: (text: string) => void;
   onClose: () => void;
@@ -204,12 +208,13 @@ export function OrderDrawer({
   const [historyNote, setHistoryNote] = useState("");
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<Msg>(null);
+  const [editing, setEditing] = useState(false);
 
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && !editing && onClose();
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [onClose]);
+  }, [onClose, editing]);
 
   const courierValue = courier === "__other" ? courierOther.trim() : courier;
   const statusChanged = status !== order.status;
@@ -278,6 +283,9 @@ export function OrderDrawer({
             <p className="text-[12.5px] text-[#616161]">{when(order.createdAt)} · ওয়েবসাইট · {order.lang === "bn" ? "বাংলা" : "English"}</p>
           </div>
           <div className="ml-auto flex flex-wrap gap-2">
+            <button type="button" onClick={() => setEditing(true)} className="adm-btn">
+              <Icon name="edit" className="h-4 w-4" /> সম্পাদনা
+            </button>
             <button type="button" onClick={() => print("a4")} className="adm-btn">
               <Icon name="printer" className="h-4 w-4" /> ইনভয়েস
             </button>
@@ -394,11 +402,33 @@ export function OrderDrawer({
                   {[...order.history].reverse().map((h, i) => (
                     <li key={i} className="relative">
                       <span className={`absolute -left-[21.5px] top-1 h-2.5 w-2.5 rounded-full border-2 border-white ${i === 0 ? "bg-[#303030]" : "bg-[#b5b5b5]"}`} />
-                      <div className="flex flex-wrap items-center gap-2">
-                        <StatusBadge status={h.status as OrderStatus} />
-                        <span className="text-[12px] text-[#616161]">{when(h.at)}</span>
-                      </div>
-                      {h.note && <p className="mt-0.5 text-[12.5px] text-[#303030]">{h.note}</p>}
+                      {h.edit ? (
+                        <>
+                          <div className="flex flex-wrap items-center gap-2">
+                            <span className="inline-flex items-center gap-1 rounded-full bg-[#f1f2f4] px-2 py-[2px] text-[12px] font-medium text-[#303030]">
+                              <Icon name="edit" className="h-3.5 w-3.5" /> অর্ডার সম্পাদনা
+                            </span>
+                            <span className="text-[12px] text-[#616161]">
+                              {when(h.at)} · {h.by ?? "admin"}
+                            </span>
+                          </div>
+                          {h.changes && (
+                            <ul className="mt-1 space-y-0.5 text-[12.5px] text-[#303030]">
+                              {h.changes.map((c, j) => (
+                                <li key={j}>{c}</li>
+                              ))}
+                            </ul>
+                          )}
+                        </>
+                      ) : (
+                        <>
+                          <div className="flex flex-wrap items-center gap-2">
+                            <StatusBadge status={h.status as OrderStatus} />
+                            <span className="text-[12px] text-[#616161]">{when(h.at)}</span>
+                          </div>
+                          {h.note && <p className="mt-0.5 text-[12.5px] text-[#303030]">{h.note}</p>}
+                        </>
+                      )}
                     </li>
                   ))}
                 </ol>
@@ -452,7 +482,251 @@ export function OrderDrawer({
           </button>
         </div>
       </form>
+      {editing && (
+        <EditOrderDialog
+          order={order}
+          token={token}
+          stock={stock}
+          fees={fees}
+          onClose={() => setEditing(false)}
+          onSaved={(o) => {
+            setEditing(false);
+            setPaid(String(o.paid || ""));
+            setNote(o.note);
+            setMsg({ ok: true, text: "অর্ডার আপডেট হয়েছে।" });
+            onSaved(o);
+          }}
+        />
+      )}
     </div>
   );
 }
+
+/* ------------------------------------------------------------------ edit order */
+
+function EditOrderDialog({
+  order,
+  token,
+  stock,
+  fees,
+  onClose,
+  onSaved,
+}: {
+  order: Order;
+  token: string;
+  stock: StockItem[];
+  fees: { dhaka: number; outside: number };
+  onClose: () => void;
+  onSaved: (o: Order) => void;
+}) {
+  const [f, setF] = useState({
+    name: order.name,
+    phone: order.phone,
+    email: order.email,
+    address: order.address,
+    location: order.location,
+    lang: order.lang === "en" ? "en" : "bn",
+    variant: order.variant,
+    qty: String(order.qty),
+    unitPrice: String(order.unitPrice),
+    delivery: String(order.delivery),
+    paid: String(order.paid),
+    note: order.note,
+  });
+  const [force, setForce] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [msg, setMsg] = useState<Msg>(null);
+  const set = (k: keyof typeof f) => (e: { target: { value: string } }) => setF({ ...f, [k]: e.target.value });
+  const priceOf = (v: string) => stock.find((s) => s.variant === v)?.price ?? 0;
+
+  const qty = Math.max(0, Number(f.qty) || 0);
+  const unitPrice = Number(f.unitPrice) || 0;
+  const delivery = Number(f.delivery) || 0;
+  const total = unitPrice * qty + delivery;
+  const holds = order.status !== "cancelled" && order.status !== "returned";
+  const locked = order.status === "delivered" || order.status === "returned";
+  const itemsChanged = f.variant !== order.variant || qty !== order.qty || unitPrice !== order.unitPrice || delivery !== order.delivery;
+  // what can be taken for the new choice: the shelf, plus what this order already holds of that edition
+  const shelf = stock.find((s) => s.variant === f.variant)?.qty ?? 0;
+  const available = shelf + (holds && f.variant === order.variant ? order.qty : 0);
+  const stockMoves = holds && (f.variant !== order.variant || qty !== order.qty);
+  const stockShort = stockMoves && qty > available;
+
+  async function save(e?: FormEvent) {
+    e?.preventDefault();
+    setBusy(true);
+    setMsg(null);
+    try {
+      const res = await api<{ order: Order }>(token, {
+        body: {
+          action: "update_order",
+          id: order.id,
+          ...f,
+          qty,
+          unitPrice,
+          delivery,
+          paid: Number(f.paid) || 0,
+          ...(locked && itemsChanged ? { force } : {}),
+        },
+      });
+      onSaved(res.order);
+    } catch (err) {
+      setMsg({ ok: false, text: err instanceof Error ? err.message : "সেভ করা গেল না।" });
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <div className="fixed inset-0 z-[60] flex items-start justify-center overflow-y-auto bg-black/40 p-4 sm:items-center" onClick={onClose}>
+      <form onSubmit={save} onClick={(e) => e.stopPropagation()} className="w-full max-w-[640px] overflow-hidden rounded-xl bg-white shadow-2xl">
+        <div className="flex items-center justify-between border-b border-[#e1e3e5] bg-[#f7f7f8] px-4 py-3">
+          <h2 className="text-[15px] font-semibold text-[#303030]">অর্ডার #{order.id} সম্পাদনা</h2>
+          <button type="button" onClick={onClose} className="rounded-md p-1 text-[#616161] hover:bg-black/5" aria-label="বন্ধ">
+            <Icon name="close" className="h-5 w-5" />
+          </button>
+        </div>
+        <div className="max-h-[70vh] space-y-4 overflow-y-auto p-4">
+          {locked && (
+            <div className="rounded-lg border border-[#ffd79d] bg-[#fff8ed] p-3 text-[13px] text-[#8a4a00]">
+              <p className="font-semibold">এই অর্ডারটি {order.status === "delivered" ? "ডেলিভারড" : "ফেরত এসেছে"}।</p>
+              <p className="mt-0.5">কাস্টমারের তথ্য আর নোট বদলানো যায়। পণ্য, সংখ্যা বা দাম বদলালে হিসাব আর ইনভয়েস বদলে যাবে; তার জন্য নিচে নিশ্চিত করুন।</p>
+              {itemsChanged && (
+                <label className="mt-2 flex items-center gap-2 font-medium">
+                  <input type="checkbox" checked={force} onChange={(e) => setForce(e.target.checked)} />
+                  আমি বুঝে পণ্য/দাম বদলাচ্ছি
+                </label>
+              )}
+            </div>
+          )}
+
+          <div>
+            <p className="mb-2 text-[13px] font-semibold text-[#303030]">পণ্য ও দাম</p>
+            <div className="grid gap-3 sm:grid-cols-[1fr_96px]">
+              <Field label="এডিশন">
+                <span className="flex items-center gap-2">
+                  <Thumb slug={variantSlug(f.variant)} size={34} />
+                  <select
+                    value={f.variant}
+                    onChange={(e) =>
+                      setF({ ...f, variant: e.target.value, unitPrice: e.target.value === order.variant ? String(order.unitPrice) : String(priceOf(e.target.value)) })
+                    }
+                    className="adm-input"
+                  >
+                    {stock.map((s) => (
+                      <option key={s.variant} value={s.variant}>
+                        {s.nameBn} · {taka(s.price)} · {s.variant === order.variant && holds ? s.qty + order.qty : s.qty}টি পাওয়া যাবে
+                      </option>
+                    ))}
+                  </select>
+                </span>
+              </Field>
+              <Field label="সংখ্যা">
+                <input inputMode="numeric" value={f.qty} onChange={(e) => setF({ ...f, qty: digits(e.target.value) })} className="adm-input text-center" />
+              </Field>
+            </div>
+            <div className="mt-3 grid gap-3 sm:grid-cols-3">
+              <Field label="প্রতিটির দাম (৳)" hint="ছাড় দিতে দাম কমান">
+                <input inputMode="numeric" value={f.unitPrice} onChange={(e) => setF({ ...f, unitPrice: digits(e.target.value) })} className="adm-input tabular-nums" />
+              </Field>
+              <Field label="শিপিং জোন">
+                <select
+                  value={f.location}
+                  onChange={(e) => {
+                    const loc = e.target.value as "dhaka" | "outside";
+                    setF({
+                      ...f,
+                      location: loc,
+                      delivery: loc === order.location ? String(order.delivery) : String(loc === "outside" ? fees.outside : fees.dhaka),
+                    });
+                  }}
+                  className="adm-input"
+                >
+                  <option value="dhaka">ঢাকার ভেতরে</option>
+                  <option value="outside">ঢাকার বাইরে</option>
+                </select>
+              </Field>
+              <Field label="ডেলিভারি চার্জ (৳)">
+                <input inputMode="numeric" value={f.delivery} onChange={(e) => setF({ ...f, delivery: digits(e.target.value) })} className="adm-input tabular-nums" />
+              </Field>
+            </div>
+            {stockShort && <p className="mt-2 text-[12.5px] text-[#8e1f0b]">এই এডিশনের মাত্র {available}টি পাওয়া যাবে।</p>}
+            {stockMoves && !stockShort && (
+              <p className="mt-2 text-[12.5px] text-[#616161]">
+                সেভ করলে আগের {order.qty}টি {order.variant} স্টকে ফেরত যাবে আর {qty}টি {f.variant} স্টক থেকে কমবে।
+              </p>
+            )}
+          </div>
+
+          <div>
+            <p className="mb-2 text-[13px] font-semibold text-[#303030]">কাস্টমার</p>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <Field label="নাম">
+                <input value={f.name} onChange={set("name")} className="adm-input" required />
+              </Field>
+              <Field label="ফোন">
+                <input value={f.phone} onChange={set("phone")} className="adm-input" required />
+              </Field>
+              <Field label="ইমেইল">
+                <input type="email" value={f.email} onChange={set("email")} className="adm-input" />
+              </Field>
+              <Field label="ভাষা">
+                <select value={f.lang} onChange={set("lang")} className="adm-input">
+                  <option value="bn">বাংলা</option>
+                  <option value="en">English</option>
+                </select>
+              </Field>
+              <Field label="ঠিকানা" className="sm:col-span-2">
+                <input value={f.address} onChange={set("address")} className="adm-input" />
+              </Field>
+            </div>
+          </div>
+
+          <div className="grid gap-3 sm:grid-cols-2">
+            <Field label="আদায় (৳)">
+              <input inputMode="numeric" value={f.paid} onChange={(e) => setF({ ...f, paid: digits(e.target.value) })} className="adm-input tabular-nums" />
+            </Field>
+            <Field label="ভেতরের নোট">
+              <input value={f.note} onChange={set("note")} className="adm-input" />
+            </Field>
+          </div>
+
+          <div className="rounded-lg bg-[#f7f7f8] p-3 text-[13px]">
+            <div className="flex justify-between">
+              <span className="text-[#616161]">
+                সাবটোটাল · {qty} × {taka(unitPrice)}
+              </span>
+              <span className="tabular-nums">{taka(unitPrice * qty)}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-[#616161]">ডেলিভারি</span>
+              <span className="tabular-nums">{taka(delivery)}</span>
+            </div>
+            <div className="mt-1 flex justify-between border-t border-[#e1e3e5] pt-1 font-semibold">
+              <span>নতুন মোট</span>
+              <span className="tabular-nums">
+                {total !== order.total && <span className="mr-1.5 font-normal text-[#8a8a8a] line-through">{taka(order.total)}</span>}
+                {taka(total)}
+              </span>
+            </div>
+          </div>
+          <MsgBanner msg={msg} />
+        </div>
+        <div className="flex justify-end gap-2 border-t border-[#e1e3e5] px-4 py-3">
+          <button type="button" onClick={onClose} className="adm-btn">
+            বাতিল
+          </button>
+          <button
+            type="submit"
+            disabled={busy || qty < 1 || stockShort || (locked && itemsChanged && !force) || !f.name.trim() || !f.phone.trim()}
+            className="adm-btn-primary"
+          >
+            {busy ? "সেভ হচ্ছে…" : "পরিবর্তন সেভ করুন"}
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+}
+
 

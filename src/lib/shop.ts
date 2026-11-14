@@ -15,7 +15,7 @@ export const LOW_STOCK = 5;
 
 export class ShopError extends Error {
   constructor(
-    public code: "out_of_stock" | "invalid_variant" | "not_found" | "bad_status" | "bad_input",
+    public code: "out_of_stock" | "invalid_variant" | "not_found" | "bad_status" | "bad_input" | "order_locked",
     message?: string,
   ) {
     super(message ?? code);
@@ -207,6 +207,128 @@ export async function updateOrder(id: number, p: FulfillmentPatch): Promise<Preo
       set.history = [...(cur.history ?? []), entry];
     }
 
+    const [row] = await tx.update(preorders).set(set).where(eq(preorders.id, id)).returning();
+    return row;
+  });
+}
+
+export type OrderEdit = {
+  name?: string;
+  phone?: string;
+  email?: string;
+  address?: string;
+  location?: "dhaka" | "outside";
+  variant?: string;
+  qty?: number;
+  unitPrice?: number;
+  delivery?: number;
+  paid?: number;
+  note?: string;
+  lang?: "bn" | "en";
+};
+
+const LOCKED: readonly string[] = ["delivered", "returned"];
+
+/**
+ * Edits an order's details in one transaction and records what changed in its history.
+ * - Edition or quantity change on an order that holds stock: the old stock and units go back,
+ *   the new ones are taken (out_of_stock if not enough; nothing changes then).
+ * - A new edition without unitPrice takes that edition's current price; a new zone without
+ *   delivery takes that zone's current charge. total = unitPrice × qty + delivery.
+ * - Items (edition, qty, prices) of a delivered or returned order change only with force: true.
+ */
+export async function editOrder(id: number, e: OrderEdit, opts: { force?: boolean; by?: string } = {}): Promise<Preorder> {
+  const { items, delivery: fees } = await getCatalog();
+  return db().transaction(async (tx) => {
+    const [cur] = await tx.select().from(preorders).where(eq(preorders.id, id)).for("update");
+    if (!cur) throw new ShopError("not_found");
+    const now = new Date();
+    const changes: string[] = [];
+    const set: Partial<typeof preorders.$inferInsert> = {};
+    const text = (k: "name" | "phone" | "email" | "address" | "note", label: string, max: number) => {
+      const v = e[k];
+      if (v === undefined) return;
+      const t = String(v).trim().slice(0, max);
+      if (t !== cur[k]) {
+        set[k] = t;
+        changes.push(k === "note" ? "note" : `${label}: ${cur[k] || "—"} → ${t || "—"}`);
+      }
+    };
+    text("name", "name", 120);
+    text("phone", "phone", 50);
+    text("email", "email", 200);
+    text("address", "address", 300);
+    text("note", "note", 1000);
+    if (set.name !== undefined && !set.name) throw new ShopError("bad_input", "name is required");
+    if (set.phone !== undefined && !/^\d{7,15}$/.test(set.phone.replace(/[\s()+-]/g, ""))) throw new ShopError("bad_input", "phone looks wrong");
+    if (set.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(set.email)) throw new ShopError("bad_input", "email looks wrong");
+    if (e.lang !== undefined && e.lang !== cur.lang) {
+      if (e.lang !== "bn" && e.lang !== "en") throw new ShopError("bad_input", "lang must be bn or en");
+      set.lang = e.lang;
+      changes.push(`lang: ${cur.lang} → ${e.lang}`);
+    }
+
+    // items and money
+    const variant = e.variant !== undefined ? String(e.variant).trim() : cur.variant;
+    const item = items.find((i) => i.variant === variant);
+    if (e.variant !== undefined && !item) throw new ShopError("invalid_variant");
+    const qty = e.qty !== undefined ? Math.trunc(Number(e.qty)) : cur.qty;
+    if (!Number.isFinite(qty) || qty < 1 || qty > 50) throw new ShopError("bad_input", "qty must be 1-50");
+    const location = e.location !== undefined ? e.location : (cur.location as "dhaka" | "outside");
+    if (location !== "dhaka" && location !== "outside") throw new ShopError("bad_input", "location must be dhaka or outside");
+    const money = (v: unknown, what: string) => {
+      const n = Math.trunc(Number(v));
+      if (!Number.isFinite(n) || n < 0 || n > 10_000_000) throw new ShopError("bad_input", `${what} must be 0 or more`);
+      return n;
+    };
+    const unitPrice =
+      e.unitPrice !== undefined ? money(e.unitPrice, "unitPrice") : variant !== cur.variant ? (item?.price ?? cur.unitPrice) : cur.unitPrice;
+    const delivery =
+      e.delivery !== undefined
+        ? money(e.delivery, "delivery")
+        : location !== cur.location
+          ? location === "outside"
+            ? fees.outside
+            : fees.dhaka
+          : cur.delivery;
+    const paid = e.paid !== undefined ? money(e.paid, "paid") : cur.paid;
+
+    const itemsChanged = variant !== cur.variant || qty !== cur.qty || unitPrice !== cur.unitPrice || delivery !== cur.delivery;
+    if (itemsChanged && LOCKED.includes(cur.status) && !opts.force) {
+      throw new ShopError("order_locked", `Order is ${cur.status}; send force: true to change its items or prices.`);
+    }
+
+    if ((variant !== cur.variant || qty !== cur.qty) && cur.stockHeld) {
+      // give back what the order held, then take the new edition/qty
+      await tx.update(stock).set({ qty: sql`${stock.qty} + ${cur.qty}`, updatedAt: now }).where(eq(stock.variant, cur.variant));
+      await releaseUnitsOf(tx, [cur.id], now);
+      const taken = await tx
+        .update(stock)
+        .set({ qty: sql`${stock.qty} - ${qty}`, updatedAt: now })
+        .where(and(eq(stock.variant, variant), gte(stock.qty, qty)))
+        .returning({ qty: stock.qty });
+      if (!taken.length) throw new ShopError("out_of_stock"); // rolls the whole edit back
+      await reserveUnitsFor(tx, cur.id, variant, qty, now);
+      if (cur.status === "delivered") await setOrderUnitsStatus(tx, cur.id, "sold", now);
+    }
+
+    if (variant !== cur.variant) changes.push(`edition: ${cur.variant} → ${variant}`);
+    if (qty !== cur.qty) changes.push(`qty: ${cur.qty} → ${qty}`);
+    if (location !== cur.location) changes.push(`zone: ${cur.location} → ${location}`);
+    if (unitPrice !== cur.unitPrice) changes.push(`unit price: ${cur.unitPrice} → ${unitPrice}`);
+    if (delivery !== cur.delivery) changes.push(`delivery: ${cur.delivery} → ${delivery}`);
+    if (paid !== cur.paid) changes.push(`paid: ${cur.paid} → ${paid}`);
+    Object.assign(set, { variant, qty, location, unitPrice, delivery, paid, total: unitPrice * qty + delivery });
+    const total = unitPrice * qty + delivery;
+    if (total !== cur.total) changes.push(`total: ${cur.total} → ${total}`);
+
+    if (!changes.length) return cur;
+    const by = (opts.by ?? "admin").slice(0, 40);
+    set.history = [
+      ...(cur.history ?? []),
+      { status: cur.status, at: now.toISOString(), edit: true, by, changes, note: `Edited by ${by}: ${changes.join("; ")}` },
+    ];
+    set.updatedAt = now;
     const [row] = await tx.update(preorders).set(set).where(eq(preorders.id, id)).returning();
     return row;
   });
